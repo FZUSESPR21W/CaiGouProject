@@ -6,4 +6,70 @@
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
 
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/top_home"/>
+
+    <LinearLayout
+        android:id="@+id/ll_head_home"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="match_parent"
+        android:paddingTop="@dimen/status_bar_height"
+        android:layout_height="70dp">
+        <include layout="@layout/toolbar_home"/>
+    </LinearLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/ll_head_home">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <com.zhouwei.mzbanner.MZBannerView
+                android:id="@+id/mzb_home"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginTop="16dp"
+                app:open_mz_mode="false"
+                android:layout_marginHorizontal="20dp"/>
+
+            <GridView
+                android:id="@+id/gv_caixi"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="6dp"
+                android:numColumns="4"
+                android:stretchMode="columnWidth"
+                android:verticalSpacing="4dp"/>
+
+            <RelativeLayout
+                android:id="@+id/rl_recommend"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginHorizontal="16dp">
+
+                <ImageView
+                    android:id="@+id/iv_recommend"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="@drawable/recommend_resource"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="今日推荐"
+                    android:background="@drawable/recommend_tv"
+                    android:padding="16dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentLeft="true"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
