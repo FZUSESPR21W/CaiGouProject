@@ -1,27 +1,22 @@
 package com.example.caigouapp.ui.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProvider;
-
 import com.example.caigouapp.R;
 import com.example.caigouapp.databinding.FragmentHomeBinding;
+import com.example.caigouapp.ui.SearchActivity;
 import com.zhouwei.mzbanner.holder.MZHolderCreator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
-public class HomeFragment extends Fragment {
+public class    HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
 
@@ -52,5 +47,12 @@ public class HomeFragment extends Fragment {
                 R.drawable.xiang,
                 R.drawable.su));
         binding.gvCaixi.setAdapter(new GridViewAdapter(styleList));
+        binding.toobar.tvSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), SearchActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

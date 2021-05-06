@@ -25,6 +25,6 @@
         app:layout_constraintRight_toRightOf="parent"
         android:text="搜索"
         android:textColor="#ffffff"
-        android:textSize="20sp"
+        android:textSize="18sp"
         android:paddingRight="10dp"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
