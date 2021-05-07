@@ -18,6 +18,13 @@ public class UserController {
     @Resource
     private UserService userService;
 
+    /**
+     * /user/findOrderUser/{userId}
+     * 查询用户信息
+     * @param userId
+     * @return null or 用户信息
+     */
+
     @GetMapping("/findOrderUser/{userId}")
     public Result<User>  findOrderUser(@PathVariable Integer userId){
         return Result.success(userService.findOrderUser(userId));

@@ -19,16 +19,23 @@ public class AdminUserController {
     private AdminUserService adminUserService;
 
     /**
+     * /adminUser/getById/{id}
      * 查询是否存在这个账号的用户
      * @param id
-     * @return List<User>
-     * 若存在返回该用户，不存在返回NULL
+     * @return 若存在返回该用户，不存在返回NULL
+     *
      */
     @GetMapping("/getById/{id}")
     public Result<AdminUser> findById(@PathVariable Integer id){
         return Result.success(adminUserService.findById(id));
     }
 
+    /**
+     * /adminUser/getByAccount/{account}
+     * 根据账号查询管理员用户，验证登录
+     * @param account
+     * @return null or 管理员信息
+     */
     @GetMapping("/getByAccount/{account}")
     public Result<AdminUser> findByAccount(@PathVariable Integer account){
         return Result.success(adminUserService.findByAccount(account));

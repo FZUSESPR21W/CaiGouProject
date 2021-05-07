@@ -15,11 +15,17 @@ import javax.annotation.Resource;
         methods = {RequestMethod.GET, RequestMethod.POST})
 @RestController//标识此接口中所有都是返回json数据
 @RequestMapping("/order")//给访问链接加个前缀
-
+s
 public class UserOrderController {
     @Resource
     private OrderService orderService;
 
+    /**
+     * /order/findAll/{pageNum}
+     * 查询所有订单
+     * @param pageNum(分页显示的页数）
+     * @return Page<UserOrder>该页的内容
+     */
     @GetMapping("/findAll/{pageNum}")
     public Result<Page<UserOrder>> findAll(@PathVariable Integer pageNum){
         return Result.success(orderService.findPage(pageNum,5));

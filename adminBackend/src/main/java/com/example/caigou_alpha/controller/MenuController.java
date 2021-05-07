@@ -19,34 +19,60 @@ public class MenuController {
     @Resource
     private MenuService menuService;
 
+    /**
+     *  /menu/findAll/{pageNum}
+     * 所有菜谱的分页查询
+     * @param pageNum
+     * @return  Page<Menu>该页的内容
+     */
     @GetMapping("/findAll/{pageNum}")
     public Result<Page<Menu>> findAll(@PathVariable Integer pageNum){
         return Result.success(menuService.findPage(pageNum,5));
     }
 
     /**
-     * 模糊分页查询
+     *  /menu/findLike
+     * 菜谱的模糊分页查询，按名字模糊查询
      * @param pageNum
      * @param name
-     * @return
+     * @return  Page<Menu>该页的内容
      */
     @GetMapping("/findLike")
     public Result<Page<Menu>> findMenuLike( @RequestParam(required = true)Integer pageNum,@RequestParam(required = true)String name){
         return Result.success(menuService.findLike(pageNum,5,name));
     }
 
+    /**
+     * /menu/addMenu
+     * 添加菜单，menu表中的每个字段都要填写因为数据库设计为非空
+     * @param menu
+     * @return
+     */
+
     @PostMapping("/addMenu")
     public Result add(Menu menu){
         menuService.save(menu);
         return Result.success();
     }
-//    @RequestBody
+
+    /**
+     * /menu/updateMenu
+     * 修改菜单，id字段必须传入，未传入字段则默认为不更改
+     * @param menu
+     * @return
+     */
     @PutMapping("/updateMenu")
     public Result update(Menu menu){
         menuService.save(menu);
         return Result.success();
     }
 
+    /**
+     * /menu/deleteMenu/{id}
+     * 根据id来删除菜谱
+     * @param id
+     * @return
+     */
     @DeleteMapping("/deleteMenu/{id}")
     public Result delete(@PathVariable Integer id){
         menuService.del(id);
