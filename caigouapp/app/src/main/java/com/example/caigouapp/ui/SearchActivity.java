@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.example.caigouapp.data.RecipeBean;
 import com.example.caigouapp.databinding.ActivitySearchBinding;
@@ -22,6 +23,8 @@ public class SearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
+        String tag = getIntent().getStringExtra("tag");
+        Log.d("tag",tag);
         initData();
         initView();
         setContentView(binding.getRoot());

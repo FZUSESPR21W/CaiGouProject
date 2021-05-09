@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            if (response.isSuccess()){
+                            if (response.isSuccessful()){
                                 sp.clear();
                                 sp.putString("account",account);
                                 sp.putString("password",password);
