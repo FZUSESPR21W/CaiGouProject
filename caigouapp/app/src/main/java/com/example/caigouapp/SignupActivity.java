@@ -48,23 +48,31 @@ public class SignupActivity extends AppCompatActivity {
                 password = binding.userPwd.getText().toString();
                 password_confirm = binding.userPwdConfirm.getText().toString();
                 //SpUtil.getInstance().setString(this, account, password);
-                String checkcode = sp.getString(account,"");
-                if(account == null){
+                String spAccount = SpUtil.getInstance().getString("account","");
+                String spPwd = SpUtil.getInstance().getString("password","");
+                //Toast.makeText(SignupActivity.this,"*"+spPwd,Toast.LENGTH_SHORT).show();
+                if(account.equals("")){
                     Toast.makeText(SignupActivity.this,"账号为空，请重新输入",Toast.LENGTH_SHORT).show();
                 }
-                if(account != null && password == null){
+                else if(!account.equals("") && password.equals("")){
                     Toast.makeText(SignupActivity.this,"密码为空，请重新输入",Toast.LENGTH_SHORT).show();
                 }
-                if(account != null && password != null && password_confirm == null){
+                else if(!account.equals("") && !password.equals("") && password_confirm.equals("")){
                     Toast.makeText(SignupActivity.this,"请再次输入密码",Toast.LENGTH_SHORT).show();
                 }
-                if(account != null && password != password_confirm ){
+                else if(!account.equals("") && !password.equals(password_confirm) ){
                     Toast.makeText(SignupActivity.this,"两次输入密码不一致！请重新输入",Toast.LENGTH_SHORT).show();
                 }
-                if(checkcode != null){
+                else if(!binding.rb.isChecked()){
+                    Toast.makeText(SignupActivity.this,"请勾选阅读相关文件",Toast.LENGTH_SHORT).show();
+                }
+                else if(spAccount.equals(account)){
                     Toast.makeText(SignupActivity.this,"用户已存在！",Toast.LENGTH_SHORT).show();
                 }
                 else{
+                    //write to isSuccessful
+                        sp.putString("account",account);
+                        sp.putString("password",password);
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl(Constant.URL_BASE)
                             .build();
@@ -73,7 +81,7 @@ public class SignupActivity extends AppCompatActivity {
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            if (response.isSuccess()){
+                            if (response.isSuccessful()){
                                 Toast.makeText(SignupActivity.this,"注册成功！请登陆",Toast.LENGTH_SHORT).show();
                             }
                         }

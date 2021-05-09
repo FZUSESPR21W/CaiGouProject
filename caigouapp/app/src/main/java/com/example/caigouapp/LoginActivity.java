@@ -45,15 +45,17 @@ public class LoginActivity extends AppCompatActivity {
                 account = binding.userAccount.getText().toString();
                 password = binding.userPwd.getText().toString();
                 //SpUtil.getInstance().setString(this, account, password);
-                String checkcode = sp.getString(account,"");
-                if(account == null){
+                String spAccount = SpUtil.getInstance().getString("account","");
+                String spPwd = SpUtil.getInstance().getString("password","");
+                //Toast.makeText(LoginActivity.this,"*"+spPwd,Toast.LENGTH_SHORT).show();
+                if(account.equals("")){
                     Toast.makeText(LoginActivity.this,"账号为空，请重新输入",Toast.LENGTH_SHORT).show();
                 }
-                if(account != null && password == null){
+                else if(!account.equals("") && password.equals("")){
                     Toast.makeText(LoginActivity.this,"密码为空，请重新输入",Toast.LENGTH_SHORT).show();
                 }
-                if(checkcode != null){
-                    if (checkcode.equals(password)) {
+                else if(spAccount.equals(account)){
+                    if (spPwd.equals(password)) {
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                     }
