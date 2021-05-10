@@ -1,74 +1,109 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/bg_round"
     android:layout_margin="3dp">
-
-    <ImageView
-        android:id="@+id/shoppingRecipeImage"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        android:layout_marginLeft="20dp"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="20dp">
-    </ImageView>
+        android:id="@+id/personalRecipe">
+        <ImageView
+            android:id="@+id/shoppingRecipeImage"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_marginLeft="20dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginStart="20dp">
+        </ImageView>
 
+        <TextView
+            app:layout_constraintTop_toTopOf="@id/shoppingRecipeImage"
+            app:layout_constraintLeft_toRightOf="@id/shoppingRecipeImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="15sp"
+            android:text="测试菜谱名"
+            android:id="@+id/shoppingRecipeName">
+        </TextView>
+
+        <TextView
+            app:layout_constraintTop_toBottomOf="@id/shoppingRecipeName"
+            app:layout_constraintLeft_toRightOf="@id/shoppingRecipeImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="5dp"
+            android:textSize="12sp"
+            android:maxLines="2"
+            android:maxEms="10"
+            android:ellipsize="end"
+            android:text="这是一个描述这个菜谱的测试语句这是一个描述这个菜谱"
+            android:id="@+id/shoppingRecipeIntro">
+        </TextView>
+
+        <TextView
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/shoppingRecipeImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginBottom="5dp"
+            android:textSize="12sp"
+            android:textColor="#FF4500"
+            android:text="￥999"
+            android:id="@+id/shoppingRecipePrice">
+        </TextView>
+
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:id="@+id/shoppingRecipeCheck"
+            android:layout_marginRight="15dp">
+        </CheckBox>
+
+        <ImageView
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="15dp"
+            android:id="@+id/showButton"
+            android:src="@drawable/arrow_up"
+            android:layout_marginEnd="15dp"
+            android:padding="5dp">
+        </ImageView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/personalRecipe"
+        android:id="@+id/rvLine">
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/bg_square"
+            android:id="@+id/personalIngredientRv">
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
     <TextView
-        app:layout_constraintTop_toTopOf="@id/shoppingRecipeImage"
-        app:layout_constraintLeft_toRightOf="@id/shoppingRecipeImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:textSize="15sp"
-        android:text="测试菜谱名"
-        android:id="@+id/shoppingRecipeName">
+        app:layout_constraintTop_toBottomOf="@id/rvLine"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:id="@+id/endItem">
     </TextView>
-
-    <TextView
-        app:layout_constraintTop_toBottomOf="@id/shoppingRecipeName"
-        app:layout_constraintLeft_toRightOf="@id/shoppingRecipeImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="5dp"
-        android:textSize="12sp"
-        android:maxLines="2"
-        android:maxEms="10"
-        android:ellipsize="end"
-        android:text="这是一个描述这个菜谱的测试语句这是一个描述这个菜谱"
-        android:id="@+id/shoppingRecipeIntro">
-    </TextView>
-
-    <TextView
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toRightOf="@id/shoppingRecipeImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginBottom="5dp"
-        android:textSize="12sp"
-        android:textColor="#FF4500"
-        android:text="￥999"
-        android:id="@+id/shoppingRecipePrice">
-    </TextView>
-
-    <CheckBox
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:id="@+id/shoppingRecipeCheck"
-        android:layout_marginRight="15dp">
-    </CheckBox>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
