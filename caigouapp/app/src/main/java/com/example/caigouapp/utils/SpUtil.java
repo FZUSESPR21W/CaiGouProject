@@ -76,7 +76,7 @@ public class SpUtil {
      * @return
      */
     public String getString(String key, String defValue) {
-        return preferences.getString(key, "defValue");
+        return preferences.getString(key, defValue);
     }
 
     public boolean getBoolean(String key, boolean defValue) {
