@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.caigouapp.R;
-import com.example.caigouapp.Step;
 
 import java.util.ArrayList;
 

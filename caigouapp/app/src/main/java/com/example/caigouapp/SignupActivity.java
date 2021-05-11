@@ -9,6 +9,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.caigouapp.data.UserResponse;
 import com.example.caigouapp.databinding.ActivitySignupBinding;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.UserServices;
@@ -77,16 +79,16 @@ public class SignupActivity extends AppCompatActivity {
                             .baseUrl(Constant.URL_BASE)
                             .build();
                     UserServices userServices = retrofit.create(UserServices.class);
-                    Call<ResponseBody> call = userServices.getSignupUser(account,password);
-                    call.enqueue(new Callback<ResponseBody>() {
+                    Call<UserResponse> call = userServices.getSignupUser(account,password);
+                    call.enqueue(new Callback<UserResponse>() {
                         @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                        public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                             if (response.isSuccessful()){
                                 Toast.makeText(SignupActivity.this,"注册成功！请登陆",Toast.LENGTH_SHORT).show();
                             }
                         }
                         @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        public void onFailure(Call<UserResponse> call, Throwable t) {
                             Log.d("SignupActivity","error");
                         }
                     });
