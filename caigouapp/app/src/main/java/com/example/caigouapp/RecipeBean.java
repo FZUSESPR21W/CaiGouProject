@@ -20,6 +20,15 @@ public class RecipeBean implements Serializable {
         this.step = step;
     }
 
+    public RecipeBean(RecipeBean bean){
+        this.name = bean.name;
+        this.intro = bean.intro;
+        this.price = bean.price;
+        this.ingredient = bean.ingredient;
+        this.side_ingredient = bean.side_ingredient;
+        this.step = bean.step;
+    }
+
     public String getName() {
         return name;
     }

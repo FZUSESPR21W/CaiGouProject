@@ -98,9 +98,11 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
             }
         });
         holder.itemView.setOnClickListener(view -> {
-            Intent intent = new Intent(mContext, RecipeDetailActivity.class);
-            intent.putExtra("recipe",list.get(position));
-            mContext.startActivity(intent);
+            if (!open){
+                Intent intent = new Intent(mContext, RecipeDetailActivity.class);
+                intent.putExtra("recipe",list.get(position));
+                mContext.startActivity(intent);
+            }
         });
     }
 

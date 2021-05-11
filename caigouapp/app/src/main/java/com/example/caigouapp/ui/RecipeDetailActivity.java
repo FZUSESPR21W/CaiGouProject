@@ -3,8 +3,10 @@ package com.example.caigouapp.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.example.caigouapp.Ingredient;
 import com.example.caigouapp.MainActivity;
@@ -61,6 +63,15 @@ public class RecipeDetailActivity extends AppCompatActivity {
         RecipeStepAdapter stepAdapter = new RecipeStepAdapter((ArrayList<String>) data.getStep());
         binding.stepRv.setAdapter(stepAdapter);
         binding.sideIngredientGv.setAdapter(new SideIngredientGridAdapter((ArrayList<Ingredient>) data.getSide_ingredient()));
+        binding.addButton.setOnClickListener(view -> {
+            if(ingredientAdapter.getSendList().size() == 0){
+                Toast.makeText(this,"您还没有选择要购买的商品！",Toast.LENGTH_SHORT).show();
+            }
+            else {
+                RecipeDialog dialog = new RecipeDialog(ingredientAdapter.getSendList(), data);
+                dialog.show(getSupportFragmentManager(), "tag");
+            }
+        });
         binding.toCarButton.setOnClickListener(view -> {
             Intent intent = new Intent(this, MainActivity.class);
             intent.putExtra("shoppingCar",1);

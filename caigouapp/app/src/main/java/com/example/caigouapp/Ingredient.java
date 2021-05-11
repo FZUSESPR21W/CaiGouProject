@@ -4,11 +4,31 @@ import java.io.Serializable;
 
 public class Ingredient implements Serializable {
     private String name;
-    private String portion;
 
-    public Ingredient(String name, String portion) {
-        this.name = name;
+    public String getWeight() {
+        return weight;
+    }
+
+    public void setWeight(String weight) {
+        this.weight = weight;
+    }
+
+    public int getPortion() {
+        return portion;
+    }
+
+    public void setPortion(int portion) {
         this.portion = portion;
+    }
+
+    private String weight;
+    private int portion;
+
+
+    public Ingredient(String name, String weight) {
+        this.name = name;
+        this.weight = weight;
+        this.portion = 1;
     }
 
     public String getName() {
@@ -17,13 +37,5 @@ public class Ingredient implements Serializable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getPortion() {
-        return portion;
-    }
-
-    public void setPortion(String portion) {
-        this.portion = portion;
     }
 }
