@@ -3,13 +3,10 @@ package com.example.caigouapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -86,46 +83,24 @@ public class SignupActivity extends AppCompatActivity {
                     call.enqueue(new Callback<UserResponse>() {
                         @Override
                         public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                            if (response.isSuccessful() && response.body().getCode().equals("200")){
-                                Toast.makeText(SignupActivity.this,"注册成功！即将跳转登陆",Toast.LENGTH_SHORT).show();
-
-                                mHandler.sendEmptyMessageDelayed(0,1500);
-                                //Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-                                //startActivity(intent);
-                                //finish();
-                                finishActivity(1);
-                            }
-                            else if (response.body().getCode().equals("1001")){
-                                Toast.makeText(SignupActivity.this,"用户已存在，请直接登录",Toast.LENGTH_SHORT).show();
+                            if (response.isSuccessful()){
+                                Toast.makeText(SignupActivity.this,"注册成功！请登陆",Toast.LENGTH_SHORT).show();
                             }
                         }
-
                         @Override
                         public void onFailure(Call<UserResponse> call, Throwable t) {
-                            Log.d("SignupActivity error:",t.toString());
+                            Log.d("SignupActivity","error");
                         }
                     });
+
                 }
             }
         });
         binding.findPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
             }
         });
-    }
-
-    private Handler mHandler = new Handler(){
-        @Override
-        public void handleMessage(@NonNull Message msg) {
-            toLoginActivity();
-            super.handleMessage(msg);
-        }
-    };
-
-    public void toLoginActivity(){
-        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
-        startActivity(intent);
     }
 }

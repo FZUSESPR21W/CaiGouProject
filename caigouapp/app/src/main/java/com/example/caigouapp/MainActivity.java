@@ -19,6 +19,9 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navView = findViewById(R.id.nav_view);
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupWithNavController(navView, navController);
+        if(getIntent().getIntExtra("shoppingCar",0) != 0){
+            navController.navigate(R.id.navigation_shopping);
+        }
     }
 
 }

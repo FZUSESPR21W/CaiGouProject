@@ -38,7 +38,9 @@ public class LoginActivity extends AppCompatActivity {
             startActivityForResult(intent,1);
         });
         binding.btn.setOnClickListener(view -> {
-            account = binding.userAccount.getText().toString();
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            /*account = binding.userAccount.getText().toString();
             password = binding.userPwd.getText().toString();
 
             if(account.equals("")){
@@ -82,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 });
 
-            }
+            }*/
         });
     }
 }

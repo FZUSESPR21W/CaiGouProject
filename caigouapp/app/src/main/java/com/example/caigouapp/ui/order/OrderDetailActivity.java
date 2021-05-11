@@ -1,9 +1,12 @@
-package com.unoni.login;
+package com.example.caigouapp.ui.order;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.caigouapp.R;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +22,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
 
-        list = CourseFragment.getOrderList();
+        list = OrderFragment.getOrderList();
         mOrder = list.get(2);
         mIcon = mOrder.getIcons();
 
