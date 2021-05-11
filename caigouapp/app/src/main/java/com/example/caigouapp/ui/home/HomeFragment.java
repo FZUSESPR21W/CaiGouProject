@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class    HomeFragment extends Fragment {
+public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
 
@@ -46,7 +46,7 @@ public class    HomeFragment extends Fragment {
                 R.drawable.zhe,
                 R.drawable.xiang,
                 R.drawable.su));
-        binding.gvCaixi.setAdapter(new GridViewAdapter(styleList));
+        binding.gvCaixi.setAdapter(new GridViewAdapter(styleList,getContext()));
         binding.toobar.tvSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

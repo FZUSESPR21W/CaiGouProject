@@ -1,5 +1,7 @@
 package com.example.caigouapp.ui.home;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,15 +9,19 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
 import com.example.caigouapp.R;
+import com.example.caigouapp.ui.SearchActivity;
 
 import java.util.ArrayList;
 
 class GridViewAdapter extends BaseAdapter {
 
     private ArrayList<Integer> picList;
+    private String[] nameArr = {"闽菜","徽菜","鲁菜","粤菜","川菜","浙菜","湘菜","苏菜"};
+    private Context context;
 
-    public GridViewAdapter(ArrayList<Integer> picList) {
+    public GridViewAdapter(ArrayList<Integer> picList, Context context) {
         this.picList = picList;
+        this.context = context;
     }
 
     @Override
@@ -44,6 +50,11 @@ class GridViewAdapter extends BaseAdapter {
             viewHolder.itemImg = (ImageView) convertView.findViewById(R.id.iv_item);
             convertView.setTag(viewHolder);
             viewHolder.itemImg.setImageResource(picList.get(position));
+            viewHolder.itemImg.setOnClickListener(v -> {
+                Intent intent = new Intent(context, SearchActivity.class);
+                intent.putExtra("tag",nameArr[position]);
+                context.startActivity(intent);
+            });
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
