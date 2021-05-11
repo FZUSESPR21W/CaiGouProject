@@ -6,4 +6,107 @@
     android:layout_height="match_parent"
     tools:context=".ui.mine.MineFragment">
 
+    <TextView
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="56dp"
+        android:text="菜购用户1"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toEndOf="@+id/user_pic"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/user_sig"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="32dp"
+        android:background="@color/white"
+        android:drawableRight="@drawable/ic_baseline_edit_24"
+        android:drawablePadding="10dp"
+        android:hint="点这里可以添加个性签名"
+        android:textSize="18sp"
+        app:layout_constraintStart_toEndOf="@+id/user_pic"
+        app:layout_constraintTop_toBottomOf="@+id/user_name" />
+
+    <ImageView
+        android:id="@+id/user_pic"
+        android:layout_width="107dp"
+        android:layout_height="119dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="28dp"
+        android:src="@drawable/user"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/logout"
+        android:layout_width="377dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginBottom="76dp"
+        android:text="退出登录"
+        app:backgroundTint="#F44336"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/address_edit"
+        android:layout_width="332dp"
+        android:layout_height="102dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="220dp"
+        android:background="@drawable/shape_corner"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+        <TextView
+            android:layout_width="332dp"
+            android:layout_height="24dp"
+            android:drawableLeft="@drawable/ic_baseline_house_24"
+            android:drawableRight="@drawable/ic_baseline_edit_24"
+            android:drawablePadding="10dp"
+            android:text="地址管理"></TextView>
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"></ListView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="335dp"
+        android:layout_height="130dp"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp"
+        android:layout_marginTop="364dp"
+        android:background="@drawable/shape_corner"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tag_choose_tv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_baseline_label_24"
+            android:drawableRight="@drawable/ic_baseline_edit_24"
+            android:drawablePadding="10dp"
+            android:text="我订阅的标签"></TextView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mine_tag_rv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
