@@ -8,10 +8,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.caigouapp.Ingredient;
 import com.example.caigouapp.MainActivity;
 import com.example.caigouapp.R;
 import com.example.caigouapp.RecipeBean;
+import com.example.caigouapp.Step;
 import com.example.caigouapp.databinding.ActivityRecipeDetailBinding;
 import com.example.caigouapp.ui.adapter.IngredientAdapter;
 import com.example.caigouapp.ui.adapter.RecipeStepAdapter;
@@ -42,6 +44,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             finish();
         });
         binding.recipeName.setText(data.getName());
+        Glide.with(this).load(data.getImageUrl()).error(R.drawable.hui).into(binding.recipeImage);
         LinearLayoutManager layoutManager1 = new LinearLayoutManager(this){
             @Override
             public boolean canScrollVertically() {
@@ -60,7 +63,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             }
         };
         binding.stepRv.setLayoutManager(layoutManager2);
-        RecipeStepAdapter stepAdapter = new RecipeStepAdapter((ArrayList<String>) data.getStep());
+        RecipeStepAdapter stepAdapter = new RecipeStepAdapter((ArrayList<Step>) data.getStep(),this);
         binding.stepRv.setAdapter(stepAdapter);
         binding.sideIngredientGv.setAdapter(new SideIngredientGridAdapter((ArrayList<Ingredient>) data.getSide_ingredient()));
         binding.addButton.setOnClickListener(view -> {

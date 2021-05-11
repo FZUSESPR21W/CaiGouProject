@@ -7,14 +7,16 @@ public class RecipeBean implements Serializable {
     private String name;
     private String intro;
     private double price;
+    private String imageUrl;
     private List<Ingredient> ingredient;
     private List<Ingredient> side_ingredient;
-    private List<String> step;
+    private List<Step> step;
 
-    public RecipeBean(String name, String intro, double price, List<Ingredient> ingredient, List<Ingredient> side_ingredient, List<String> step) {
+    public RecipeBean(String name, String intro, double price,String url, List<Ingredient> ingredient, List<Ingredient> side_ingredient, List<Step> step) {
         this.name = name;
         this.intro = intro;
         this.price = price;
+        this.imageUrl = url;
         this.ingredient = ingredient;
         this.side_ingredient = side_ingredient;
         this.step = step;
@@ -24,6 +26,7 @@ public class RecipeBean implements Serializable {
         this.name = bean.name;
         this.intro = bean.intro;
         this.price = bean.price;
+        this.imageUrl = bean.imageUrl;
         this.ingredient = bean.ingredient;
         this.side_ingredient = bean.side_ingredient;
         this.step = bean.step;
@@ -69,15 +72,21 @@ public class RecipeBean implements Serializable {
         this.side_ingredient = side_ingredient;
     }
 
-    public List<String> getStep() {
+    public List<Step> getStep() {
         return step;
     }
 
-    public void setStep(List<String> step) {
+    public void setStep(List<Step> step) {
         this.step = step;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
 
 }

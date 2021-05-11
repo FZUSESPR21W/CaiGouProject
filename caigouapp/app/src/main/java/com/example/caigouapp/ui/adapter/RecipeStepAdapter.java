@@ -1,5 +1,6 @@
 package com.example.caigouapp.ui.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,15 +10,19 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.caigouapp.R;
+import com.example.caigouapp.Step;
 
 import java.util.ArrayList;
 
 public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.ViewHolder> {
 
-    private ArrayList<String> stepList = new ArrayList<>();
+    private ArrayList<Step> stepList = new ArrayList<>();
+    private Context mContext;
 
-    public RecipeStepAdapter(ArrayList<String> list){
+    public RecipeStepAdapter(ArrayList<Step> list, Context context){
+        mContext = context;
         stepList.clear();
         stepList.addAll(list);
     }
@@ -33,8 +38,8 @@ public class RecipeStepAdapter extends RecyclerView.Adapter<RecipeStepAdapter.Vi
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String step = "步骤"+ (position + 1);
         holder.stepNum.setText(step);
-        holder.stepImage.setImageResource(R.drawable.zhe);
-        holder.stepContent.setText(stepList.get(position));
+        Glide.with(mContext).load(stepList.get(position).getImgUrl()).error(R.drawable.hui).into(holder.stepImage);
+        holder.stepContent.setText(stepList.get(position).getContent());
     }
 
     @Override

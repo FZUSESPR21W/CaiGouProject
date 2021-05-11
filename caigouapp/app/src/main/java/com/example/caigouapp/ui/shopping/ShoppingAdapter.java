@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.caigouapp.Ingredient;
 import com.example.caigouapp.R;
 import com.example.caigouapp.RecipeBean;
@@ -52,7 +53,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeBean recipeBean = list.get(position);
         String str = "￥"+recipeBean.getPrice();
-        holder.recipeImage.setImageResource(R.mipmap.ic_launcher_round);
+        Glide.with(mContext).load(recipeBean.getImageUrl()).error(R.drawable.hui).into(holder.recipeImage);
         if(open){
             holder.showButton.setVisibility(View.GONE);
             holder.recipeCheck.setVisibility(View.VISIBLE);
