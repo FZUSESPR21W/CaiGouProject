@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.caigouapp.databinding.ActivitySignupBinding;
 import com.example.caigouapp.http.Constant;
-import com.example.caigouapp.http.RequestServices;
+import com.example.caigouapp.http.UserServices;
 import com.example.caigouapp.utils.SpUtil;
 
 import okhttp3.ResponseBody;
@@ -76,8 +76,8 @@ public class SignupActivity extends AppCompatActivity {
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl(Constant.URL_BASE)
                             .build();
-                    RequestServices requestServices = retrofit.create(RequestServices.class);
-                    Call<ResponseBody> call = requestServices.getSignupUser(account,password);
+                    UserServices userServices = retrofit.create(UserServices.class);
+                    Call<ResponseBody> call = userServices.getSignupUser(account,password);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
