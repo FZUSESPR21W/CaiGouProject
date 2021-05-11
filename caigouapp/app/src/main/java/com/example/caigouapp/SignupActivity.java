@@ -3,12 +3,17 @@ package com.example.caigouapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.caigouapp.data.UserResponse;
 import com.example.caigouapp.databinding.ActivitySignupBinding;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.UserServices;
@@ -77,28 +82,50 @@ public class SignupActivity extends AppCompatActivity {
                             .baseUrl(Constant.URL_BASE)
                             .build();
                     UserServices userServices = retrofit.create(UserServices.class);
-                    Call<ResponseBody> call = userServices.getSignupUser(account,password);
-                    call.enqueue(new Callback<ResponseBody>() {
+                    Call<UserResponse> call = userServices.getSignupUser(account,password);
+                    call.enqueue(new Callback<UserResponse>() {
                         @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            if (response.isSuccessful()){
-                                Toast.makeText(SignupActivity.this,"注册成功！请登陆",Toast.LENGTH_SHORT).show();
+                        public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                            if (response.isSuccessful() && response.body().getCode().equals("200")){
+                                Toast.makeText(SignupActivity.this,"注册成功！即将跳转登陆",Toast.LENGTH_SHORT).show();
+
+                                mHandler.sendEmptyMessageDelayed(0,1500);
+                                //Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                                //startActivity(intent);
+                                //finish();
+                                finishActivity(1);
+                            }
+                            else if (response.body().getCode().equals("1001")){
+                                Toast.makeText(SignupActivity.this,"用户已存在，请直接登录",Toast.LENGTH_SHORT).show();
                             }
                         }
+
                         @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            Log.d("SignupActivity","error");
+                        public void onFailure(Call<UserResponse> call, Throwable t) {
+                            Log.d("SignupActivity error:",t.toString());
                         }
                     });
-
                 }
             }
         });
         binding.findPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                
             }
         });
+    }
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            toLoginActivity();
+            super.handleMessage(msg);
+        }
+    };
+
+    public void toLoginActivity(){
+        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+        startActivity(intent);
     }
 }

@@ -35,7 +35,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.userPwd.setText(spPwd);
         binding.signup.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent,1);
         });
         binding.btn.setOnClickListener(view -> {
             account = binding.userAccount.getText().toString();
@@ -62,6 +62,9 @@ public class LoginActivity extends AppCompatActivity {
                             sp.putString("password",password);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
+                        }
+                        else if (response.body().getCode().equals("1003")){
+                            Toast.makeText(LoginActivity.this,"密码错误，登录失败",Toast.LENGTH_SHORT).show();
                         }else{
                             runOnUiThread(() -> {
                                 Toast.makeText(LoginActivity.this,response.body().getMsg(),Toast.LENGTH_SHORT).show();
@@ -71,9 +74,9 @@ public class LoginActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<UserResponse> call, Throwable t) {
-                        Log.d("LoginActivity","error");
+                        Log.d("LoginActivity error:",t.toString());
                         runOnUiThread(() -> {
-                            Toast.makeText(LoginActivity.this,"登录失败",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this,"请求失败",Toast.LENGTH_SHORT).show();
                         });
                     }
 
