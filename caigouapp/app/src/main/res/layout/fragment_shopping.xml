@@ -33,6 +33,7 @@
             android:layout_marginRight="25dp"
             android:background="@drawable/bg_button"
             android:text="管理"
+            android:textColor="@color/white"
             android:id="@+id/manageButton"
             android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
@@ -116,6 +117,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginBottom="12dp"
             android:text="提交订单"
+            android:textColor="@color/white"
             android:background="@drawable/bg_button"
             android:id="@+id/submitButton">
         </Button>

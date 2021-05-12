@@ -5,16 +5,17 @@ import java.util.List;
 
 public class RecipeBean implements Serializable {
     private String name;
-    private String intro;
+    private String tag;
     private double price;
     private String imageUrl;
+    private int status;
     private List<Ingredient> ingredient;
     private List<Ingredient> side_ingredient;
     private List<Step> step;
 
-    public RecipeBean(String name, String intro, double price,String url, List<Ingredient> ingredient, List<Ingredient> side_ingredient, List<Step> step) {
+    public RecipeBean(String name, String tag, double price,String url, List<Ingredient> ingredient, List<Ingredient> side_ingredient, List<Step> step) {
         this.name = name;
-        this.intro = intro;
+        this.tag = tag;
         this.price = price;
         this.imageUrl = url;
         this.ingredient = ingredient;
@@ -24,7 +25,7 @@ public class RecipeBean implements Serializable {
 
     public RecipeBean(RecipeBean bean){
         this.name = bean.name;
-        this.intro = bean.intro;
+        this.tag = bean.tag;
         this.price = bean.price;
         this.imageUrl = bean.imageUrl;
         this.ingredient = bean.ingredient;
@@ -40,12 +41,12 @@ public class RecipeBean implements Serializable {
         this.name = name;
     }
 
-    public String getIntro() {
-        return intro;
+    public String getTag() {
+        return tag;
     }
 
-    public void setIntro(String intro) {
-        this.intro = intro;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public double getPrice() {

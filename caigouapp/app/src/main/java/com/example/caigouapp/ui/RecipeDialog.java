@@ -1,9 +1,11 @@
 package com.example.caigouapp.ui;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +40,8 @@ public class RecipeDialog extends DialogFragment {
         recipe = new RecipeBean(data);
     }
 
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -45,11 +49,12 @@ public class RecipeDialog extends DialogFragment {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
         getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         getDialog().getWindow().getDecorView().setBackgroundColor(Color.TRANSPARENT);
-
+        DisplayMetrics dm = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
         // 遮罩层透明度
         getDialog().getWindow().setDimAmount(0);
         WindowManager.LayoutParams params = window.getAttributes();
-        params.width = WindowManager.LayoutParams.MATCH_PARENT;
+        params.width = (int) (dm.widthPixels * 0.95);
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
         params.gravity = Gravity.CENTER_HORIZONTAL;
         getDialog().getWindow().setAttributes(params);

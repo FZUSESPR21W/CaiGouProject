@@ -75,7 +75,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
             map.clear();
         }
         holder.recipeName.setText(recipeBean.getName());
-        holder.recipeIntro.setText(recipeBean.getIntro());
+        holder.recipeIntro.setText(recipeBean.getTag());
         holder.recipePrice.setText(str);
         holder.recipeIngredient.setLayoutManager(new LinearLayoutManager(mContext));
         holder.recipeIngredient.setAdapter(new PersonalIngredientAdapter((ArrayList<Ingredient>) recipeBean.getIngredient()));
