@@ -1,8 +1,6 @@
 package com.example.caigouapp.data;
 
-import java.io.Serializable;
-
-public class UserResponse implements Serializable {
+public class UserResponse {
 
     private String msg;
     private String code;
@@ -41,7 +39,7 @@ public class UserResponse implements Serializable {
         this.token = token;
     }
 
-    public class DataBean implements Serializable {
+    public class DataBean {
 
         private int id;
         private String user_name;

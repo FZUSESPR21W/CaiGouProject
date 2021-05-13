@@ -36,7 +36,9 @@ public class PersonalIngredientAdapter extends RecyclerView.Adapter<PersonalIngr
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Ingredient ingredient = ingredientList.get(position);
         holder.ingredientName.setText(ingredient.getName());
-        holder.ingredientWeight.setText(ingredient.getPortion());
+        holder.ingredientWeight.setText(ingredient.getWeight());
+        String portion = "× " + ingredient.getPortion();
+        holder.ingredientPortion.setText(portion);
     }
 
     @Override
@@ -47,11 +49,13 @@ public class PersonalIngredientAdapter extends RecyclerView.Adapter<PersonalIngr
     class ViewHolder extends RecyclerView.ViewHolder{
         TextView ingredientName;
         TextView ingredientWeight;
+        TextView ingredientPortion;
 
         public ViewHolder(View itemView){
             super(itemView);
             ingredientName = (TextView)itemView.findViewById(R.id.personalIngredientName);
             ingredientWeight = (TextView)itemView.findViewById(R.id.personalIngredientWeight);
+            ingredientPortion = (TextView)itemView.findViewById(R.id.personalIngredientPortion);
         }
     }
 }

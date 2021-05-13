@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import com.example.caigouapp.R;
@@ -47,12 +49,9 @@ public class HomeFragment extends Fragment {
                 R.drawable.xiang,
                 R.drawable.su));
         binding.gvCaixi.setAdapter(new GridViewAdapter(styleList,getContext()));
-        binding.toobar.tvSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), SearchActivity.class);
-                startActivity(intent);
-            }
+        binding.clTop.setOnClickListener((View.OnClickListener) v -> {
+            Intent intent = new Intent(getActivity(), SearchActivity.class);
+            startActivity(intent);
         });
     }
 }

@@ -52,7 +52,7 @@ class GridViewAdapter extends BaseAdapter {
             viewHolder.itemImg.setImageResource(picList.get(position));
             viewHolder.itemImg.setOnClickListener(v -> {
                 Intent intent = new Intent(context, SearchActivity.class);
-                intent.putExtra("tag",nameArr[position]);
+                intent.putExtra("content",nameArr[position]);
                 context.startActivity(intent);
             });
         } else {

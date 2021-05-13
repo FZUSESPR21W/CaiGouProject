@@ -1,5 +1,6 @@
 package com.example.caigouapp.ui.shopping;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,44 +13,124 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.caigouapp.Ingredient;
+import com.example.caigouapp.MainActivity;
 import com.example.caigouapp.R;
 import com.example.caigouapp.RecipeBean;
+import com.example.caigouapp.Step;
+import com.example.caigouapp.data.CartResponse;
+import com.example.caigouapp.data.CommonResponse;
 import com.example.caigouapp.databinding.FragmentShoppingBinding;
+import com.example.caigouapp.http.CartServices;
+import com.example.caigouapp.http.Constant;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class ShoppingFragment extends Fragment {
 
     private FragmentShoppingBinding binding;
     private List<RecipeBean> list = new ArrayList<>();
     private List<Ingredient> ingredient = new ArrayList<>();
-    private List<Ingredient> side_ingredient = new ArrayList<>();
-    private List<String> step = new ArrayList<>();
+    private List<Ingredient> sideIngredient = new ArrayList<>();
+    private List<Step> step = new ArrayList<>();
     private ShoppingAdapter adapter;
     private double totalPrice = 0;
+    private int userId = 1;
     DecimalFormat df = new DecimalFormat( "0.00");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentShoppingBinding.inflate(getLayoutInflater());
+        getCartRequest(userId);
         initView();
         return binding.getRoot();
     }
 
+    private void postRequest(int userId){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.URL_BASE)
+                .build();
+        CartServices cartServices = retrofit.create(CartServices.class);
+        Call<CommonResponse> call = cartServices.postOrder(userId);
+        call.enqueue(new Callback<CommonResponse>() {
+            @Override
+            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+                Toast.makeText(getContext(),"已经为您下单啦",Toast.LENGTH_SHORT).show();
+                list.clear();
+            }
+
+            @Override
+            public void onFailure(Call<CommonResponse> call, Throwable t) {
+                Toast.makeText(getContext(),"好像出了一点问题……",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getCartRequest(int userId){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.URL_BASE)
+                .build();
+        CartServices cartServices = retrofit.create(CartServices.class);
+        Call<CartResponse> call = cartServices.getCartDetail(userId);
+        call.enqueue(new Callback<CartResponse>() {
+            @Override
+            public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
+                if(response.body() != null && response.body().getCode() == 200){
+                    double price = 0;
+                    List<CartResponse.DataBean.InfoBean> infoList = response.body().getData().getInfo();
+                    for(CartResponse.DataBean.InfoBean dataBean : infoList){
+                        String[] weight = dataBean.getFood_weight_list().split(",");
+                        String[] portion = dataBean.getMultiple().split(",");
+                        for(int i = 0;i<weight.length;i++){
+                            int major = dataBean.getFood().get(i).getMajor();
+                            Ingredient in = new Ingredient(
+                                    dataBean.getFood().get(i).getIngredient(),
+                                    weight[i],
+                                    dataBean.getFood().get(i).getId(),
+                                    dataBean.getFood().get(i).getPrice());
+                            in.setPortion(Integer.parseInt(portion[i]));
+                            price += dataBean.getFood().get(i).getPrice() * Integer.parseInt(portion[i]);
+                            if(major == 1){
+                                ingredient.add(new Ingredient(in));
+                            }
+                            else if(major == 0){
+                                sideIngredient.add(new Ingredient(in));
+                            }
+                        }
+                        //解析recipe
+                        list.add(new RecipeBean(dataBean.getId(),dataBean.getName(),dataBean.getTags(),0,dataBean.getAvatar(),ingredient,sideIngredient,step));
+                    }
+                }
+                initView();
+            }
+
+            @Override
+            public void onFailure(Call<CartResponse> call, Throwable t) {
+                Toast.makeText(getContext(),"好像出了点问题……",Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     private void initData(){
-        ingredient.add(new Ingredient("西红柿","两个"));
+        /*ingredient.add(new Ingredient("西红柿","两个"));
         ingredient.add(new Ingredient("鸡蛋","一个"));
         side_ingredient.add(new Ingredient("小葱","一把"));
         side_ingredient.add(new Ingredient("盐","少许"));
         side_ingredient.add(new Ingredient("糖","少许"));
         side_ingredient.add(new Ingredient("胡椒","少许"));
         side_ingredient.add(new Ingredient("清水","少许"));
-        step.add("1.放入番茄");
-        step.add("2.放入鸡蛋");
+        step.add(new Step("no","放入番茄"));
+        step.add(new Step("no","放入鸡蛋"));
         for(int i = 0;i<10;i++)
-            list.add(new RecipeBean("测试菜谱"+i,"测试介绍",6.66,ingredient,side_ingredient,step));
+            list.add(new RecipeBean("测试菜谱"+i,"测试介绍",6.66,"no",ingredient,side_ingredient,step));*/
     }
 
     private void countPrice(){
@@ -61,7 +142,6 @@ public class ShoppingFragment extends Fragment {
     }
 
     private void initView(){
-        initData();
         countPrice();
         String str = "共有"+list.size()+"件菜品";
         String price = "￥"+df.format(totalPrice);
@@ -71,36 +151,38 @@ public class ShoppingFragment extends Fragment {
         binding.shoppingCarRv.setLayoutManager(layoutManager);
         adapter = new ShoppingAdapter(list,getContext());
         binding.shoppingCarRv.setAdapter(adapter);
-        binding.manageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(binding.manageButton.getText().equals("管理")){
-                    adapter.open = true;
-                    adapter.notifyDataSetChanged();
-                    binding.manageButton.setText("删除");
-                    binding.total.setVisibility(View.GONE);
-                    binding.submitButton.setVisibility(View.GONE);
-                    binding.shoppingCarTotal.setVisibility(View.GONE);
-                }
-                else if (binding.manageButton.getText().equals("删除")){
-                    int t = list.size();
-                    adapter.delete();
-                    delete();
-                    countPrice();
-                    String price = "￥"+df.format(totalPrice);
-                    String str = "共有"+list.size()+"件菜品";
-                    adapter.open = false;
-                    adapter.notifyDataSetChanged();
-                    binding.shoppingCarTotal.setText(price);
-                    binding.shoppingRecipeTotal.setText(str);
-                    binding.manageButton.setText("管理");
-                    binding.total.setVisibility(View.VISIBLE);
-                    binding.submitButton.setVisibility(View.VISIBLE);
-                    binding.shoppingCarTotal.setVisibility(View.VISIBLE);
-                    Toast.makeText(getContext(),"已经删除了"+(t-list.size())+"个商品",Toast.LENGTH_SHORT).show();
-                }
-            }
+        binding.submitButton.setOnClickListener(view -> {
+            if(list.size() != 0) postRequest(userId);
+            else Toast.makeText(getContext(),"您的购物车还没有东西哦！",Toast.LENGTH_SHORT).show();
         });
+        //管理购物车功能暂不实现
+        /*binding.manageButton.setOnClickListener(view -> {
+            if(binding.manageButton.getText().equals("管理")){
+                adapter.open = true;
+                adapter.notifyDataSetChanged();
+                binding.manageButton.setText("删除");
+                binding.total.setVisibility(View.GONE);
+                binding.submitButton.setVisibility(View.GONE);
+                binding.shoppingCarTotal.setVisibility(View.GONE);
+            }
+            else if (binding.manageButton.getText().equals("删除")){
+                int t = list.size();
+                adapter.delete();
+                delete();
+                countPrice();
+                String price1 = "￥"+df.format(totalPrice);
+                String str1 = "共有"+list.size()+"件菜品";
+                adapter.open = false;
+                adapter.notifyDataSetChanged();
+                binding.shoppingCarTotal.setText(price1);
+                binding.shoppingRecipeTotal.setText(str1);
+                binding.manageButton.setText("管理");
+                binding.total.setVisibility(View.VISIBLE);
+                binding.submitButton.setVisibility(View.VISIBLE);
+                binding.shoppingCarTotal.setVisibility(View.VISIBLE);
+                Toast.makeText(getContext(),"已经删除了"+(t-list.size())+"个商品",Toast.LENGTH_SHORT).show();
+            }
+        });*/
     }
 
     private void delete(){
@@ -110,4 +192,7 @@ public class ShoppingFragment extends Fragment {
             i++;
         }
     }
+
+
+
 }

@@ -12,9 +12,12 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Caigouapp">
-        <activity android:name=".ui.mine.TagChooseActivity"></activity>
-        <activity android:name=".ui.SearchActivity" />
+        android:theme="@style/Theme.Caigouapp"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".ui.mine.TagChooseActivity"/>
+        <activity android:name=".ui.SearchActivity"
+            android:launchMode="singleTask"/>
+        <activity android:name=".ui.RecipeDetailActivity"/>
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
@@ -34,7 +37,6 @@
         <activity
             android:name=".ui.order.OrderDetailActivity"
             android:label="@string/app_name"></activity>
-        <activity android:name=".ui.RecipeDetailActivity"/>
     </application>
 
 </manifest>

@@ -21,11 +21,17 @@ import java.util.TreeMap;
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
     private ArrayList<Ingredient> ingredientList = new ArrayList<>();
     private Map<Integer, Boolean> map = new TreeMap<>();
+
+    public ArrayList<Ingredient> getSendList() {
+        return sendList;
+    }
+
     public ArrayList<Ingredient> sendList = new ArrayList<>();
 
     public IngredientAdapter(ArrayList<Ingredient> list){
         ingredientList.clear();
         ingredientList.addAll(list);
+        sendList.addAll(list);
         for(int i = 0;i<ingredientList.size();i++){
             map.put(i,true);
         }
@@ -42,7 +48,7 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
     public void onBindViewHolder(@NonNull IngredientAdapter.ViewHolder holder, int position) {
         Ingredient ingredient = ingredientList.get(position);
         holder.ingredientName.setText(ingredient.getName());
-        holder.ingredientWeight.setText(ingredient.getPortion());
+        holder.ingredientWeight.setText(ingredient.getWeight());
         holder.ingredientCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

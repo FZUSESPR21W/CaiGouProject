@@ -4,20 +4,44 @@ import java.io.Serializable;
 import java.util.List;
 
 public class RecipeBean implements Serializable {
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     private String name;
-    private String intro;
+    private String tag;
     private double price;
+    private String imageUrl;
     private List<Ingredient> ingredient;
     private List<Ingredient> side_ingredient;
-    private List<String> step;
+    private List<Step> step;
 
-    public RecipeBean(String name, String intro, double price, List<Ingredient> ingredient, List<Ingredient> side_ingredient, List<String> step) {
+    public RecipeBean(int id,String name, String tag, double price,String url, List<Ingredient> ingredient, List<Ingredient> side_ingredient, List<Step> step) {
+        this.id = id;
         this.name = name;
-        this.intro = intro;
+        this.tag = tag;
         this.price = price;
+        this.imageUrl = url;
         this.ingredient = ingredient;
         this.side_ingredient = side_ingredient;
         this.step = step;
+    }
+
+    public RecipeBean(RecipeBean bean){
+        this.id = bean.id;
+        this.name = bean.name;
+        this.tag = bean.tag;
+        this.price = bean.price;
+        this.imageUrl = bean.imageUrl;
+        this.ingredient = bean.ingredient;
+        this.side_ingredient = bean.side_ingredient;
+        this.step = bean.step;
     }
 
     public String getName() {
@@ -28,12 +52,12 @@ public class RecipeBean implements Serializable {
         this.name = name;
     }
 
-    public String getIntro() {
-        return intro;
+    public String getTag() {
+        return tag;
     }
 
-    public void setIntro(String intro) {
-        this.intro = intro;
+    public void setTag(String tag) {
+        this.tag = tag;
     }
 
     public double getPrice() {
@@ -60,15 +84,21 @@ public class RecipeBean implements Serializable {
         this.side_ingredient = side_ingredient;
     }
 
-    public List<String> getStep() {
+    public List<Step> getStep() {
         return step;
     }
 
-    public void setStep(List<String> step) {
+    public void setStep(List<Step> step) {
         this.step = step;
     }
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
 
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
 
 
 }

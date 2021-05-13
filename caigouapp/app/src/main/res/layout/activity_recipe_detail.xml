@@ -38,7 +38,7 @@
                 android:background="@drawable/bg_left_button"
                 android:text="加入购物车"
                 android:textStyle="bold"
-                android:textColor="#FF5722"
+                android:textColor="#71CC98"
                 android:id="@+id/addButton">
             </Button>
             <Button

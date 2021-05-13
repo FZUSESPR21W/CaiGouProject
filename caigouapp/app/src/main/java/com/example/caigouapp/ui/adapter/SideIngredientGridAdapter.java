@@ -42,7 +42,7 @@ public class SideIngredientGridAdapter extends BaseAdapter {
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
             viewHolder.tvName.setText(sideIngredientList.get(position).getName());
-            viewHolder.tvWeight.setText(sideIngredientList.get(position).getPortion());
+            viewHolder.tvWeight.setText(sideIngredientList.get(position).getWeight());
         }
         else {
             viewHolder = (ViewHolder) view.getTag();
