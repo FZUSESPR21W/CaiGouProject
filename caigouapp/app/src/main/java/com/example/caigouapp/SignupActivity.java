@@ -3,24 +3,34 @@ package com.example.caigouapp;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.caigouapp.data.UserResponse;
 import com.example.caigouapp.databinding.ActivitySignupBinding;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.UserServices;
 import com.example.caigouapp.utils.SpUtil;
+import com.google.gson.Gson;
 
+import java.util.HashMap;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignupActivity extends AppCompatActivity {
     private ActivitySignupBinding binding;
@@ -36,9 +46,14 @@ public class SignupActivity extends AppCompatActivity {
         mContext = this;
         binding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        Glide.with(this).load(R.drawable.vegetabledoge).into(binding.img);
+        binding.userAccount.clearFocus();
+        binding.userPwd.clearFocus();
+        binding.userPwdConfirm.clearFocus();
         binding.login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SpUtil.getInstance().putString("str","777");
                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                 startActivity(intent);
             }
@@ -68,39 +83,62 @@ public class SignupActivity extends AppCompatActivity {
                 else if(!binding.rb.isChecked()){
                     Toast.makeText(SignupActivity.this,"请勾选阅读相关文件",Toast.LENGTH_SHORT).show();
                 }
-                else if(spAccount.equals(account)){
-                    Toast.makeText(SignupActivity.this,"用户已存在！",Toast.LENGTH_SHORT).show();
-                }
                 else{
-                    //write to isSuccessful
-                        sp.putString("account",account);
-                        sp.putString("password",password);
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl(Constant.URL_BASE)
+                            .addConverterFactory(GsonConverterFactory.create())
                             .build();
                     UserServices userServices = retrofit.create(UserServices.class);
-                    Call<UserResponse> call = userServices.getSignupUser(account,password);
+                    HashMap<String,String> map = new HashMap<>();
+                    map.put("phone",account);
+                    map.put("password",password);
+                    RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),new Gson().toJson(map));
+                    Call<UserResponse> call = userServices.getSignupUser(body);
                     call.enqueue(new Callback<UserResponse>() {
                         @Override
                         public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                             if (response.isSuccessful()){
-                                Toast.makeText(SignupActivity.this,"注册成功！请登陆",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SignupActivity.this,"注册成功！即将跳转登陆",Toast.LENGTH_SHORT).show();
+                                sp.putString("account",account);
+                                sp.putString("password",password);
+                                mHandler.sendEmptyMessageDelayed(0,1500);
+//                                Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+//                                startActivity(intent);
+
+                                //finishActivity(1);
+                            }
+                            else if (response.body().getCode().equals("1001")){
+                                Toast.makeText(SignupActivity.this,"用户已存在，请直接登录",Toast.LENGTH_SHORT).show();
                             }
                         }
+
                         @Override
                         public void onFailure(Call<UserResponse> call, Throwable t) {
-                            Log.d("SignupActivity","error");
+                            Log.d("SignupActivity error:",t.toString());
                         }
                     });
-
                 }
             }
         });
         binding.findPwd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                
             }
         });
+    }
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(@NonNull Message msg) {
+            toLoginActivity();
+            super.handleMessage(msg);
+            finish();
+        }
+    };
+
+    public void toLoginActivity(){
+        Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+        startActivity(intent);
     }
 }

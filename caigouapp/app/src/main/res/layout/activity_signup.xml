@@ -33,6 +33,7 @@
         android:layout_marginTop="50dp"/>
 
     <EditText
+        app:passwordToggleEnabled="true"
         android:background="@drawable/edit_account_style"
         android:id="@+id/user_pwd"
         android:drawableLeft="@drawable/password"
@@ -47,6 +48,7 @@
         android:layout_marginRight="30dp" />
 
     <EditText
+        app:passwordToggleEnabled="true"
         android:background="@drawable/edit_account_style"
         android:id="@+id/user_pwd_confirm"
         android:drawableLeft="@drawable/password"
