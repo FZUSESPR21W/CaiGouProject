@@ -16,11 +16,22 @@ public class UserOrder {
     private int id;
     @Column(name = "user_id")
     private int user_id;
+//    @Column()
     private String remark;
     private int status;
-    private String menus;
+    private String custom_menuid_list;
     private int store_id;
     private Double price;
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    private String address;
 
     public int getStore_id() {
         return store_id;
@@ -62,12 +73,12 @@ public class UserOrder {
         this.status = status;
     }
 
-    public String getMenus() {
-        return menus;
+    public String getCustom_menuid_list() {
+        return custom_menuid_list;
     }
 
-    public void setMenus(String menus) {
-        this.menus = menus;
+    public void setCustom_menuid_list(String menus) {
+        this.custom_menuid_list = menus;
     }
 
     public Double getPrice() {
