@@ -1,5 +1,7 @@
 package com.example.caigou_alpha.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -12,6 +14,7 @@ public class User {
 
     private String user_name;
     private String account_num;
+    @JsonIgnore
     private String password;
     private String phone;
     private String signature;

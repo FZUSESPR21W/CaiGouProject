@@ -1,7 +1,9 @@
 package com.example.caigou_alpha.controller;
 
+import com.example.caigou_alpha.annotation.UserLoginToken;
 import com.example.caigou_alpha.common.Result;
 import com.example.caigou_alpha.entity.User;
+import com.example.caigou_alpha.service.TokenService;
 import com.example.caigou_alpha.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +27,13 @@ public class UserController {
      * @return null or 用户信息
      */
 
+    @UserLoginToken
     @GetMapping("/findOrderUser/{userId}")
     public Result<User>  findOrderUser(@PathVariable Integer userId){
         return Result.success(userService.findOrderUser(userId));
     }
+
+
+
+
 }

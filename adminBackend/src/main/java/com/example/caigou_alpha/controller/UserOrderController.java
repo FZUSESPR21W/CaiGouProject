@@ -1,6 +1,7 @@
 package com.example.caigou_alpha.controller;
 
 
+import com.example.caigou_alpha.annotation.UserLoginToken;
 import com.example.caigou_alpha.common.Result;
 import com.example.caigou_alpha.entity.UserOrder;
 import com.example.caigou_alpha.entity.UserOrderInfoListAll;
@@ -29,11 +30,17 @@ public class UserOrderController {
      * @param pageNum(分页显示的页数）
      * @return Page<UserOrder>该页的内容
      */
+    @UserLoginToken
     @GetMapping("/findAll/{pageNum}")
     public Result<Page<UserOrder>> findAll(@PathVariable Integer pageNum){
         return Result.success(orderService.findPage(pageNum,5));
     }
 
+    /**
+     * /order/findAll1
+     * @return
+     */
+    @UserLoginToken
     @GetMapping("/findAll1")
     public UserOrderInfoListAll findAll2(){
         return userOrderService.getUserOrderInfo();

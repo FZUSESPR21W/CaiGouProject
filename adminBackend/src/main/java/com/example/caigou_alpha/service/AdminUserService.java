@@ -18,4 +18,8 @@ public class AdminUserService {
     public AdminUser findByAccount(Integer account){
         return adminuserDao.findByAccount(account);
     }
+
+    public AdminUser findByName(String name){
+        return adminuserDao.findByName(name);
+    }
 }

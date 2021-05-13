@@ -1,5 +1,6 @@
 package com.example.caigou_alpha.controller;
 
+import com.example.caigou_alpha.annotation.UserLoginToken;
 import com.example.caigou_alpha.common.Result;
 import com.example.caigou_alpha.entity.Menu;
 import com.example.caigou_alpha.entity.UserOrder;
@@ -25,6 +26,7 @@ public class MenuController {
      * @param pageNum
      * @return  Page<Menu>该页的内容
      */
+    @UserLoginToken
     @GetMapping("/findAll/{pageNum}")
     public Result<Page<Menu>> findAll(@PathVariable Integer pageNum){
         return Result.success(menuService.findPage(pageNum,5));
@@ -37,6 +39,7 @@ public class MenuController {
      * @param name
      * @return  Page<Menu>该页的内容
      */
+    @UserLoginToken
     @GetMapping("/findLike")
     public Result<Page<Menu>> findMenuLike( @RequestParam(required = true)Integer pageNum,@RequestParam(required = true)String name){
         return Result.success(menuService.findLike(pageNum,5,name));
@@ -49,6 +52,7 @@ public class MenuController {
      * @return
      */
 
+    @UserLoginToken
     @PostMapping("/addMenu")
     public Result add(Menu menu){
         menuService.save(menu);
@@ -61,6 +65,7 @@ public class MenuController {
      * @param menu
      * @return
      */
+    @UserLoginToken
     @PutMapping("/updateMenu")
     public Result update(Menu menu){
         menuService.save(menu);
@@ -73,6 +78,7 @@ public class MenuController {
      * @param id
      * @return
      */
+    @UserLoginToken
     @DeleteMapping("/deleteMenu/{id}")
     public Result delete(@PathVariable Integer id){
         menuService.del(id);

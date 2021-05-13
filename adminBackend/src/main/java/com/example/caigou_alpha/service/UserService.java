@@ -15,4 +15,11 @@ public class UserService {
     public User findOrderUser(Integer userId){
         return userDao.findOrder(userId);
     }
+
+    public User findUserById(String userId) {
+        int i = Integer.parseInt(userId);
+
+        return userDao.findById(i).orElse(null);
+    }
+
 }
