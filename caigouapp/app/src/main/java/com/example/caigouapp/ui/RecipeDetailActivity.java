@@ -14,13 +14,23 @@ import com.example.caigouapp.MainActivity;
 import com.example.caigouapp.R;
 import com.example.caigouapp.RecipeBean;
 import com.example.caigouapp.Step;
+import com.example.caigouapp.data.RecipeDetailResponse;
 import com.example.caigouapp.databinding.ActivityRecipeDetailBinding;
+import com.example.caigouapp.http.Constant;
+import com.example.caigouapp.http.RecipeServices;
 import com.example.caigouapp.ui.adapter.IngredientAdapter;
 import com.example.caigouapp.ui.adapter.RecipeStepAdapter;
 import com.example.caigouapp.ui.adapter.SideIngredientGridAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
@@ -28,15 +38,78 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private RecipeBean data;
     private ArrayList<Ingredient> ingredient = new ArrayList<>();
     private ArrayList<Ingredient> sideIngredient = new ArrayList<>();
-    private ArrayList<String> step = new ArrayList<>();
+    private ArrayList<Step> step = new ArrayList<>();
+    private int id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRecipeDetailBinding.inflate(getLayoutInflater());
-        data = (RecipeBean) getIntent().getSerializableExtra("recipe");
-        initView();
+        id = getIntent().getIntExtra("id",-1);
+        internetRequest(id);
         setContentView(binding.getRoot());
+    }
+
+    private void internetRequest(int id){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.URL_BASE)
+                .build();
+        RecipeServices recipeServices = retrofit.create(RecipeServices.class);
+        Call<RecipeDetailResponse> call = recipeServices.getRecipeDetail(id);
+        call.enqueue(new Callback<RecipeDetailResponse>() {
+            @Override
+            public void onResponse(Call<RecipeDetailResponse> call, Response<RecipeDetailResponse> response) {
+                if (response.body() != null && response.body().getCode() == 200){
+                    RecipeDetailResponse.DataBean dataBean = response.body().getData();
+                    //解析ingredient
+                    String[] weight = dataBean.getFood_weight_list().split(",");
+                    for(int i = 0;i<weight.length;i++){
+                        int major = dataBean.getFood().get(i).getMajor();
+                        Ingredient in = new Ingredient(
+                                dataBean.getFood().get(i).getIngredient(),
+                                weight[i],
+                                dataBean.getFood().get(i).getId(),
+                                dataBean.getFood().get(i).getPrice());
+                        if(major == 1){
+                            ingredient.add(new Ingredient(in));
+                        }
+                        else if(major == 0){
+                            sideIngredient.add(new Ingredient(in));
+                        }
+                    }
+                    //解析step
+                    String[] steps = dataBean.getMethod().split(" ");
+                    Pattern pattern = Pattern.compile("[0-9]*");
+                    Pattern httpPattern = Pattern.compile("^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+$");
+                    String url = null;
+                    String content = null;
+                    for (String s : steps) {
+                        Matcher isNum = pattern.matcher(s);
+                        Matcher isHttp = httpPattern.matcher(s);
+                        if (!s.equals("步骤") && !isNum.matches()) {
+                            if (isHttp.matches()) {
+                                url = s;
+                            } else {
+                                content = s;
+                            }
+                        }
+                        if(content != null){
+                            step.add(new Step(url,content));
+                            url = null;
+                            content = null;
+                        }
+                    }
+                    //解析recipe
+                    data = new RecipeBean(dataBean.getId(),dataBean.getName(),dataBean.getTags(),0,dataBean.getAvatar(),ingredient,sideIngredient,step);
+                }
+                runOnUiThread(() -> initView());
+            }
+
+            @Override
+            public void onFailure(Call<RecipeDetailResponse> call, Throwable t) {
+                runOnUiThread(() -> Toast.makeText(RecipeDetailActivity.this, "好像出了点问题……", Toast.LENGTH_SHORT).show());
+            }
+        });
     }
 
     private void initView(){
@@ -83,7 +156,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     }
 
     private void initData(){
-        ingredient.add(new Ingredient("西红柿","两个"));
+        /*ingredient.add(new Ingredient("西红柿","两个"));
         ingredient.add(new Ingredient("鸡蛋","一个"));
         sideIngredient.add(new Ingredient("小葱","一把"));
         sideIngredient.add(new Ingredient("盐","少许"));
@@ -91,6 +164,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
         sideIngredient.add(new Ingredient("胡椒","少许"));
         sideIngredient.add(new Ingredient("七彩葫芦藤的种子","少许"));
         step.add("1.放入番茄");
-        step.add("2.放入鸡蛋");
+        step.add("2.放入鸡蛋");*/
     }
 }

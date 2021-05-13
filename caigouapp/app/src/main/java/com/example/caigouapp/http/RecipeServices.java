@@ -11,10 +11,10 @@ import retrofit2.http.POST;
 public interface RecipeServices {
 
     @FormUrlEncoded
-    @POST
+    @POST("menu")
     Call<SearchResponse> searchRecipes(@Field("searchWord") String searchWord);
 
     @FormUrlEncoded
-    @POST
+    @POST("menuInfo")
     Call<RecipeDetailResponse> getRecipeDetail(@Field("id") Integer id);
 }

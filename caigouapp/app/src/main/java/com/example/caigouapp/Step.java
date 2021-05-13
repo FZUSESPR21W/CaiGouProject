@@ -24,6 +24,11 @@ public class Step implements Serializable {
         this.content = content;
     }
 
+    public Step(Step step){
+        this.imgUrl = step.imgUrl;
+        this.content = step.content;
+    }
+
     private String imgUrl;
     private String content;
 }

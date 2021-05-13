@@ -22,6 +22,7 @@ import com.example.caigouapp.RecipeBean;
 import com.example.caigouapp.ui.RecipeDetailActivity;
 import com.example.caigouapp.ui.adapter.PersonalIngredientAdapter;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
     private Map<Integer, Boolean> map = new TreeMap<>();
     public boolean open = false;
     private Context mContext;
+    DecimalFormat df = new DecimalFormat( "0.00");
 
     public Map<Integer, Boolean> getMap() {
         return map;
@@ -52,7 +54,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         RecipeBean recipeBean = list.get(position);
-        String str = "￥"+recipeBean.getPrice();
+        String str = "￥"+df.format(recipeBean.getPrice());
         Glide.with(mContext).load(recipeBean.getImageUrl()).error(R.drawable.hui).into(holder.recipeImage);
         if(open){
             holder.showButton.setVisibility(View.GONE);
@@ -101,7 +103,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
         holder.itemView.setOnClickListener(view -> {
             if (!open){
                 Intent intent = new Intent(mContext, RecipeDetailActivity.class);
-                intent.putExtra("recipe",list.get(position));
+                intent.putExtra("id",list.get(position).getId());
                 mContext.startActivity(intent);
             }
         });

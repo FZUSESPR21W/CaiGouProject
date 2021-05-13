@@ -3,7 +3,25 @@ package com.example.caigouapp;
 import java.io.Serializable;
 
 public class Ingredient implements Serializable {
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    private int id;
     private String name;
+    double price;
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     public String getWeight() {
         return weight;
@@ -25,10 +43,20 @@ public class Ingredient implements Serializable {
     private int portion;
 
 
-    public Ingredient(String name, String weight) {
+    public Ingredient(String name, String weight,int id,double price) {
+        this.price = price;
+        this.id = id;
         this.name = name;
         this.weight = weight;
         this.portion = 1;
+    }
+
+    public Ingredient(Ingredient ingredient){
+        this.price = ingredient.price;
+        this.id = ingredient.id;
+        this.name = ingredient.name;
+        this.weight = ingredient.weight;
+        this.portion = ingredient.portion;
     }
 
     public String getName() {

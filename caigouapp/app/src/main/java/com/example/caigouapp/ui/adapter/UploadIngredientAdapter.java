@@ -16,13 +16,15 @@ import com.example.caigouapp.R;
 import java.util.ArrayList;
 
 public class UploadIngredientAdapter extends RecyclerView.Adapter<UploadIngredientAdapter.ViewHolder> {
+    private int menuId;
     private ArrayList<Ingredient> uploadList = new ArrayList<>();
 
     public ArrayList<Ingredient> getUploadList() {
         return uploadList;
     }
 
-    public UploadIngredientAdapter(ArrayList<Ingredient> list){
+    public UploadIngredientAdapter(ArrayList<Ingredient> list,int id){
+        menuId = id;
         uploadList.clear();
         uploadList.addAll(list);
     }

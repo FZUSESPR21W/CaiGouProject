@@ -4,16 +4,26 @@ import java.io.Serializable;
 import java.util.List;
 
 public class RecipeBean implements Serializable {
+    private int id;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
     private String name;
     private String tag;
     private double price;
     private String imageUrl;
-    private int status;
     private List<Ingredient> ingredient;
     private List<Ingredient> side_ingredient;
     private List<Step> step;
 
-    public RecipeBean(String name, String tag, double price,String url, List<Ingredient> ingredient, List<Ingredient> side_ingredient, List<Step> step) {
+    public RecipeBean(int id,String name, String tag, double price,String url, List<Ingredient> ingredient, List<Ingredient> side_ingredient, List<Step> step) {
+        this.id = id;
         this.name = name;
         this.tag = tag;
         this.price = price;
@@ -24,6 +34,7 @@ public class RecipeBean implements Serializable {
     }
 
     public RecipeBean(RecipeBean bean){
+        this.id = bean.id;
         this.name = bean.name;
         this.tag = bean.tag;
         this.price = bean.price;

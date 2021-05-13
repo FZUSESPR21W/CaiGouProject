@@ -39,8 +39,8 @@ public class RecipeDetailResponse implements Serializable {
         private String name;
         private String tags;
         private String method;
-        private String avatar;
-        private String food_weight_list;
+        private String avatar;//image
+        private String food_weight_list;//this string contains weights of every food,sort by order,please split by ','.
         private List<FoodBean> food;
 
         public int getId() {
@@ -102,9 +102,9 @@ public class RecipeDetailResponse implements Serializable {
         public static class FoodBean implements Serializable {
 
             private int id;
-            private String ingredient;
+            private String ingredient;//name
             private double price;
-            private int major;
+            private int major;// 1 = ingredient 0 = sideIngredient
             private Object standard_weight;
 
             public int getId() {
