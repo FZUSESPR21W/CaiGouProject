@@ -14,7 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Caigouapp">
         <activity android:name=".ui.mine.TagChooseActivity"/>
-        <activity android:name=".ui.SearchActivity" />
+        <activity android:name=".ui.SearchActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".ui.RecipeDetailActivity"/>
         <activity
             android:name=".MainActivity"
@@ -35,7 +36,6 @@
         <activity
             android:name=".ui.order.OrderDetailActivity"
             android:label="@string/app_name"></activity>
-        <activity android:name=".ui.RecipeDetailActivity"/>
     </application>
 
 </manifest>

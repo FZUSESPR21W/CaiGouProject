@@ -27,12 +27,7 @@
             android:layout_weight="1"
             android:textStyle="bold"/>
         <TextView
-            android:id="@+id/tv_food_list"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_weight="1"/>
-        <TextView
-            android:id="@+id/tv_price"
+            android:id="@+id/tv_tag"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"/>
