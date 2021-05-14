@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -21,6 +22,7 @@ import com.example.caigouapp.http.RecipeServices;
 import com.example.caigouapp.ui.adapter.IngredientAdapter;
 import com.example.caigouapp.ui.adapter.RecipeStepAdapter;
 import com.example.caigouapp.ui.adapter.SideIngredientGridAdapter;
+import com.example.caigouapp.utils.SpUtil;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -44,6 +46,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private ArrayList<Ingredient> ingredient = new ArrayList<>();
     private ArrayList<Ingredient> sideIngredient = new ArrayList<>();
     private ArrayList<Step> step = new ArrayList<>();
+    private String token = SpUtil.getInstance().getString("token",null);
     private int id;
 
     @Override
@@ -64,7 +67,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         map.put("id",id);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
         RecipeServices recipeServices = retrofit.create(RecipeServices.class);
-        Call<RecipeDetailResponse> call = recipeServices.getRecipeDetail(id);
+        Call<RecipeDetailResponse> call = recipeServices.getRecipeDetail(token,requestBody);
         call.enqueue(new Callback<RecipeDetailResponse>() {
             @Override
             public void onResponse(Call<RecipeDetailResponse> call, Response<RecipeDetailResponse> response) {
@@ -152,7 +155,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 Toast.makeText(this,"您还没有选择要购买的商品！",Toast.LENGTH_SHORT).show();
             }
             else {
-                RecipeDialog dialog = new RecipeDialog(ingredientAdapter.getSendList(), data);
+                RecipeDialog dialog = new RecipeDialog(ingredientAdapter.getSendList(), data ,ingredientAdapter.getTotalSize());
                 dialog.show(getSupportFragmentManager(), "tag");
             }
         });

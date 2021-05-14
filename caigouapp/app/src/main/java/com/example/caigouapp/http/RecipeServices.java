@@ -15,7 +15,6 @@ import retrofit2.http.POST;
 
 public interface RecipeServices {
 
-    @FormUrlEncoded
     @POST("menu")
     Call<SearchResponse> searchRecipes(@Body RequestBody requestBody);
 

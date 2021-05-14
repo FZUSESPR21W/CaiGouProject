@@ -31,6 +31,7 @@ import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.RecipeServices;
 import com.example.caigouapp.ui.adapter.UploadIngredientAdapter;
 import com.example.caigouapp.ui.shopping.ShoppingFragment;
+import com.example.caigouapp.utils.SpUtil;
 import com.google.gson.Gson;
 
 import org.jetbrains.annotations.NotNull;
@@ -55,8 +56,8 @@ public class RecipeDialog extends DialogFragment {
     private RecipeBean recipe;
     private UploadIngredientAdapter adapter;
     private int totalSize;
-    private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4In0.KD68i4Quc8pI2bD9NbT0nhJlrYcOb-I8X07LG7DNwJs";
-    private int userId = 3;
+    private String token = SpUtil.getInstance().getString("token",null);
+    private int userId = SpUtil.getInstance().getInt("id",0);
 
     public RecipeDialog(ArrayList<Ingredient> list,RecipeBean data,int size){
         this.totalSize = size;

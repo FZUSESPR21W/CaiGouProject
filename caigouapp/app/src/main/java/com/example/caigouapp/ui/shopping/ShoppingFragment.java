@@ -26,6 +26,7 @@ import com.example.caigouapp.http.CartServices;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.RecipeServices;
 import com.example.caigouapp.ui.RecipeDetailActivity;
+import com.example.caigouapp.utils.SpUtil;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
@@ -55,9 +56,8 @@ public class ShoppingFragment extends Fragment {
     private List<Step> step = new ArrayList<>();
     private ShoppingAdapter adapter;
     private double totalPrice = 0;
-    private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4In0.KD68i4Quc8pI2bD9NbT0nhJlrYcOb-I8X07LG7DNwJs";
-    //userid
-    private int userId = 3;
+    private String token = SpUtil.getInstance().getString("token",null);
+    private int userId = SpUtil.getInstance().getInt("id",0);
     DecimalFormat df = new DecimalFormat( "0.00");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
