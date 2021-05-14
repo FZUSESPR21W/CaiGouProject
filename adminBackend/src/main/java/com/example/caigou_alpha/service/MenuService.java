@@ -1,5 +1,6 @@
 package com.example.caigou_alpha.service;
 
+import com.example.caigou_alpha.dao.CustomMenuDao;
 import com.example.caigou_alpha.dao.MenuDao;
 import com.example.caigou_alpha.dao.MenuFoodDao;
 import com.example.caigou_alpha.entity.Menu;
@@ -14,7 +15,10 @@ import javax.annotation.Resource;
 public class MenuService {
     @Resource
     private MenuDao menuDao;
+    @Resource
     private MenuFoodDao menuFoodDao;
+    @Resource
+    private CustomMenuDao customMenuDao;
 
     public MenuService(MenuFoodDao menuFoodDao) {
         this.menuFoodDao = menuFoodDao;
@@ -44,7 +48,8 @@ public class MenuService {
     }
 
     public void del(Integer id){
-        menuFoodDao.deleteSonRow(id);
+        customMenuDao.deleteMenuSonRow(id);
+//        menuFoodDao.deleteSonRow(id);
         menuDao.deleteById(id);
     }
 

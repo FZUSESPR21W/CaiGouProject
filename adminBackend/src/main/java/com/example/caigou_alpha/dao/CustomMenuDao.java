@@ -2,8 +2,11 @@ package com.example.caigou_alpha.dao;
 
 import com.example.caigou_alpha.entity.CustomMenu;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+
+import javax.transaction.Transactional;
 
 
 public interface CustomMenuDao extends JpaRepository<CustomMenu,Integer> {
@@ -25,5 +28,9 @@ public interface CustomMenuDao extends JpaRepository<CustomMenu,Integer> {
     @Query(value ="select cm from  CustomMenu  cm where cm.id = :custom_menuid")
     CustomMenu selectCustomMenuById(@Param("custom_menuid")Integer custom_menuid);
 
+    @Modifying
+    @Transactional
+    @Query("delete from CustomMenu  customMenu where customMenu.menu_id = :id")
+    void deleteMenuSonRow(@Param("id") Integer id);
 
 }

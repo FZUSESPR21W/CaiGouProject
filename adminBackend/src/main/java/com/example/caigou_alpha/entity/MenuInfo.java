@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 public class MenuInfo {
     @OneToOne
-    private Menu menu;
+    private CustomMenu customMenu;
     @OneToOne
     private MenuFood menuFood;
 
