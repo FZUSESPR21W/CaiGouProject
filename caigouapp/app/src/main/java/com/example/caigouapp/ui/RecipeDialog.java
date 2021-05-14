@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,14 +31,22 @@ import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.RecipeServices;
 import com.example.caigouapp.ui.adapter.UploadIngredientAdapter;
 import com.example.caigouapp.ui.shopping.ShoppingFragment;
+import com.google.gson.Gson;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class RecipeDialog extends DialogFragment {
@@ -45,8 +54,12 @@ public class RecipeDialog extends DialogFragment {
     private ArrayList<Ingredient> uploadList = new ArrayList<>();
     private RecipeBean recipe;
     private UploadIngredientAdapter adapter;
+    private int totalSize;
+    private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4In0.KD68i4Quc8pI2bD9NbT0nhJlrYcOb-I8X07LG7DNwJs";
+    private int userId = 3;
 
-    public RecipeDialog(ArrayList<Ingredient> list,RecipeBean data){
+    public RecipeDialog(ArrayList<Ingredient> list,RecipeBean data,int size){
+        this.totalSize = size;
         uploadList.addAll(list);
         recipe = new RecipeBean(data);
     }
@@ -74,6 +87,21 @@ public class RecipeDialog extends DialogFragment {
         return binding.getRoot();
     }
 
+    private String getMultiply(ArrayList<Ingredient> list,int size){
+        String[] multiply = new String[size];
+        StringBuilder builder = new StringBuilder();
+        Arrays.fill(multiply, "0");
+        for(Ingredient in : list){
+            multiply[in.getIndex()] = String.valueOf(in.getPortion());
+            Log.d("tag",in.getId()+" "+in.getIndex());
+        }
+        for (String s : multiply) {
+            builder.append(s);
+            builder.append(",");
+        }
+        return builder.toString();
+    }
+
     private void initView(){
         adapter = new UploadIngredientAdapter(uploadList,recipe.getId());
         binding.uploadRv.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -82,29 +110,36 @@ public class RecipeDialog extends DialogFragment {
             this.dismiss();
         });
         binding.uploadButton.setOnClickListener(view -> {
-            StringBuilder multiple = new StringBuilder();
-            StringBuffer foodIdList = new StringBuffer();
+            String multiple;
+            StringBuilder foodIdList = new StringBuilder();
             double price = 0;
             recipe.setIngredient(adapter.getUploadList());
+            multiple = getMultiply((ArrayList<Ingredient>) recipe.getIngredient(),totalSize);
             for(int i = 0 ;i < recipe.getIngredient().size();i++){
                 Ingredient ingredient = recipe.getIngredient().get(i);
-                multiple.append(ingredient.getPortion());
                 foodIdList.append(ingredient.getId());
-                price += ingredient.getPrice() * ingredient.getPrice();
+                price += ingredient.getPrice() * ingredient.getPortion();
                 if(i < recipe.getIngredient().size() - 1){
-                    multiple.append(",");
                     foodIdList.append(",");
                 }
             }
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(Constant.URL_BASE)
+                    .addConverterFactory(GsonConverterFactory.create())
                     .build();
             CartServices cartServices = retrofit.create(CartServices.class);
             //userID还未确定给入
-            Call<CommonResponse> call = cartServices.postCustomRecipe(multiple.toString(),price,foodIdList.toString(),recipe.getId(),recipe.getId());
+            HashMap<String , Object> map = new HashMap<>();
+            map.put("Multiple",multiple);
+            map.put("price",price);
+            map.put("food_id_list",foodIdList.toString());
+            map.put("userId",userId);
+            map.put("id",recipe.getId());
+            RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
+            Call<CommonResponse> call = cartServices.postCustomRecipe(token,requestBody);
             call.enqueue(new Callback<CommonResponse>() {
                 @Override
-                public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+                public void onResponse(Call<CommonResponse> call,Response<CommonResponse> response) {
                     Toast.makeText(getContext(),"已经添加到购物车啦",Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getContext(), MainActivity.class);
                     intent.putExtra("shoppingCar",1);

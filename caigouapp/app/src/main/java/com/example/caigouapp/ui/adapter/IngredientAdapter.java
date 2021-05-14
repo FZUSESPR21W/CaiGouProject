@@ -21,6 +21,11 @@ import java.util.TreeMap;
 public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.ViewHolder> {
     private ArrayList<Ingredient> ingredientList = new ArrayList<>();
     private Map<Integer, Boolean> map = new TreeMap<>();
+    private int totalSize = 0;
+
+    public int getTotalSize(){
+        return totalSize;
+    }
 
     public ArrayList<Ingredient> getSendList() {
         return sendList;
@@ -28,7 +33,8 @@ public class IngredientAdapter extends RecyclerView.Adapter<IngredientAdapter.Vi
 
     public ArrayList<Ingredient> sendList = new ArrayList<>();
 
-    public IngredientAdapter(ArrayList<Ingredient> list){
+    public IngredientAdapter(ArrayList<Ingredient> list,int totalSize){
+        this.totalSize = totalSize;
         ingredientList.clear();
         ingredientList.addAll(list);
         sendList.addAll(list);

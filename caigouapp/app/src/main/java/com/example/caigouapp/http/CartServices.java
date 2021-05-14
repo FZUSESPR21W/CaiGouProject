@@ -4,28 +4,31 @@ import com.example.caigouapp.data.CartResponse;
 import com.example.caigouapp.data.CommonResponse;
 import com.example.caigouapp.data.RecipeDetailResponse;
 
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 
 public interface CartServices {
 
-    @FormUrlEncoded
     @POST("updata/custMenu")
-    Call<CommonResponse> postCustomRecipe(@Field("Multiple") String multiple/*份数列表，添加成string，*/,
+    Call<CommonResponse> postCustomRecipe(@Header("token") String header,@Body RequestBody body);
+                                          /*@Field("Multiple") String multiple
                                           @Field("price") Double price,
                                           @Field("food_id_list") String foodIdList,
                                           @Field("userId") Integer userId,
-                                          @Field("id") Integer id/*这个id是菜谱id*/);
+                                          @Field("id") Integer id */
 
-    @FormUrlEncoded
     @POST("order")
-    Call<CommonResponse> postOrder(@Field("userId") Integer userId);
+    Call<CommonResponse> postOrder(@Header("token") String header, @Body RequestBody body);
 
-    @FormUrlEncoded
     @POST("cart/list")
-    Call<CartResponse> getCartDetail(@Field("userId") Integer userId);
+    Call<CartResponse> getCartDetail(@Header("token") String header,@Body RequestBody body);
 
 
 }

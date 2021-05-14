@@ -41,14 +41,23 @@ public class Ingredient implements Serializable {
 
     private String weight;
     private int portion;
+    private int index;
 
+    public int getIndex() {
+        return index;
+    }
 
-    public Ingredient(String name, String weight,int id,double price) {
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public Ingredient(String name, String weight, int id, double price) {
         this.price = price;
         this.id = id;
         this.name = name;
         this.weight = weight;
         this.portion = 1;
+        this.index = 0;
     }
 
     public Ingredient(Ingredient ingredient){
@@ -57,6 +66,7 @@ public class Ingredient implements Serializable {
         this.name = ingredient.name;
         this.weight = ingredient.weight;
         this.portion = ingredient.portion;
+        this.index = ingredient.index;
     }
 
     public String getName() {

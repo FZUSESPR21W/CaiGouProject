@@ -2,6 +2,7 @@ package com.example.caigouapp.ui.shopping;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,31 +20,44 @@ import com.example.caigouapp.RecipeBean;
 import com.example.caigouapp.Step;
 import com.example.caigouapp.data.CartResponse;
 import com.example.caigouapp.data.CommonResponse;
+import com.example.caigouapp.data.RecipeDetailResponse;
 import com.example.caigouapp.databinding.FragmentShoppingBinding;
 import com.example.caigouapp.http.CartServices;
 import com.example.caigouapp.http.Constant;
+import com.example.caigouapp.http.RecipeServices;
+import com.example.caigouapp.ui.RecipeDetailActivity;
+import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ShoppingFragment extends Fragment {
 
     private FragmentShoppingBinding binding;
     private List<RecipeBean> list = new ArrayList<>();
     private List<Ingredient> ingredient = new ArrayList<>();
+    private List<Ingredient> standardIngredient = new ArrayList<>();
     private List<Ingredient> sideIngredient = new ArrayList<>();
     private List<Step> step = new ArrayList<>();
     private ShoppingAdapter adapter;
     private double totalPrice = 0;
-    private int userId = 1;
+    private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4In0.KD68i4Quc8pI2bD9NbT0nhJlrYcOb-I8X07LG7DNwJs";
+    //userid
+    private int userId = 3;
     DecimalFormat df = new DecimalFormat( "0.00");
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -57,9 +71,13 @@ public class ShoppingFragment extends Fragment {
     private void postRequest(int userId){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.URL_BASE)
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
+        HashMap<String , Integer> map = new HashMap<>();
+        map.put("user_id",userId);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
         CartServices cartServices = retrofit.create(CartServices.class);
-        Call<CommonResponse> call = cartServices.postOrder(userId);
+        Call<CommonResponse> call = cartServices.postOrder(token,requestBody);
         call.enqueue(new Callback<CommonResponse>() {
             @Override
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
@@ -74,23 +92,40 @@ public class ShoppingFragment extends Fragment {
         });
     }
 
+
+    private Ingredient find(ArrayList<Ingredient> list,int id){
+        for(Ingredient ingredient : list){
+            if(ingredient.getId() == id)return ingredient;
+        }
+        return null;
+    }
+
     private void getCartRequest(int userId){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.URL_BASE)
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
+        HashMap<String , Integer> map = new HashMap<>();
+        map.put("user_id",userId);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
         CartServices cartServices = retrofit.create(CartServices.class);
-        Call<CartResponse> call = cartServices.getCartDetail(userId);
+        Call<CartResponse> call = cartServices.getCartDetail(token,requestBody);
         call.enqueue(new Callback<CartResponse>() {
             @Override
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
-                if(response.body() != null && response.body().getCode() == 200){
+                if(response.body() != null){
                     double price = 0;
-                    List<CartResponse.DataBean.InfoBean> infoList = response.body().getData().getInfo();
+                    List<CartResponse.DataBean.InfoBean> infoList = new ArrayList<>(response.body().getData().getInfo());
                     for(CartResponse.DataBean.InfoBean dataBean : infoList){
-                        String[] weight = dataBean.getFood_weight_list().split(",");
                         String[] portion = dataBean.getMultiple().split(",");
-                        for(int i = 0;i<weight.length;i++){
+                        String[] weight = dataBean.getFood_weight_list().split(",");
+                        ingredient.clear();
+                        sideIngredient.clear();
+                        Log.d("portion",portion.length+"");
+                        for(int i = 0; i < portion.length; i++){
+                            Log.d("portion",dataBean.getFood().size()+" "+i);
                             int major = dataBean.getFood().get(i).getMajor();
+                            if(portion[i].equals("0"))continue;
                             Ingredient in = new Ingredient(
                                     dataBean.getFood().get(i).getIngredient(),
                                     weight[i],
@@ -106,15 +141,25 @@ public class ShoppingFragment extends Fragment {
                             }
                         }
                         //解析recipe
-                        list.add(new RecipeBean(dataBean.getId(),dataBean.getName(),dataBean.getTags(),0,dataBean.getAvatar(),ingredient,sideIngredient,step));
+                        list.add(new RecipeBean(dataBean.getId(),
+                                dataBean.getName(),
+                                dataBean.getTags(),
+                                0,
+                                dataBean.getAvatar(),
+                                new ArrayList<>(ingredient),
+                                new ArrayList<>(sideIngredient),
+                                new ArrayList<>(step)));
                     }
+                    Toast.makeText(getContext(),"数据获取完毕",Toast.LENGTH_SHORT).show();
                 }
-                initView();
+
+                requireActivity().runOnUiThread(()->initView());
             }
 
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
                 Toast.makeText(getContext(),"好像出了点问题……",Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
             }
         });
     }

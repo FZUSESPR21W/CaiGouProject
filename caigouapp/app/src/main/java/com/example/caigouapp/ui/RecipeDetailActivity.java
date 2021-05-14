@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -21,16 +22,21 @@ import com.example.caigouapp.http.RecipeServices;
 import com.example.caigouapp.ui.adapter.IngredientAdapter;
 import com.example.caigouapp.ui.adapter.RecipeStepAdapter;
 import com.example.caigouapp.ui.adapter.SideIngredientGridAdapter;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RecipeDetailActivity extends AppCompatActivity {
 
@@ -39,6 +45,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private ArrayList<Ingredient> ingredient = new ArrayList<>();
     private ArrayList<Ingredient> sideIngredient = new ArrayList<>();
     private ArrayList<Step> step = new ArrayList<>();
+    private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4In0.KD68i4Quc8pI2bD9NbT0nhJlrYcOb-I8X07LG7DNwJs";
     private int id;
 
     @Override
@@ -53,9 +60,13 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private void internetRequest(int id){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.URL_BASE)
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
+        HashMap<String , Integer> map = new HashMap<>();
+        map.put("id",id);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
         RecipeServices recipeServices = retrofit.create(RecipeServices.class);
-        Call<RecipeDetailResponse> call = recipeServices.getRecipeDetail(id);
+        Call<RecipeDetailResponse> call = recipeServices.getRecipeDetail(token,requestBody);
         call.enqueue(new Callback<RecipeDetailResponse>() {
             @Override
             public void onResponse(Call<RecipeDetailResponse> call, Response<RecipeDetailResponse> response) {
@@ -70,6 +81,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                                 weight[i],
                                 dataBean.getFood().get(i).getId(),
                                 dataBean.getFood().get(i).getPrice());
+                        in.setIndex(i);
                         if(major == 1){
                             ingredient.add(new Ingredient(in));
                         }
@@ -78,25 +90,23 @@ public class RecipeDetailActivity extends AppCompatActivity {
                         }
                     }
                     //解析step
-                    String[] steps = dataBean.getMethod().split(" ");
-                    Pattern pattern = Pattern.compile("[0-9]*");
+                    String[] steps = dataBean.getMethod().split("\n");
                     Pattern httpPattern = Pattern.compile("^([hH][tT]{2}[pP]://|[hH][tT]{2}[pP][sS]://)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\/])+$");
                     String url = null;
                     String content = null;
                     for (String s : steps) {
-                        Matcher isNum = pattern.matcher(s);
                         Matcher isHttp = httpPattern.matcher(s);
-                        if (!s.equals("步骤") && !isNum.matches()) {
+                        if (!s.contains("步骤 ")) {
                             if (isHttp.matches()) {
                                 url = s;
                             } else {
                                 content = s;
                             }
-                        }
-                        if(content != null){
-                            step.add(new Step(url,content));
-                            url = null;
-                            content = null;
+                            if(content != null){
+                                step.add(new Step(url,content));
+                                url = null;
+                                content = null;
+                            }
                         }
                     }
                     //解析recipe
@@ -126,7 +136,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
             }
         };
         binding.ingredientRv.setLayoutManager(layoutManager1);
-        IngredientAdapter ingredientAdapter = new IngredientAdapter((ArrayList<Ingredient>) data.getIngredient());
+        IngredientAdapter ingredientAdapter = new IngredientAdapter((ArrayList<Ingredient>) data.getIngredient(),data.getIngredient().size()+data.getSide_ingredient().size());
         binding.ingredientRv.setAdapter(ingredientAdapter);
         LinearLayoutManager layoutManager2 = new LinearLayoutManager(this){
             @Override
@@ -144,7 +154,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 Toast.makeText(this,"您还没有选择要购买的商品！",Toast.LENGTH_SHORT).show();
             }
             else {
-                RecipeDialog dialog = new RecipeDialog(ingredientAdapter.getSendList(), data);
+                RecipeDialog dialog = new RecipeDialog(ingredientAdapter.getSendList(), data ,ingredientAdapter.getTotalSize());
                 dialog.show(getSupportFragmentManager(), "tag");
             }
         });
