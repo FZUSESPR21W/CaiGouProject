@@ -14,10 +14,10 @@ import java.util.List;
 
 public class MineAdapter extends RecyclerView.Adapter<MineAdapter.MineViewHolder> {
 
-    private List<MineBean> data;
+    private List<String> data;
     private Context context;
 
-    public MineAdapter(List<MineBean> data, Context context) {
+    public MineAdapter(List<String> data, Context context) {
         this.data = data;
         this.context = context;
     }
@@ -31,7 +31,7 @@ public class MineAdapter extends RecyclerView.Adapter<MineAdapter.MineViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MineAdapter.MineViewHolder holder, int position) {
-        holder.tv.setText(data.get(position).getName());
+        holder.tv.setText(data.get(position));
     }
 
     @Override

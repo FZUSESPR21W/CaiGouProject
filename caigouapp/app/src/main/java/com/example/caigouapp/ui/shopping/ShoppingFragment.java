@@ -58,6 +58,7 @@ public class ShoppingFragment extends Fragment {
     private String token = SpUtil.getInstance().getString("token",null);
     private int userId = SpUtil.getInstance().getInt("id",0);
     DecimalFormat df = new DecimalFormat( "0.00");
+    Call<CartResponse> call;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -110,10 +111,8 @@ public class ShoppingFragment extends Fragment {
         HashMap<String , Integer> map = new HashMap<>();
         map.put("user_id",userId);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
-        Log.d("tag",userId+"");
-        Log.d("tag",token);
         CartServices cartServices = retrofit.create(CartServices.class);
-        Call<CartResponse> call = cartServices.getCartDetail(token,requestBody);
+        call = cartServices.getCartDetail(token,requestBody);
         call.enqueue(new Callback<CartResponse>() {
             @Override
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
@@ -190,9 +189,7 @@ public class ShoppingFragment extends Fragment {
         adapter = new ShoppingAdapter(list,getContext());
         binding.shoppingCarRv.setAdapter(adapter);
         binding.submitButton.setOnClickListener(view -> {
-            if(list.size() != 0) {
-                postRequest(userId);
-            }
+            if(list.size() != 0) postRequest(userId);
             else Toast.makeText(getContext(),"您的购物车还没有东西哦！",Toast.LENGTH_SHORT).show();
         });
         //管理购物车功能暂不实现
@@ -233,6 +230,10 @@ public class ShoppingFragment extends Fragment {
         }
     }
 
-
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (call != null && call.isExecuted())
+            call.cancel();
+    }
 }
