@@ -5,7 +5,7 @@ plugins {
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
-
+    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.example.caigouapp"
         minSdkVersion 17
@@ -14,6 +14,8 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        testApplicationId 'com.guojingwen.testretrifit.tests'
     }
 
     buildTypes {
@@ -45,6 +47,7 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'com.android.support.test:rules:1.0.2'
 
     //MZBannerView
     implementation 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
@@ -56,4 +59,9 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     //recyclerview弹性布局
     implementation 'com.google.android:flexbox:2.0.1'
+    //leak canary support
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
 }
