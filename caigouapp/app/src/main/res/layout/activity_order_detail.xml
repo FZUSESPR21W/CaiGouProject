@@ -26,7 +26,7 @@
 
 
     <TextView
-        android:id="@+id/txt_order_preview_state"
+        android:id="@+id/txt_order_detail_state"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="left"
@@ -51,37 +51,34 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#FFFFFF"
-
                 android:layout_marginBottom="15dp"
+                android:background="@drawable/order_recyclerview_backgroud"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginVertical="15dp"
-                    android:text="订单详情"
                     android:paddingLeft="10dp"
+                    android:text="订单详情"
                     android:textColor="#000000"
                     android:textSize="20dp"></TextView>
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:background="#DCDCDC"
-                    android:layout_height="1dp">
-                </TextView>
+                    android:layout_height="1dp"
+                    android:background="#DCDCDC"></TextView>
 
                 <ScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginVertical="15dp"
+                    android:layout_marginVertical="10dp"
                     android:padding="10dp">
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recycler_order_detail"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
-                    </androidx.recyclerview.widget.RecyclerView>
+                        android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
                 </ScrollView>
 
             </LinearLayout>
@@ -96,13 +93,12 @@
                     android:id="@+id/call_seller"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="3dp"
                     android:background="#FFFFFF"
+                    android:elevation="2dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:elevation="2dp"
-                    android:layout_margin="3dp"
-                    android:padding="5dp"
-                    >
+                    android:padding="5dp">
 
                     <ImageView
                         android:layout_width="25dp"
@@ -112,10 +108,10 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="30dp"
-                        android:text="致电商家"
+                        android:gravity="center"
                         android:paddingHorizontal="15dp"
-                        android:textColor="#000000"
-                        android:gravity="center"></TextView>
+                        android:text="致电商家"
+                        android:textColor="#000000"></TextView>
 
                 </LinearLayout>
 
@@ -123,16 +119,16 @@
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:gravity="right|center_vertical"
-                    android:layout_weight="2">
+                    android:layout_weight="2"
+                    android:gravity="right|center_vertical">
 
                     <Button
                         android:id="@+id/btn_order_detail_cancel"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
-                        android:text="取消订单"
-                        android:paddingHorizontal="20dp"
                         android:background="#FFFFFF"
+                        android:paddingHorizontal="20dp"
+                        android:text="取消订单"
                         android:textSize="15dp"></Button>
                 </LinearLayout>
             </LinearLayout>
@@ -141,157 +137,202 @@
                 android:id="@+id/btn_order_detail_call_seller"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="10dp"
-                android:background="#FFFFFF"
                 android:layout_marginVertical="15dp"
-                android:orientation="vertical">
+                android:background="@drawable/order_recyclerview_backgroud"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingRight="3dp">
+
                 <TextView
-                    android:id="@+id/txt_order_detail_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="订单信息"
                     android:layout_marginVertical="15dp"
+                    android:text="订单信息"
                     android:textColor="#000000"
                     android:textSize="20dp"></TextView>
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:background="#DCDCDC"
-                    android:layout_height="1dp">
-                </TextView>
+                    android:layout_height="1dp"
+                    android:background="#DCDCDC"></TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:gravity="center"
                         android:text="订单号码"></TextView>
+
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right">
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:gravity="right|center_vertical">
 
                         <TextView
+                            android:id="@+id/txt_order_detail_number"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:gravity="center_vertical"
-                            android:textColor="#000000"
-                            android:text="1123 7109 0824 3702 55"></TextView>
+                            android:text="1123 7109 0824 3702 55"
+                            android:textColor="#000000"></TextView>
 
                         <TextView
                             android:id="@+id/btn_order_detail_copy_number"
                             android:layout_width="wrap_content"
                             android:layout_height="40dp"
-                            android:text="复制"
-                            android:paddingHorizontal="20dp"
-                            android:background="#FFFFFF"
-                            android:textSize="15dp"
-                            android:textColor="#000000"
-                            android:gravity="center"
                             android:layout_marginVertical="3dp"
-                            android:layout_marginLeft="20dp"></TextView>
+                            android:layout_marginLeft="10dp"
+                            android:background="#FFFFFF"
+                            android:gravity="center"
+                            android:paddingHorizontal="20dp"
+                            android:text="复制"
+                            android:textColor="#000000"
+                            android:textSize="15dp"></TextView>
 
                     </LinearLayout>
 
                 </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
-                    android:background="#DCDCDC"
-                    android:layout_height="1dp">
-                </TextView>
+                    android:layout_height="1dp"
+                    android:background="#DCDCDC"></TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp">
+
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:gravity="center"
                         android:text="下单时间"></TextView>
+
                     <TextView
                         android:id="@+id/txt_order_detail_create_time"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:paddingLeft="8dp"
                         android:gravity="center_vertical|right"
-                        android:textColor="#000000"
-                        android:text="2021-04-01 11:01:10"></TextView>
+                        android:text="2021-04-01 11:01:10"
+                        android:textColor="#000000"></TextView>
                 </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
-                    android:background="#DCDCDC"
-                    android:layout_height="1dp">
-                </TextView>
+                    android:layout_height="1dp"
+                    android:background="#DCDCDC"></TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp">
 
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:gravity="center"
                         android:text="配送地址"></TextView>
 
                     <TextView
                         android:id="@+id/txt_order_detail_address"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:paddingLeft="8dp"
                         android:gravity="center_vertical|right"
-                        android:textColor="#000000"
-                        android:text="福州大学学生公寓XX号楼"></TextView>
+                        android:text="福州大学学生公寓XX号楼"
+                        android:textColor="#000000"></TextView>
                 </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
-                    android:background="#DCDCDC"
-                    android:layout_height="1dp">
-                </TextView>
+                    android:layout_height="1dp"
+                    android:background="#DCDCDC"></TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp">
+
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:gravity="center"
                         android:text="手机号"></TextView>
+
                     <TextView
                         android:id="@+id/txt_order_detail_phone"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:paddingLeft="8dp"
                         android:gravity="center_vertical|right"
-                        android:textColor="#000000"
-                        android:text="15512345678"></TextView>
+                        android:text="15512345678"
+                        android:textColor="#000000"></TextView>
                 </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
-                    android:background="#DCDCDC"
-                    android:layout_height="1dp">
-                </TextView>
+                    android:layout_height="1dp"
+                    android:background="#DCDCDC"></TextView>
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp">
+
                     <TextView
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:gravity="center"
                         android:text="预计送达时间"></TextView>
+
                     <TextView
                         android:id="@+id/txt_order_detail_serve_time"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:paddingLeft="8dp"
                         android:gravity="center_vertical|right"
-                        android:textColor="#000000"
-                        android:text="2021-04-01 11:30"></TextView>
+                        android:text="2021-04-01 11:30"
+                        android:textColor="#000000"></TextView>
                 </LinearLayout>
+
                 <TextView
                     android:layout_width="match_parent"
-                    android:background="#DCDCDC"
-                    android:layout_height="1dp">
-                </TextView>
+                    android:layout_height="1dp"
+                    android:background="#DCDCDC"></TextView>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="备注"></TextView>
+
+                    <TextView
+                        android:id="@+id/txt_order_detail_remark"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="3"
+                        android:gravity="center_vertical|right"
+                        android:paddingLeft="8dp"
+                        android:paddingVertical="10dp"
+                        android:text="不要放葱不要放葱不要放葱不要放葱不要放葱不要放葱不要放葱不要放葱"
+                        android:textColor="#000000"></TextView>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

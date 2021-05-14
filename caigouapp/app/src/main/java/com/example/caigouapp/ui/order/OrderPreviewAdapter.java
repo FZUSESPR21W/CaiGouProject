@@ -2,6 +2,7 @@ package com.example.caigouapp.ui.order;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,14 @@ import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.caigouapp.R;
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,30 +64,27 @@ public class OrderPreviewAdapter extends RecyclerView.Adapter<OrderPreviewAdapte
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_preview_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);
-        holder.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(mContext,OrderDetailActivity.class);
-                mContext.startActivity(intent);
-            }
-        });
         holder.showDetailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               //开新活动，到OrderDetailActivity
+                Intent intent = new Intent(mContext,OrderDetailActivity.class);
+                intent.putExtra("data", new Gson().toJson(list.get((int)view.getTag())));
+                mContext.startActivity(intent);
             }
         });
+        //如果不是已下单状态,则将文本改为"再来一单"
         return holder;
     }
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Order order = list.get(position);
         holder.storeNameView.setText(order.getStoreName());
-        holder.orderStateView.setText(order.isOrder_state()+"");//要根据返回的状态填入文字
+        holder.orderStateView.setText(order.getOrderStateString());
         setHorizontalGridView(position, holder.oneOrderGridView);
-        holder.priceView.setText(order.getPrice()+"");
-        holder.pieceView.setText("共"+order.getPiece()+"件");
-        //holder.cancelButton.setText(order.getStoreName()); 根据订单状态决定文本，设置监听事件时也根据状态
+        holder.priceView.setText("￥"+order.getPrice());
+        holder.pieceView.setText("共 "+order.getCms().size()+" 件");
+        holder.cancelButton.setText(getCancelButtonText(order));
+        holder.showDetailButton.setTag(position);
     }
 
     @Override
@@ -87,9 +92,16 @@ public class OrderPreviewAdapter extends RecyclerView.Adapter<OrderPreviewAdapte
         return list.size();
     }
 
+    public String getCancelButtonText(Order order){
+        if(order.getOrderState()!=3 && order.getOrderState()!=4){
+            return "再来一单";
+        }
+        return "取消订单";
+    }
+
     public void setHorizontalGridView(int position,GridView view) {
-        ArrayList<Icon> icons = list.get(position).getIcons();
-        int size = icons.size();
+        ArrayList<CustomerMenu> cms = list.get(position).getCms();
+        int size = cms.size();
         int length = 100;
         DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
         float density = dm.density;
@@ -104,12 +116,23 @@ public class OrderPreviewAdapter extends RecyclerView.Adapter<OrderPreviewAdapte
         view.setStretchMode(GridView.NO_STRETCH);
         view.setNumColumns(size); // 设置列数量=列表集合数
 
-        mAdapter = new GridAdapter(icons, R.layout.item_grid_order) {
+        mAdapter = new GridAdapter(cms, R.layout.item_grid_order) {
             @Override
             public void bindView(ViewHolder holder, Object obj) {
-                Icon icon = (Icon) obj;
-                holder.setImageResource(R.id.img_grid, icon.getiId());
-                holder.setText(R.id.txt_grid, icon.getiName());
+                CustomerMenu cm = (CustomerMenu) obj;
+                Glide.with(mContext)
+                        .load(cm.getPhotoUrl())
+                        //.placeholder() 这是等待时的图标
+                        .asBitmap()
+                        .fitCenter()
+                        .into(new SimpleTarget<Bitmap>() {
+                            @Override
+                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                holder.setImageResource(R.id.img_grid,resource);
+                            }
+                        });
+                //holder.setImageResource(R.id.img_grid, R.drawable.sample);//这里要用加载图片的框架
+                holder.setText(R.id.txt_grid, cm.getiName());
             }
         };
         view.setAdapter(mAdapter);

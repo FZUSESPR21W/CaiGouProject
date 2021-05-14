@@ -1,5 +1,6 @@
 package com.example.caigouapp.ui.order;
 
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,45 +15,94 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.caigouapp.R;
+import com.example.caigouapp.data.OrderResponse;
+import com.example.caigouapp.utils.GsonUtil;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OrderFragment extends Fragment {
 
-    private TextView allOrderTextView;
-    private TextView recentOrderTextView;
     private Button cancelButton;
-    private RecyclerView allOrderRecyclerView;
+    private RecyclerView recyclerView;
     private GridView recentOrderGridView;
     private BaseAdapter mAdapter;
-    private ArrayList<Icon> mData = null;
-    private List<Order> list = null;
+    private ArrayList<CustomerMenu> mData = null;
+    private List<Order> list = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,
                              Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.fragment_course,container,false);
+        View view = inflater.inflate(R.layout.fragment_order,container,false);
+        //String str = GsonUtil.getOrderJson(getActivity());
+        //System.out.println(GsonUtil.ParseOrderGson(str));
 
+        HashMap<String, Integer> map = new HashMap<String, Integer>();
+        map.put("user_id", 1);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://106.53.148.37:8082/")
+                .addConverterFactory(GsonConverterFactory.create()) //设置数据解析器
+                .build();
+        OrderRequest request = retrofit.create(OrderRequest.class);
+        Call<OrderResponse> call = request.getPostCall(requestBody);
+        //System.out.println(call.request().headers());
+        //System.out.println(call.request());
+        //System.out.println(call.request().url());
+        call.enqueue(new Callback<OrderResponse>() {
+            @Override
+            public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
+                String str = new Gson().toJson(response.body());
+                //GsonUtil.e("123",str);
+                try{
+                    JSONObject jsonObject = new JSONObject(str);
+                    JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("info");
+                    String data = jsonArray.toString();
+                    GsonUtil.e("123",data);
+                    list = new Gson().fromJson(data, new TypeToken<List<Order>>(){}.getType());
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        recyclerView = (RecyclerView) view.findViewById(R.id.all_order_recycler);
+                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity获得活动（context）
+                        recyclerView.setAdapter(new OrderPreviewAdapter(getActivity(),list));
+                    }
+                });
+            }
+
+            @Override
+            public void onFailure(Call<OrderResponse> call, Throwable t) {
+                System.out.println(t.getMessage());
+            }
+        });
+
+        //System.out.println(GsonUtil.ParseOrderGson(GsonUtil.getOrderJson(getActivity())));
         //grid_recent_order
         recentOrderGridView = view.findViewById(R.id.recent_order_grid);
-        mData = new ArrayList<Icon>();
-        mData.add(new Icon(R.drawable.sample,"ダサ"));
-        mData.add(new Icon(R.drawable.sample,"ダサ"));
-        mData.add(new Icon(R.drawable.sample,"ダサ"));
-        mData.add(new Icon(R.drawable.sample,"ダサ"));
-        mData.add(new Icon(R.drawable.sample,"ダサ"));
+        mData = new ArrayList<CustomerMenu>();
+        mData.add(new CustomerMenu(R.drawable.sample,"番茄炒牛肉"));
 
         setHorizontalGridView();
-
-        //all_order_recycler
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.all_order_recycler);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity获得活动（context）
-        list = getOrderList();//初始化list<order>
-        recyclerView.setAdapter(new OrderPreviewAdapter(getActivity(),list));
 
         return view;
     }
@@ -76,41 +126,11 @@ public class OrderFragment extends Fragment {
         mAdapter = new GridAdapter(mData, R.layout.item_grid_order) {
             @Override
             public void bindView(ViewHolder holder, Object obj) {
-                Icon icon = (Icon)obj;
-                holder.setImageResource(R.id.img_grid, icon.getiId());
-                holder.setText(R.id.txt_grid, icon.getiName());
+                CustomerMenu cm = (CustomerMenu)obj;
+                holder.setImageResource(R.id.img_grid, BitmapFactory.decodeResource(getResources(),R.drawable.sample));
+                holder.setText(R.id.txt_grid, cm.getiName());
             }
         };
         recentOrderGridView.setAdapter(mAdapter);
-    }
-
-    public static List<Order> getOrderList(){
-        List<Order> list = new ArrayList<>();
-        for(int i=1;i<=3;i++){
-            Order order = new Order();
-            order.setAddress("福大学生公寓");
-            order.setOrderNumber("1123 7109 0824 3702 55");
-            order.setOrderCreateTime("2021-05-01 11:01:10");
-            order.setPhone("17612345678");
-            order.setOrderServeTime("2021-05-01 11:30");
-            order.setStoreName("sf超市");
-            order.setOrder_state(true);
-            order.setPiece(2);
-            order.setPrice(23.33);
-            ArrayList<Icon> icons = new ArrayList<>();
-            for(int j=1;j<=i;j++){
-                Icon icon = new Icon();
-                icon.setiId(R.drawable.sample);
-                icon.setiName("图标名字"+i);
-                icon.setMethod("做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法做法");
-                icon.setPrice(7.21);
-                icon.setPiece(2);
-                icon.setSourceMenuId(265);
-                icons.add(icon);
-            }
-            order.setIcons(icons);
-            list.add(order);
-        }
-        return list;
     }
 }
