@@ -2,11 +2,13 @@ package com.example.caigouapp.data;
 
 import java.io.Serializable;
 
-public class UserResponse implements Serializable {
+import okio.BufferedSource;
+
+public class UserResponse {
 
     private String msg;
     private String code;
-    private DataBean data;
+    private DataBean user;
     private String token;
 
     public String getMsg() {
@@ -26,11 +28,11 @@ public class UserResponse implements Serializable {
     }
 
     public DataBean getData() {
-        return data;
+        return user;
     }
 
     public void setData(DataBean data) {
-        this.data = data;
+        this.user = data;
     }
 
     public String getToken() {
@@ -41,14 +43,14 @@ public class UserResponse implements Serializable {
         this.token = token;
     }
 
-    public class DataBean implements Serializable {
+    public class DataBean {
 
         private int id;
         private String user_name;
         private String account_num;
         private String phone;
-        private String signature;
-        private String tags;
+        private String signature = "";
+        private String tags = "";
         private String avatar;
 
         public int getId() {

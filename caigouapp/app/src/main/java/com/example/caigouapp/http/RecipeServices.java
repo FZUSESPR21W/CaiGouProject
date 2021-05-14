@@ -4,6 +4,8 @@ import com.example.caigouapp.data.RecipeDetailResponse;
 import com.example.caigouapp.data.SearchResponse;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -15,7 +17,7 @@ public interface RecipeServices {
 
     @FormUrlEncoded
     @POST("menu")
-    Call<SearchResponse> searchRecipes(@Field("searchWord") String searchWord);
+    Call<SearchResponse> searchRecipes(@Body RequestBody requestBody);
 
     @POST("menuInfo")
     Call<RecipeDetailResponse> getRecipeDetail(@Header("token") String header, @Body RequestBody body);

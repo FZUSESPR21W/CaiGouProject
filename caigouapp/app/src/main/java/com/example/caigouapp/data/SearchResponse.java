@@ -3,7 +3,7 @@ package com.example.caigouapp.data;
 import java.io.Serializable;
 import java.util.List;
 
-public class SearchResponse implements Serializable {
+public class SearchResponse {
 
     private int code;
     private String message;
