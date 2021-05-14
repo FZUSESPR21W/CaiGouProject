@@ -28,6 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -82,6 +83,7 @@ public class OrderFragment extends Fragment {
                     String data = jsonArray.toString();
                     GsonUtil.e("123",data);
                     list = new Gson().fromJson(data, new TypeToken<List<Order>>(){}.getType());
+                    Collections.reverse(list);
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -107,7 +109,7 @@ public class OrderFragment extends Fragment {
         //System.out.println(GsonUtil.ParseOrderGson(GsonUtil.getOrderJson(getActivity())));
         //grid_recent_order
         recentOrderGridView = view.findViewById(R.id.recent_order_grid);
-        mData = new ArrayList<CustomerMenu>();
+        mData = new ArrayList<>();
         mData.add(new CustomerMenu(R.drawable.sample,"番茄炒牛肉"));
 
         setHorizontalGridView();
