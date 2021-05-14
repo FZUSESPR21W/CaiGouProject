@@ -95,14 +95,6 @@ public class ShoppingFragment extends Fragment {
         });
     }
 
-
-    private Ingredient find(ArrayList<Ingredient> list,int id){
-        for(Ingredient ingredient : list){
-            if(ingredient.getId() == id)return ingredient;
-        }
-        return null;
-    }
-
     private void getCartRequest(int userId){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.URL_BASE)
