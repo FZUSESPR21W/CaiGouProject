@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,6 +61,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         addressTextView = (TextView) findViewById(R.id.txt_order_detail_address);
         phoneTextView = (TextView) findViewById(R.id.txt_order_detail_phone);
         remarkTextView = (TextView) findViewById(R.id.txt_order_detail_remark);
+        ImageView back = findViewById(R.id.btn_arrow_left);
 
         stateTextView.setText(mOrder.getOrderStateString());
         numberTextView.setText(mOrder.getOrderNumber());
@@ -69,14 +71,15 @@ public class OrderDetailActivity extends AppCompatActivity {
         phoneTextView.setText(mOrder.getPhone());
         remarkTextView.setText(mOrder.getRemark());
 
-        copyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData mClipData = ClipData.newPlainText("Label", mOrder.getOrderNumber());
-                cm.setPrimaryClip(mClipData);
-                Toast.makeText(OrderDetailActivity.this,"已复制到剪贴板",Toast.LENGTH_SHORT).show();
-            }
+        back.setOnClickListener(v -> {
+            finish();
+        });
+
+        copyButton.setOnClickListener(v -> {
+            ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData mClipData = ClipData.newPlainText("Label", mOrder.getOrderNumber());
+            cm.setPrimaryClip(mClipData);
+            Toast.makeText(OrderDetailActivity.this,"已复制到剪贴板",Toast.LENGTH_SHORT).show();
         });
     }
 }

@@ -98,6 +98,8 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         String[] multiples = cm.getMultiple().split(",");
         for (int i = 0; i < cm.getFoods().size(); i++) {
             //GsonUtil.e("123",list.size()+"");
+            if (multiples[i].equals("0"))
+                continue;
             Food food = cm.getFoods().get(i);
             if(food.getMajor() == 1){
                 HashMap<Food, String> map = new HashMap<Food, String>();

@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import com.example.caigouapp.R;
 import com.example.caigouapp.data.OrderResponse;
 import com.example.caigouapp.utils.GsonUtil;
+import com.example.caigouapp.utils.SpUtil;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -53,8 +54,9 @@ public class OrderFragment extends Fragment {
         //String str = GsonUtil.getOrderJson(getActivity());
         //System.out.println(GsonUtil.ParseOrderGson(str));
 
+        int id = SpUtil.getInstance().getInt("id",1);
         HashMap<String, Integer> map = new HashMap<String, Integer>();
-        map.put("user_id", 1);
+        map.put("user_id", id);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://106.53.148.37:8082/")
