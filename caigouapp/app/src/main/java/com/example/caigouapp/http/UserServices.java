@@ -34,4 +34,7 @@ public interface UserServices {
 
     @GET("user/getUserAddress/{account}")
     Call<UserAddressResponse> getUserAddress(@Header("token") String header, @Path("account") String account);
+
+    @POST("user/addUserAddress")
+    Call<CommonResponse> addUserAddress(@Header("token") String header,@Body RequestBody body);
 }

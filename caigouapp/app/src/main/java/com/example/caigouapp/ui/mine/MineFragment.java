@@ -23,6 +23,7 @@ import com.example.caigouapp.data.UserTagResponse;
 import com.example.caigouapp.data.UserTagResponse.*;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.UserServices;
+import com.example.caigouapp.ui.AddAddressActivity;
 import com.example.caigouapp.utils.SpUtil;
 
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ public class MineFragment extends Fragment {
 
         TextView textView = root.findViewById(R.id.tag_choose_tv);
         TextView userName = root.findViewById(R.id.user_name);
+        TextView address = root.findViewById(R.id.tv_address);
 
         userName.setText(SpUtil.getInstance().getString("account","昵称"));
 
@@ -63,6 +65,11 @@ public class MineFragment extends Fragment {
                 tagChosen += tagsBean.getTag();
             }
             intent.putExtra("tagChosen",tagChosen);
+            startActivity(intent);
+        });
+
+        address.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AddAddressActivity.class);
             startActivity(intent);
         });
 

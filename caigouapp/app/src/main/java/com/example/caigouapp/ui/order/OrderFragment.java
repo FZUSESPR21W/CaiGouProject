@@ -48,6 +48,7 @@ public class OrderFragment extends Fragment {
     private BaseAdapter mAdapter;
     private ArrayList<CustomerMenu> mData = null;
     private List<Order> list = new ArrayList<>();
+    Call<OrderResponse> call;
 
     @Override
     public View onCreateView(LayoutInflater inflater,ViewGroup container,
@@ -66,7 +67,7 @@ public class OrderFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create()) //设置数据解析器
                 .build();
         OrderRequest request = retrofit.create(OrderRequest.class);
-        Call<OrderResponse> call = request.getPostCall(requestBody);
+        call = request.getPostCall(requestBody);
         //System.out.println(call.request().headers());
         //System.out.println(call.request());
         //System.out.println(call.request().url());
@@ -139,5 +140,12 @@ public class OrderFragment extends Fragment {
             }
         };
         recentOrderGridView.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (call != null && call.isExecuted())
+            call.cancel();
     }
 }
