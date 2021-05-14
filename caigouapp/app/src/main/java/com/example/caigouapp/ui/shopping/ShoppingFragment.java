@@ -59,6 +59,7 @@ public class ShoppingFragment extends Fragment {
     private String token = SpUtil.getInstance().getString("token",null);
     private int userId = SpUtil.getInstance().getInt("id",0);
     DecimalFormat df = new DecimalFormat( "0.00");
+    Call<CartResponse> call;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -102,6 +103,7 @@ public class ShoppingFragment extends Fragment {
 
     private void getCartRequest(int userId){
         Retrofit retrofit = new Retrofit.Builder()
+                .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(Constant.URL_BASE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -109,7 +111,7 @@ public class ShoppingFragment extends Fragment {
         map.put("user_id",userId);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
         CartServices cartServices = retrofit.create(CartServices.class);
-        Call<CartResponse> call = cartServices.getCartDetail(token,requestBody);
+        call = cartServices.getCartDetail(token,requestBody);
         call.enqueue(new Callback<CartResponse>() {
             @Override
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
@@ -150,7 +152,7 @@ public class ShoppingFragment extends Fragment {
                                 new ArrayList<>(sideIngredient),
                                 new ArrayList<>(step)));
                     }
-                    Toast.makeText(getContext(),"数据获取完毕",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"数据获取完毕",Toast.LENGTH_SHORT).show();
                 }
 
                 requireActivity().runOnUiThread(()->initView());
@@ -158,7 +160,6 @@ public class ShoppingFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
-                Toast.makeText(getContext(),"好像出了点问题……",Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
             }
         });
@@ -238,6 +239,10 @@ public class ShoppingFragment extends Fragment {
         }
     }
 
-
-
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (call != null && call.isExecuted())
+            call.cancel();
+    }
 }

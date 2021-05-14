@@ -80,6 +80,10 @@ public class SearchActivity extends AppCompatActivity {
                         binding.tvHistoryHead.setVisibility(View.GONE);
                         binding.rvSearchHistory.setVisibility(View.GONE);
                         binding.pbLoad.setVisibility(View.GONE);
+                        if (recipeList.size() == 0)
+                            binding.rvRecipeList.setVisibility(View.GONE);
+                        else
+                            binding.tvBlank.setVisibility(View.GONE);
                     });
                 }
             }
@@ -109,6 +113,7 @@ public class SearchActivity extends AppCompatActivity {
         if (recipeList.size() != 0){
             binding.rvSearchHistory.setVisibility(View.GONE);
             binding.tvHistoryHead.setVisibility(View.GONE);
+            binding.tvBlank.setVisibility(View.GONE);
         }
 
         // 线性布局管理器

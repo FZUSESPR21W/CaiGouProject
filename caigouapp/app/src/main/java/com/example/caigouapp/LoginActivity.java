@@ -11,7 +11,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.caigouapp.data.UserResponse;
 import com.example.caigouapp.databinding.ActivityLoginBinding;
 import com.example.caigouapp.http.Constant;
-import com.example.caigouapp.http.NullOnEmptyConverterFactory;
 import com.example.caigouapp.http.UserServices;
 import com.example.caigouapp.utils.SpUtil;
 

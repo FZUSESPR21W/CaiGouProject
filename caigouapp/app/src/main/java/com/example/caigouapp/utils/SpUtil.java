@@ -16,7 +16,7 @@ public class SpUtil {
 
     public static SpUtil getInstance(){
         if(instance == null){
-            instance=new SpUtil(MyApplication.getContext(),"sp");
+            instance = new SpUtil(MyApplication.getContext(),"sp");
         }
         return instance;
     }

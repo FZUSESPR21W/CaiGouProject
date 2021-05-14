@@ -1,6 +1,8 @@
 package com.example.caigouapp.http;
 
+import com.example.caigouapp.data.CommonResponse;
 import com.example.caigouapp.data.UserResponse;
+import com.example.caigouapp.data.UserTagResponse;
 
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -9,7 +11,11 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.HEAD;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface UserServices {
 
@@ -19,4 +25,9 @@ public interface UserServices {
     @POST("user/register")
     Call<UserResponse> getSignupUser(@Body RequestBody body);
 
+    @GET("user/getUserTags/{account}")
+    Call<UserTagResponse> getUserTags(@Header("token") String header, @Path("account") String account);
+
+    @POST("user/addUserTags")
+    Call<CommonResponse> addUserTags(@Body RequestBody body);
 }
