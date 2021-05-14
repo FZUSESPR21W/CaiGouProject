@@ -38,12 +38,12 @@ public class MineFragment extends Fragment {
 
     private List<TagsBean> tagList = new ArrayList<>();
     private MineAdapter adapter;
+    Call<UserAddressResponse> call;
+    Call<UserTagResponse> call1;
 
 //    地址管理代码
     private ListView listView;
-
     private List<AddressBean> addressList = new ArrayList<>();
-
     private MineAddressAdapter addressAdapter;
 
 
@@ -99,7 +99,7 @@ public class MineFragment extends Fragment {
         Log.d("account",account);
         Log.d("token",token);
         UserServices userServices = retrofit.create(UserServices.class);
-        Call<UserAddressResponse> call = userServices.getUserAddress(token, account);
+        call = userServices.getUserAddress(token, account);
         call.enqueue(new Callback<UserAddressResponse>() {
             @Override
             public void onResponse(Call<UserAddressResponse> call, Response<UserAddressResponse> response) {
@@ -119,7 +119,7 @@ public class MineFragment extends Fragment {
             }
         });
         //标签
-        Call<UserTagResponse> call1 = userServices.getUserTags(token, account);
+        call1 = userServices.getUserTags(token, account);
         call1.enqueue(new Callback<UserTagResponse>() {
             @Override
             public void onResponse(Call<UserTagResponse> call, Response<UserTagResponse> response) {
@@ -138,5 +138,14 @@ public class MineFragment extends Fragment {
                 Log.d("MineFragment",t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (call != null && call.isExecuted())
+            call.cancel();
+        if (call1 != null && call1.isExecuted())
+            call1.cancel();
     }
 }
