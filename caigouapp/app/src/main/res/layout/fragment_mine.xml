@@ -69,6 +69,7 @@
             android:text="地址管理"></TextView>
 
         <ListView
+            android:id="@+id/address_lv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"></ListView>
     </LinearLayout>

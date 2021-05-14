@@ -6,9 +6,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +38,14 @@ public class MineFragment extends Fragment {
     private List<String> tagList = new ArrayList<>();
     private MineAdapter adapter;
 
+//    地址管理代码
+    private ListView listView;
+
+    private List<String> listText;
+
+    private MineAddressAdapter addressAdapter;
+
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_mine, container, false);
@@ -55,12 +65,24 @@ public class MineFragment extends Fragment {
         recyclerView.setLayoutManager(staggeredGridLayoutManager);
 
         adapter = new MineAdapter(tagList, getActivity());
-
         recyclerView.setAdapter(adapter);
+
+        //地址list
+        listView = (ListView)root.findViewById(R.id.address_lv);
+        addressAdapter = new MineAddressAdapter(listText, getActivity());
+        listView.setAdapter(addressAdapter);
+
         return root;
     }
 
     private void initData() {
+        //地址
+        listText = new ArrayList<String>();
+        for (int i = 0; i < 60; i++) {
+            listText.add("单选按钮标题" + i);
+        }
+
+        //标签
         String account = SpUtil.getInstance().getString("account","");
         String token = SpUtil.getInstance().getString("token","");
         Retrofit retrofit = new Retrofit.Builder()
