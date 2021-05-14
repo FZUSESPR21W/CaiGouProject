@@ -63,6 +63,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 .baseUrl(Constant.URL_BASE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
         HashMap<String , Integer> map = new HashMap<>();
         map.put("id",id);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
@@ -166,15 +167,4 @@ public class RecipeDetailActivity extends AppCompatActivity {
         });
     }
 
-    private void initData(){
-        /*ingredient.add(new Ingredient("西红柿","两个"));
-        ingredient.add(new Ingredient("鸡蛋","一个"));
-        sideIngredient.add(new Ingredient("小葱","一把"));
-        sideIngredient.add(new Ingredient("盐","少许"));
-        sideIngredient.add(new Ingredient("糖","少许"));
-        sideIngredient.add(new Ingredient("胡椒","少许"));
-        sideIngredient.add(new Ingredient("七彩葫芦藤的种子","少许"));
-        step.add("1.放入番茄");
-        step.add("2.放入鸡蛋");*/
-    }
 }

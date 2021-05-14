@@ -51,7 +51,6 @@ public class ShoppingFragment extends Fragment {
     private FragmentShoppingBinding binding;
     private List<RecipeBean> list = new ArrayList<>();
     private List<Ingredient> ingredient = new ArrayList<>();
-    private List<Ingredient> standardIngredient = new ArrayList<>();
     private List<Ingredient> sideIngredient = new ArrayList<>();
     private List<Step> step = new ArrayList<>();
     private ShoppingAdapter adapter;
@@ -84,6 +83,9 @@ public class ShoppingFragment extends Fragment {
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
                 Toast.makeText(getContext(),"已经为您下单啦",Toast.LENGTH_SHORT).show();
                 list.clear();
+                adapter.clear();
+                adapter.notifyDataSetChanged();
+                binding.noItem.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -93,17 +95,8 @@ public class ShoppingFragment extends Fragment {
         });
     }
 
-
-    private Ingredient find(ArrayList<Ingredient> list,int id){
-        for(Ingredient ingredient : list){
-            if(ingredient.getId() == id)return ingredient;
-        }
-        return null;
-    }
-
     private void getCartRequest(int userId){
         Retrofit retrofit = new Retrofit.Builder()
-                .addConverterFactory(GsonConverterFactory.create())
                 .baseUrl(Constant.URL_BASE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
@@ -115,7 +108,8 @@ public class ShoppingFragment extends Fragment {
         call.enqueue(new Callback<CartResponse>() {
             @Override
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
-                if(response.body() != null){
+                if(response.body().getData() != null){
+                    binding.noItem.setVisibility(View.GONE);
                     double price = 0;
                     List<CartResponse.DataBean.InfoBean> infoList = new ArrayList<>(response.body().getData().getInfo());
                     for(CartResponse.DataBean.InfoBean dataBean : infoList){
@@ -152,7 +146,9 @@ public class ShoppingFragment extends Fragment {
                                 new ArrayList<>(sideIngredient),
                                 new ArrayList<>(step)));
                     }
-                    Toast.makeText(getActivity(),"数据获取完毕",Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    binding.noItem.setVisibility(View.VISIBLE);
                 }
 
                 requireActivity().runOnUiThread(()->initView());
@@ -160,23 +156,10 @@ public class ShoppingFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
+                Toast.makeText(getContext(),"好像出了点问题……",Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
             }
         });
-    }
-
-    private void initData(){
-        /*ingredient.add(new Ingredient("西红柿","两个"));
-        ingredient.add(new Ingredient("鸡蛋","一个"));
-        side_ingredient.add(new Ingredient("小葱","一把"));
-        side_ingredient.add(new Ingredient("盐","少许"));
-        side_ingredient.add(new Ingredient("糖","少许"));
-        side_ingredient.add(new Ingredient("胡椒","少许"));
-        side_ingredient.add(new Ingredient("清水","少许"));
-        step.add(new Step("no","放入番茄"));
-        step.add(new Step("no","放入鸡蛋"));
-        for(int i = 0;i<10;i++)
-            list.add(new RecipeBean("测试菜谱"+i,"测试介绍",6.66,"no",ingredient,side_ingredient,step));*/
     }
 
     private void countPrice(){
