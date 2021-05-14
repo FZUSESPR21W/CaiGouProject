@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.caigouapp.R;
 import com.example.caigouapp.data.OrderResponse;
@@ -42,6 +43,7 @@ public class OrderFragment extends Fragment {
 
     private Button cancelButton;
     private RecyclerView recyclerView;
+    private TextView noOrderTextView;
     private GridView recentOrderGridView;
     private BaseAdapter mAdapter;
     private ArrayList<CustomerMenu> mData = null;
@@ -51,6 +53,7 @@ public class OrderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,ViewGroup container,
                              Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_order,container,false);
+        noOrderTextView = (TextView)view.findViewById(R.id.txt_order_preview_noOrder);
         //String str = GsonUtil.getOrderJson(getActivity());
         //System.out.println(GsonUtil.ParseOrderGson(str));
 
@@ -85,6 +88,8 @@ public class OrderFragment extends Fragment {
                 getActivity().runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if(list.size()==0) noOrderTextView.setVisibility(View.VISIBLE);
+                        else noOrderTextView.setVisibility(View.GONE);
                         recyclerView = (RecyclerView) view.findViewById(R.id.all_order_recycler);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity获得活动（context）
                         recyclerView.setAdapter(new OrderPreviewAdapter(getActivity(),list));
