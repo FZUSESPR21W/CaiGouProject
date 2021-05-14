@@ -15,8 +15,7 @@
         android:theme="@style/Theme.Caigouapp"
         android:usesCleartextTraffic="true">
         <activity android:name=".ui.mine.TagChooseActivity"/>
-        <activity android:name=".ui.SearchActivity"
-            android:launchMode="singleTask"/>
+        <activity android:name=".ui.SearchActivity"/>
         <activity android:name=".ui.RecipeDetailActivity"/>
         <activity
             android:name=".MainActivity"

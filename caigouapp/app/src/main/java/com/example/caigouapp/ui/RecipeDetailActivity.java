@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -45,7 +44,6 @@ public class RecipeDetailActivity extends AppCompatActivity {
     private ArrayList<Ingredient> ingredient = new ArrayList<>();
     private ArrayList<Ingredient> sideIngredient = new ArrayList<>();
     private ArrayList<Step> step = new ArrayList<>();
-    private String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4In0.KD68i4Quc8pI2bD9NbT0nhJlrYcOb-I8X07LG7DNwJs";
     private int id;
 
     @Override
@@ -66,7 +64,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
         map.put("id",id);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
         RecipeServices recipeServices = retrofit.create(RecipeServices.class);
-        Call<RecipeDetailResponse> call = recipeServices.getRecipeDetail(token,requestBody);
+        Call<RecipeDetailResponse> call = recipeServices.getRecipeDetail(id);
         call.enqueue(new Callback<RecipeDetailResponse>() {
             @Override
             public void onResponse(Call<RecipeDetailResponse> call, Response<RecipeDetailResponse> response) {
@@ -154,7 +152,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 Toast.makeText(this,"您还没有选择要购买的商品！",Toast.LENGTH_SHORT).show();
             }
             else {
-                RecipeDialog dialog = new RecipeDialog(ingredientAdapter.getSendList(), data ,ingredientAdapter.getTotalSize());
+                RecipeDialog dialog = new RecipeDialog(ingredientAdapter.getSendList(), data);
                 dialog.show(getSupportFragmentManager(), "tag");
             }
         });
