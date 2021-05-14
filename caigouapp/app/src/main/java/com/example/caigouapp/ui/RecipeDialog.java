@@ -77,7 +77,7 @@ public class RecipeDialog extends DialogFragment {
         DisplayMetrics dm = new DisplayMetrics();
         getActivity().getWindowManager().getDefaultDisplay().getMetrics(dm);
         // 遮罩层透明度
-        getDialog().getWindow().setDimAmount(0);
+        getDialog().getWindow().setDimAmount((float) 0.3);
         WindowManager.LayoutParams params = window.getAttributes();
         params.width = (int) (dm.widthPixels * 0.95);
         params.height = WindowManager.LayoutParams.WRAP_CONTENT;
@@ -129,7 +129,6 @@ public class RecipeDialog extends DialogFragment {
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
             CartServices cartServices = retrofit.create(CartServices.class);
-            //userID还未确定给入
             HashMap<String , Object> map = new HashMap<>();
             map.put("Multiple",multiple);
             map.put("price",price);
