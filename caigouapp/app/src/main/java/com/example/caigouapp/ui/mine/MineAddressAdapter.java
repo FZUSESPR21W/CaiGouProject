@@ -8,22 +8,25 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.example.caigouapp.R;
+import com.example.caigouapp.data.UserAddressResponse.*;
 
 import java.util.HashMap;
 import java.util.List;
 
 public class MineAddressAdapter extends BaseAdapter {
-    private List<String> listText;
+    private List<AddressBean> addressList;
     private Context context;
     HashMap<String, Boolean> states = new HashMap<String, Boolean>();
-    public MineAddressAdapter(List<String> listText, Context context) {
-        this.listText = listText;
+    public MineAddressAdapter(List<AddressBean> addressList, Context context) {
+        this.addressList = addressList;
         this.context = context;
+        if (!addressList.isEmpty())
+            states.put(String.valueOf(0), true);
     }
 
     @Override
     public int getCount() {
-        return listText.size();
+        return addressList.size();
     }
 
     @Override
@@ -44,18 +47,16 @@ public class MineAddressAdapter extends BaseAdapter {
         }else {
             view = convertView;
         }
-        TextView radioText = (TextView)view.findViewById(R.id.address_tv);
-        RadioButton radioButton = (RadioButton)view.findViewById(R.id.mine_phone_num);
-        radioText.setText(listText.get(position));
-        radioButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                for(String key : states.keySet()) {
-                    states.put(key, false);
-                }
-                states.put(String.valueOf(position), true);
-                MineAddressAdapter.this.notifyDataSetChanged();
+        RadioButton address = view.findViewById(R.id.mine_address);
+        TextView phone = view.findViewById(R.id.tv_phone);
+        address.setText(addressList.get(position).getAddress());
+        phone.setText(addressList.get(position).getPhone());
+        address.setOnClickListener(v -> {
+            for(String key : states.keySet()) {
+                states.put(key, false);
             }
+            states.put(String.valueOf(position), true);
+            MineAddressAdapter.this.notifyDataSetChanged();
         });
         boolean res = false;
         if(states.get(String.valueOf(position)) == null || states.get(String.valueOf(position)) == false) {
@@ -64,7 +65,7 @@ public class MineAddressAdapter extends BaseAdapter {
         } else
             res = true;
 
-        radioButton.setChecked(res);
+        address.setChecked(res);
         return view;
     }
 }

@@ -27,6 +27,7 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -44,6 +45,7 @@ public class SearchActivity extends AppCompatActivity {
     private ActivitySearchBinding binding;
     private RecipeSearchAdapter adapter;
     private List<MenusBean> recipeList = new ArrayList<>();
+    List<String> historyList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +59,16 @@ public class SearchActivity extends AppCompatActivity {
             binding.pbLoad.setVisibility(View.VISIBLE);
             initData(new Gson().toJson(map));
         }
+        initHistory();
         initView();
         setContentView(binding.getRoot());
+    }
+
+    private void initHistory() {
+        String historyStr = SpUtil.getInstance().getString("history","");
+        if (!historyStr.equals("")){
+            historyList.addAll(Arrays.asList(historyStr.split(",")));
+        }
     }
 
     private void initData(String searchContent) {
@@ -75,15 +85,21 @@ public class SearchActivity extends AppCompatActivity {
             public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
                 if (response.isSuccessful()){
                     runOnUiThread(() -> {
+                        recipeList.clear();
                         recipeList.addAll(response.body().getMenus());
                         adapter.notifyDataSetChanged();
                         binding.tvHistoryHead.setVisibility(View.GONE);
+                        binding.tvClearHistory.setVisibility(View.GONE);
                         binding.rvSearchHistory.setVisibility(View.GONE);
                         binding.pbLoad.setVisibility(View.GONE);
-                        if (recipeList.size() == 0)
+                        if (recipeList.size() == 0){
                             binding.rvRecipeList.setVisibility(View.GONE);
-                        else
+                            binding.tvBlank.setVisibility(View.VISIBLE);
+                        }
+                        else{
                             binding.tvBlank.setVisibility(View.GONE);
+                            binding.rvRecipeList.setVisibility(View.VISIBLE);
+                        }
                     });
                 }
             }
@@ -95,20 +111,22 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     private void initView(){
-        String[] historyArr = null;
-        String historyStr = SpUtil.getInstance().getString("history","");
-        if (!historyStr.equals("")){
-            historyArr = historyStr.split(",");
-        }
-        if (historyArr != null && historyArr.length != 0){
+        TextAdapter textAdapter = new TextAdapter(historyList, this);
+        if (historyList.size() != 0){
             FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
             layoutManager.setFlexDirection(FlexDirection.ROW);
             layoutManager.setJustifyContent(JustifyContent.FLEX_START);
             binding.rvSearchHistory.setLayoutManager(layoutManager);
             // 历史记录
-            TextAdapter textAdapter = new TextAdapter(historyArr, this);
             binding.rvSearchHistory.setAdapter(textAdapter);
         }
+
+        binding.tvClearHistory.setOnClickListener(v -> {
+            SpUtil.getInstance().putString("history","");
+            initHistory();
+            historyList.clear();
+            textAdapter.notifyDataSetChanged();
+        });
 
         if (recipeList.size() != 0){
             binding.rvSearchHistory.setVisibility(View.GONE);
@@ -127,10 +145,12 @@ public class SearchActivity extends AppCompatActivity {
             String content = binding.etSearch.getText().toString();
             if (content != null && !content.equals("")){
                 String str = SpUtil.getInstance().getString("history","");
-                if (str.equals(""))
-                    SpUtil.getInstance().putString("history",content);
-                else
-                    SpUtil.getInstance().putString("history",str+","+content);
+                if (!str.contains(content)){
+                    if (str.equals(""))
+                        SpUtil.getInstance().putString("history",content);
+                    else
+                        SpUtil.getInstance().putString("history",str+","+content);
+                }
                 HashMap<String, String> map = new HashMap<>();
                 map.put("searchWord",content);
                 binding.pbLoad.setVisibility(View.VISIBLE);

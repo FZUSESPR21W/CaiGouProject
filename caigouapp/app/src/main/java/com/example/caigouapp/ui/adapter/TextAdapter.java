@@ -13,12 +13,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.caigouapp.R;
 import com.example.caigouapp.ui.SearchActivity;
 
+import java.util.List;
+
 public class TextAdapter extends RecyclerView.Adapter<TextAdapter.ViewHolder> {
 
-    private String[] arr;
+    private List<String> arr;
     private Context mContext;
 
-    public TextAdapter(String[] list, Context context){
+    public TextAdapter(List<String> list, Context context){
         this.arr = list;
         this.mContext = context;
     }
@@ -32,7 +34,7 @@ public class TextAdapter extends RecyclerView.Adapter<TextAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull TextAdapter.ViewHolder holder, int position) {
-        String content = arr[position];
+        String content = arr.get(position);
         holder.historyContent.setText(content);
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, SearchActivity.class);
@@ -45,7 +47,7 @@ public class TextAdapter extends RecyclerView.Adapter<TextAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return arr.length;
+        return arr.size();
     }
 
     class ViewHolder extends RecyclerView.ViewHolder{

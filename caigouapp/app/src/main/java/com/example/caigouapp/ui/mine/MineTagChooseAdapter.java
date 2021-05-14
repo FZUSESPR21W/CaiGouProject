@@ -4,20 +4,20 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.caigouapp.R;
+import com.example.caigouapp.data.UserTagResponse.*;
 
 import java.util.List;
 
 public class MineTagChooseAdapter extends RecyclerView.Adapter<MineTagChooseAdapter.MineViewHolder> {
-    private List<MineBean> data;
+    private List<TagsBean> data;
     private Context context;
 
-    public MineTagChooseAdapter(List<MineBean> data, Context context) {
+    public MineTagChooseAdapter(List<TagsBean> data, Context context) {
         this.data = data;
         this.context = context;
     }
@@ -31,9 +31,11 @@ public class MineTagChooseAdapter extends RecyclerView.Adapter<MineTagChooseAdap
 
     @Override
     public void onBindViewHolder(@NonNull MineTagChooseAdapter.MineViewHolder holder, int position) {
-        holder.tv.setText(data.get(position).getName());
-//        判断已选标签
-//        holder.tv.setChecked(true);
+        holder.tv.setText(data.get(position).getTag());
+        if (data.get(position).getStatus() == 1)
+            holder.tv.setChecked(true);
+        else
+            holder.tv.setChecked(false);
     }
 
     @Override

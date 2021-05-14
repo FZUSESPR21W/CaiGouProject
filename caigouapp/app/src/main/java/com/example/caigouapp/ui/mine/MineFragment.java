@@ -17,10 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.caigouapp.R;
-import com.example.caigouapp.data.SearchResponse;
+import com.example.caigouapp.data.UserAddressResponse;
+import com.example.caigouapp.data.UserAddressResponse.*;
 import com.example.caigouapp.data.UserTagResponse;
+import com.example.caigouapp.data.UserTagResponse.*;
 import com.example.caigouapp.http.Constant;
-import com.example.caigouapp.http.RecipeServices;
 import com.example.caigouapp.http.UserServices;
 import com.example.caigouapp.utils.SpUtil;
 
@@ -35,13 +36,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MineFragment extends Fragment {
 
-    private List<String> tagList = new ArrayList<>();
+    private List<TagsBean> tagList = new ArrayList<>();
     private MineAdapter adapter;
 
 //    地址管理代码
     private ListView listView;
 
-    private List<String> listText;
+    private List<AddressBean> addressList = new ArrayList<>();
 
     private MineAddressAdapter addressAdapter;
 
@@ -50,12 +51,18 @@ public class MineFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_mine, container, false);
 
-        initData();
-
         TextView textView = root.findViewById(R.id.tag_choose_tv);
+        TextView userName = root.findViewById(R.id.user_name);
+
+        userName.setText(SpUtil.getInstance().getString("account","昵称"));
 
         textView.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), TagChooseActivity.class);
+            String tagChosen = "";
+            for (TagsBean tagsBean : tagList) {
+                tagChosen += tagsBean.getTag();
+            }
+            intent.putExtra("tagChosen",tagChosen);
             startActivity(intent);
         });
 
@@ -69,37 +76,60 @@ public class MineFragment extends Fragment {
 
         //地址list
         listView = (ListView)root.findViewById(R.id.address_lv);
-        addressAdapter = new MineAddressAdapter(listText, getActivity());
+        addressAdapter = new MineAddressAdapter(addressList, getActivity());
         listView.setAdapter(addressAdapter);
 
         return root;
     }
 
-    private void initData() {
-        //地址
-        listText = new ArrayList<String>();
-        for (int i = 0; i < 60; i++) {
-            listText.add("单选按钮标题" + i);
-        }
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+    }
 
-        //标签
+    private void initData() {
         String account = SpUtil.getInstance().getString("account","");
         String token = SpUtil.getInstance().getString("token","");
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.URL_BASE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+        //地址
+        Log.d("account",account);
+        Log.d("token",token);
         UserServices userServices = retrofit.create(UserServices.class);
-        Call<UserTagResponse> call = userServices.getUserTags(token, account);
-        call.enqueue(new Callback<UserTagResponse>() {
+        Call<UserAddressResponse> call = userServices.getUserAddress(token, account);
+        call.enqueue(new Callback<UserAddressResponse>() {
+            @Override
+            public void onResponse(Call<UserAddressResponse> call, Response<UserAddressResponse> response) {
+                if (response.isSuccessful()){
+                    getActivity().runOnUiThread(() -> {
+                        if (response.body().getAddress() != null){
+                            addressList.clear();
+                            addressList.addAll(response.body().getAddress());
+                            addressAdapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onFailure(Call<UserAddressResponse> call, Throwable t) {
+                Log.d("MineFragment",t.getMessage());
+            }
+        });
+        //标签
+        Call<UserTagResponse> call1 = userServices.getUserTags(token, account);
+        call1.enqueue(new Callback<UserTagResponse>() {
             @Override
             public void onResponse(Call<UserTagResponse> call, Response<UserTagResponse> response) {
                 if (response.isSuccessful()){
                     getActivity().runOnUiThread(() -> {
                         if (response.body().getTags() != null){
+                            tagList.clear();
                             tagList.addAll(response.body().getTags());
+                            adapter.notifyDataSetChanged();
                         }
-                        adapter.notifyDataSetChanged();
                     });
                 }
             }
