@@ -108,7 +108,7 @@ public class ShoppingFragment extends Fragment {
         call.enqueue(new Callback<CartResponse>() {
             @Override
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
-                if(response.body().getData() != null){
+                if(response.body() != null && response.body().getData() != null){
                     binding.noItem.setVisibility(View.GONE);
                     double price = 0;
                     List<CartResponse.DataBean.InfoBean> infoList = new ArrayList<>(response.body().getData().getInfo());
