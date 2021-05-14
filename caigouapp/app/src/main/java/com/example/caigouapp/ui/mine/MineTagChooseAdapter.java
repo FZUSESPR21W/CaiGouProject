@@ -36,6 +36,12 @@ public class MineTagChooseAdapter extends RecyclerView.Adapter<MineTagChooseAdap
             holder.tv.setChecked(true);
         else
             holder.tv.setChecked(false);
+        holder.tv.setOnClickListener(v -> {
+            if (data.get(position).getStatus() == 0)
+                data.get(position).setStatus(1);
+            else
+                data.get(position).setStatus(0);
+        });
     }
 
     @Override

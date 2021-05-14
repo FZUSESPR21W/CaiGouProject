@@ -97,6 +97,7 @@ public class TagChooseActivity extends AppCompatActivity {
                 tags.add(data.get(i).getTag_id()+"");
         }
         map.put("tags",tags);
+        Log.d("test",map.toString());
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.URL_BASE)
