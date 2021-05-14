@@ -25,14 +25,14 @@ public class UserOrderController {
     private UserOrderService userOrderService;
 
     /**
-     * /order/findAll/{pageNum}
+     * /order/findAll
      * 查询所有订单
      * @param pageNum(分页显示的页数）
      * @return Page<UserOrder>该页的内容
      */
     @UserLoginToken
-    @GetMapping("/findAll/{pageNum}")
-    public Result<Page<UserOrder>> findAll(@PathVariable Integer pageNum){
+    @GetMapping("/findAll")
+    public Result<Page<UserOrder>> findAll(@RequestParam Integer pageNum){
         return Result.success(orderService.findPage(pageNum,5));
     }
 

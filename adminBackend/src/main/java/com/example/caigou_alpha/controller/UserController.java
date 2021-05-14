@@ -28,12 +28,9 @@ public class UserController {
      */
 
     @UserLoginToken
-    @GetMapping("/findOrderUser/{userId}")
-    public Result<User>  findOrderUser(@PathVariable Integer userId){
+    @GetMapping("/findOrderUser")
+    public Result<User>  findOrderUser(@RequestParam Integer userId){
         return Result.success(userService.findOrderUser(userId));
     }
-
-
-
 
 }

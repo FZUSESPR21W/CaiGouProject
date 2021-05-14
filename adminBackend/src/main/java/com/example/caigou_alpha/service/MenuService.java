@@ -31,17 +31,25 @@ public class MenuService {
         return menuDao.findLikeDao(name,pageable);
     }
 
+//    public Menu findLike1()
+
     /**
      * 新增和修改
      * 有ID则为修改
      * @param m
      */
     public void save(Menu m){
+
         menuDao.save(m);
     }
 
     public void del(Integer id){
         menuFoodDao.deleteSonRow(id);
         menuDao.deleteById(id);
+    }
+
+    public Page<Menu> findLikeTags(Integer pageNum, Integer pageSize, String tags) {
+        Pageable pageable = PageRequest.of(pageNum-1,pageSize);
+        return menuDao.findLikeTagDao(tags,pageable);
     }
 }

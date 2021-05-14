@@ -27,8 +27,8 @@ public class MenuController {
      * @return  Page<Menu>该页的内容
      */
     @UserLoginToken
-    @GetMapping("/findAll/{pageNum}")
-    public Result<Page<Menu>> findAll(@PathVariable Integer pageNum){
+    @GetMapping("/findAll")
+    public Result<Page<Menu>> findAll(@RequestParam Integer pageNum){
         return Result.success(menuService.findPage(pageNum,5));
     }
 
@@ -45,6 +45,13 @@ public class MenuController {
         return Result.success(menuService.findLike(pageNum,5,name));
     }
 
+
+    @UserLoginToken
+    @GetMapping("/findLikeTag")
+    public Result<Page<Menu>> findMenuLikeTags( @RequestParam(required = true)Integer pageNum,@RequestParam(required = true)String tag){
+        return Result.success(menuService.findLikeTags(pageNum,5,tag));
+    }
+
     /**
      * /menu/addMenu
      * 添加菜单，menu表中的每个字段都要填写因为数据库设计为非空
@@ -54,7 +61,7 @@ public class MenuController {
 
     @UserLoginToken
     @PostMapping("/addMenu")
-    public Result add(Menu menu){
+    public Result add(@RequestBody Menu menu){
         menuService.save(menu);
         return Result.success();
     }
@@ -66,8 +73,8 @@ public class MenuController {
      * @return
      */
     @UserLoginToken
-    @PutMapping("/updateMenu")
-    public Result update(Menu menu){
+    @PostMapping("/updateMenu")
+    public Result update(@RequestBody  Menu menu){
         menuService.save(menu);
         return Result.success();
     }
@@ -79,8 +86,8 @@ public class MenuController {
      * @return
      */
     @UserLoginToken
-    @DeleteMapping("/deleteMenu/{id}")
-    public Result delete(@PathVariable Integer id){
+    @DeleteMapping("/deleteMenu")
+    public Result delete(@RequestParam Integer id){
         menuService.del(id);
         return Result.success();
     }

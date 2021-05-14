@@ -54,4 +54,7 @@ public interface MenuDao extends JpaRepository<Menu,Integer> {
      */
     @Query(value = "select m from Menu  m where  m.id = :id")
     Menu selectMenuById(@Param("id")Integer id);
+
+    @Query(value = "SELECT m FROM  Menu m  where m.tags like %:tags%")
+    Page<Menu> findLikeTagDao(@Param("tags") String tags, Pageable pageable);
 }

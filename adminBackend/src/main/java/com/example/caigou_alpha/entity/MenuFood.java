@@ -2,7 +2,10 @@ package com.example.caigou_alpha.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 
 @Table(name = "menu_food")
 @Entity
@@ -15,6 +18,36 @@ public class MenuFood {
     public Integer getId() {
         return id;
     }
+
+//    public List<Food> getFoodList() {
+//        return foodList;
+//    }
+//
+//    public void setFoodList(List<Food> foodList) {
+//        this.foodList = foodList;
+//    }
+//
+//    @OneToMany
+//    private List<Food> foodList = new ArrayList<>();
+//
+//    public String getFoodListString() {
+//        return foodListString;
+//    }
+//
+//    public void setFoodListString(String foodListString) {
+//        this.foodListString = foodListString;
+//    }
+//
+//    public String getStandardList() {
+//        return standardList;
+//    }
+//
+//    public void setStandardList(String standardList) {
+//        this.standardList = standardList;
+//    }
+//
+//    private String foodListString;
+//    private String standardList;
 
     public void setId(Integer id) {
         this.id = id;

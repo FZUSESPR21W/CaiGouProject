@@ -1,6 +1,8 @@
 package com.example.caigou_alpha.entity;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  *
@@ -18,6 +20,17 @@ public class Menu {
     private String method;
     private String tags;
     private String avatar;
+
+//    public List<Food> getFoodList() {
+//        return foodList;
+//    }
+//
+//    public void setFoodList(List<Food> foodList) {
+//        this.foodList = foodList;
+//    }
+//
+//    @OneToMany
+//    private List<Food> foodList = new ArrayList<Food>();
 
     public int getId() {
         return id;
