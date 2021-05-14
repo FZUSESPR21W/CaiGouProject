@@ -34,9 +34,11 @@ public class TextAdapter extends RecyclerView.Adapter<TextAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull TextAdapter.ViewHolder holder, int position) {
         String content = arr[position];
         holder.historyContent.setText(content);
-        holder.historyContent.setOnClickListener(v -> {
+        holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(mContext, SearchActivity.class);
             intent.putExtra("content",content);
+            if (mContext instanceof SearchActivity)
+                ((SearchActivity) mContext).finish();
             mContext.startActivity(intent);
         });
     }

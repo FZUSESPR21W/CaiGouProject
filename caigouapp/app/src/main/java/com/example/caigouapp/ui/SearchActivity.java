@@ -51,8 +51,12 @@ public class SearchActivity extends AppCompatActivity {
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
         
         String content = getIntent().getStringExtra("content");
-        if (content != null && !content.equals(""))
-            initData(content);
+        if (content != null && !content.equals("")){
+            HashMap<String, String> map = new HashMap<>();
+            map.put("searchWord",content);
+            binding.pbLoad.setVisibility(View.VISIBLE);
+            initData(new Gson().toJson(map));
+        }
         initView();
         setContentView(binding.getRoot());
     }

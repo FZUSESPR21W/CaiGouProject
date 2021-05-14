@@ -21,12 +21,16 @@ import com.example.caigouapp.http.RecipeServices;
 import com.example.caigouapp.ui.adapter.IngredientAdapter;
 import com.example.caigouapp.ui.adapter.RecipeStepAdapter;
 import com.example.caigouapp.ui.adapter.SideIngredientGridAdapter;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -55,7 +59,10 @@ public class RecipeDetailActivity extends AppCompatActivity {
                 .baseUrl(Constant.URL_BASE)
                 .build();
         RecipeServices recipeServices = retrofit.create(RecipeServices.class);
-        Call<RecipeDetailResponse> call = recipeServices.getRecipeDetail(id);
+        HashMap<String,Integer> map = new HashMap<>();
+        map.put("id",id);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),new Gson().toJson(map));
+        Call<RecipeDetailResponse> call = recipeServices.getRecipeDetail(body);
         call.enqueue(new Callback<RecipeDetailResponse>() {
             @Override
             public void onResponse(Call<RecipeDetailResponse> call, Response<RecipeDetailResponse> response) {
