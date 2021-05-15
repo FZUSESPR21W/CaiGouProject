@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/bg_square">
+
+    <TextView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:text="测试材料"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/uploadIngredientName"
+        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp">
+    </TextView>
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/bg_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/uploadIngredientPortion"
+        android:id="@+id/subButton"
+        android:text="-"
+        android:textColor="#FFFFFF"
+        android:layout_marginRight="25dp"
+        android:layout_marginEnd="25dp">
+    </Button>
+    <TextView
+        android:layout_width="35dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:text="1"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="#000"
+        app:layout_constraintRight_toLeftOf="@+id/addButton"
+        android:layout_marginRight="25dp"
+        android:layout_marginEnd="25dp"
+        android:id="@+id/uploadIngredientPortion">
+    </TextView>
+
+    <Button
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@drawable/bg_button"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/addButton"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="+"
+        android:textColor="#FFFFFF"
+        android:layout_marginRight="20dp"
+        android:layout_marginEnd="20dp">
+    </Button>
+
+    <TextView
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/subButton"
+        android:text="100克"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/uploadIngredientWeight"
+        android:layout_marginEnd="20dp"
+        android:layout_marginRight="20dp">
+    </TextView>
+</androidx.constraintlayout.widget.ConstraintLayout>
