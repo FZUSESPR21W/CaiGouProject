@@ -91,4 +91,11 @@ public class MenuController {
         menuService.del(id);
         return Result.success();
     }
+
+//    @UserLoginToken
+//    @GetMapping("/findMenuByIdDetail")
+//    public Result findMenuByIdDetail(@RequestParam Integer id){
+//        menuService.findMenuAndDetailById(id);
+//        return Result.success();
+//    }
 }

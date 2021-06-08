@@ -6,12 +6,9 @@ import com.example.caigou_alpha.common.Constant;
 import com.example.caigou_alpha.common.Result;
 import com.example.caigou_alpha.entity.AdminUser;
 import com.example.caigou_alpha.entity.AdminUserDTO;
-import com.example.caigou_alpha.entity.User;
 import com.example.caigou_alpha.service.AdminUserService;
 import com.example.caigou_alpha.service.TokenService;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -59,7 +56,7 @@ public class AdminUserController {
      * @return
      */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
-    public JSONObject login(@RequestBody AdminUserDTO adminuserDTO)  {
+    public JSONObject login(@RequestBody AdminUserDTO adminuserDTO){
         JSONObject jsonObject=new JSONObject();
         AdminUser adminUserForBase=adminUserService.findByName(adminuserDTO.getName());
         if(adminUserForBase==null){
@@ -67,12 +64,12 @@ public class AdminUserController {
             jsonObject.put("msg","登录失败,用户不存在");
             jsonObject.put("content",adminuserDTO.getName());
             return jsonObject;
-        }else {
-            if (!adminUserForBase.getApp_admin_password().equals(adminuserDTO.getPassword())){
+        }else{
+            if(!adminUserForBase.getApp_admin_password().equals(adminuserDTO.getPassword())){
                 jsonObject.put("code", Constant.INVALID_PASSWORD);
                 jsonObject.put("msg","登录失败,密码错误");
                 return jsonObject;
-            }else {
+            }else{
                 String token = tokenService.getToken(adminUserForBase);
                 jsonObject.put("token", token);
                 jsonObject.put("adminUser", adminUserForBase);

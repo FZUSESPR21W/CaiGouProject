@@ -8,7 +8,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.stereotype.Service;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.xml.ws.soap.Addressing;
 
 import static org.junit.jupiter.api.Assertions.*;
 @Service

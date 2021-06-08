@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+
 @Repository
 public interface MenuDao extends JpaRepository<Menu,Integer> {
     @Query(value = "SELECT m FROM  Menu m  where m.name like %:name%")
@@ -57,4 +58,12 @@ public interface MenuDao extends JpaRepository<Menu,Integer> {
 
     @Query(value = "SELECT m FROM  Menu m  where m.tags like %:tags%")
     Page<Menu> findLikeTagDao(@Param("tags") String tags, Pageable pageable);
+
+
+    @Query("select mf.food_weight_list from MenuFood  mf where  mf.menu_id = :menuid")
+    String findWeightList(@Param("menuid") Integer id);
+
+    @Query("select mf.food_id_list from MenuFood  mf where  mf.menu_id = :menuid")
+    String findFoodList(@Param("menuid") Integer id);
+
 }

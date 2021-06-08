@@ -1,5 +1,7 @@
 package com.example.caigou_alpha.entity;
 
+import org.springframework.context.annotation.Bean;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,16 +23,40 @@ public class Menu {
     private String tags;
     private String avatar;
 
-//    public List<Food> getFoodList() {
-//        return foodList;
-//    }
-//
-//    public void setFoodList(List<Food> foodList) {
-//        this.foodList = foodList;
-//    }
-//
-//    @OneToMany
-//    private List<Food> foodList = new ArrayList<Food>();
+    //一下未非数据库表部分
+    private String weightList;
+    private String foodAll;//需要分割分割后填充为foodList的Food.name
+
+    public List<Food> getFoodList() {
+        return foodList;
+    }
+
+    public void setFoodList(List<Food> foodList) {
+        this.foodList = foodList;
+    }
+
+    @OneToMany
+    private List<Food> foodList;
+
+    static private  String test;
+
+    public String getWeightList() {
+        return weightList;
+    }
+
+    public void setWeightList(String weightList) {
+        this.weightList = weightList;
+    }
+
+    public String getFoodAll() {
+        return foodAll;
+    }
+
+    public void setFoodAll(String foodAll) {
+        this.foodAll = foodAll;
+    }
+
+
 
     public int getId() {
         return id;

@@ -8,7 +8,7 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.example.caigou_alpha.annotation.PassToken;
 import com.example.caigou_alpha.annotation.UserLoginToken;
 import com.example.caigou_alpha.entity.AdminUser;
-import com.example.caigou_alpha.entity.User;
+//import com.example.caigou_alpha.entity.User;
 import com.example.caigou_alpha.service.AdminUserService;
 import com.example.caigou_alpha.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     AdminUserService adminUserService;
 
     @Override
-    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
+    public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object){
         String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
         // 如果不是映射到方法直接通过
         if(!(object instanceof HandlerMethod)){
@@ -79,12 +79,12 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest httpServletRequest,
                            HttpServletResponse httpServletResponse,
-                           Object o, ModelAndView modelAndView) throws Exception {
+                           Object o, ModelAndView modelAndView)  {
 
     }
     @Override
     public void afterCompletion(HttpServletRequest httpServletRequest,
                                 HttpServletResponse httpServletResponse,
-                                Object o, Exception e) throws Exception {
+                                Object o, Exception e)  {
     }
 }
