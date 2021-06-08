@@ -58,10 +58,9 @@
         app:layout_constraintTop_toBottomOf="@id/ll_head_home"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical"
             android:background="@drawable/search_et">
             <TextView
                 android:id="@+id/tv_history_head"
@@ -72,24 +71,37 @@
                 android:textSize="15sp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginVertical="5dp"/>
+            <TextView
+                android:id="@+id/tv_clear_history"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="清空"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="5dp"
+                android:layout_marginVertical="5dp"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_search_history"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
-                android:layout_marginLeft="5dp"/>
+                android:layout_marginLeft="5dp"
+                android:layout_below="@id/tv_history_head"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_recipe_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rv_search_history"/>
 
             <TextView
                 android:id="@+id/tv_blank"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:text="空空如也"
-                android:gravity="center"/>
-        </LinearLayout>
+                android:textSize="20sp"
+                android:visibility="gone"
+                android:layout_centerInParent="true"/>
+        </RelativeLayout>
     </androidx.core.widget.NestedScrollView>
 
     <ProgressBar

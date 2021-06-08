@@ -1,6 +1,7 @@
 package com.example.caigouapp.http;
 
 import com.example.caigouapp.data.CommonResponse;
+import com.example.caigouapp.data.UserAddressResponse;
 import com.example.caigouapp.data.UserResponse;
 import com.example.caigouapp.data.UserTagResponse;
 
@@ -29,5 +30,11 @@ public interface UserServices {
     Call<UserTagResponse> getUserTags(@Header("token") String header, @Path("account") String account);
 
     @POST("user/addUserTags")
-    Call<CommonResponse> addUserTags(@Body RequestBody body);
+    Call<CommonResponse> addUserTags(@Header("token") String header, @Body RequestBody body);
+
+    @GET("user/getUserAddress/{account}")
+    Call<UserAddressResponse> getUserAddress(@Header("token") String header, @Path("account") String account);
+
+    @POST("user/addUserAddress")
+    Call<CommonResponse> addUserAddress(@Header("token") String header,@Body RequestBody body);
 }

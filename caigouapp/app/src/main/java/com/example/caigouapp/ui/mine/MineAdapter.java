@@ -9,15 +9,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.caigouapp.R;
+import com.example.caigouapp.data.UserTagResponse.*;
 
 import java.util.List;
 
 public class MineAdapter extends RecyclerView.Adapter<MineAdapter.MineViewHolder> {
 
-    private List<String> data;
+    private List<TagsBean> data;
     private Context context;
 
-    public MineAdapter(List<String> data, Context context) {
+    public MineAdapter(List<TagsBean> data, Context context) {
         this.data = data;
         this.context = context;
     }
@@ -31,7 +32,7 @@ public class MineAdapter extends RecyclerView.Adapter<MineAdapter.MineViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull MineAdapter.MineViewHolder holder, int position) {
-        holder.tv.setText(data.get(position));
+        holder.tv.setText(data.get(position).getTag());
     }
 
     @Override

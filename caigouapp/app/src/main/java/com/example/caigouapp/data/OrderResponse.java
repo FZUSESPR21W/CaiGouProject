@@ -34,6 +34,16 @@ public class OrderResponse implements Serializable {
     }
 
     public static class DataBean implements Serializable {
+        private int id;
+
+        public int getId() {
+            return id;
+        }
+
+        public void setId(int id) {
+            this.id = id;
+        }
+
         private List<InfoBean> info;
 
         public List<InfoBean> getInfo() {
@@ -47,14 +57,16 @@ public class OrderResponse implements Serializable {
         public static class InfoBean implements Serializable {
 
             private int id;
-            private String name;
-            private String tags;
-            private String method;
-            private String avatar;
-            private int price;
-            private int menuId;
-            private String multiple;
-            private List<ListBean> list;
+            private String storeName;
+            private int orderState;
+            private String orderNumber;
+            private String oderCreatTime;
+            private String oderServeTime;
+            private String phone;
+            private String remark;
+            private double price;
+            private String address;
+            private List<ListBean> info;
 
             public int getId() {
                 return id;
@@ -64,77 +76,97 @@ public class OrderResponse implements Serializable {
                 this.id = id;
             }
 
-            public String getName() {
-                return name;
+            public String getStoreName() {
+                return storeName;
             }
 
-            public void setName(String name) {
-                this.name = name;
+            public void setStoreName(String storeName) {
+                this.storeName = storeName;
             }
 
-            public String getTags() {
-                return tags;
+            public int getOrderState() {
+                return orderState;
             }
 
-            public void setTags(String tags) {
-                this.tags = tags;
+            public void setOrderState(int orderState) {
+                this.orderState = orderState;
             }
 
-            public String getMethod() {
-                return method;
+            public String getOrderNumber() {
+                return orderNumber;
             }
 
-            public void setMethod(String method) {
-                this.method = method;
+            public void setOrderNumber(String orderNumber) {
+                this.orderNumber = orderNumber;
             }
 
-            public String getAvatar() {
-                return avatar;
+            public String getOderCreatTime() {
+                return oderCreatTime;
             }
 
-            public void setAvatar(String avatar) {
-                this.avatar = avatar;
+            public void setOderCreatTime(String oderCreatTime) {
+                this.oderCreatTime = oderCreatTime;
             }
 
-            public int getPrice() {
+            public String getOderServeTime() {
+                return oderServeTime;
+            }
+
+            public void setOderServeTime(String oderServeTime) {
+                this.oderServeTime = oderServeTime;
+            }
+
+            public String getPhone() {
+                return phone;
+            }
+
+            public void setPhone(String phone) {
+                this.phone = phone;
+            }
+
+            public String getRemark() {
+                return remark;
+            }
+
+            public void setRemark(String remark) {
+                this.remark = remark;
+            }
+
+            public double getPrice() {
                 return price;
             }
 
-            public void setPrice(int price) {
+            public void setPrice(double price) {
                 this.price = price;
             }
 
-            public int getMenuId() {
-                return menuId;
+            public String getAddress() {
+                return address;
             }
 
-            public void setMenuId(int menuId) {
-                this.menuId = menuId;
+            public void setAddress(String address) {
+                this.address = address;
             }
 
-            public String getMultiple() {
-                return multiple;
+            public List<ListBean> getInfo() {
+                return info;
             }
 
-            public void setMultiple(String multiple) {
-                this.multiple = multiple;
-            }
-
-            public List<ListBean> getList() {
-                return list;
-            }
-
-            public void setList(List<ListBean> list) {
-                this.list = list;
+            public void setInfo(List<ListBean> info) {
+                this.info = info;
             }
 
             public static class ListBean implements Serializable {
 
                 private int id;
-                private String ingredient;
-                private int price;
-                private int major;
-                private String standard_weight;
+                private String name;
+                private String tags;
+                private String method;
+                private String avatar;
+                private String multiple;
+                private double price;
+                private int menuId;
+                private List<FoodBean> list;
 
                 public int getId() {
                     return id;
@@ -144,38 +176,119 @@ public class OrderResponse implements Serializable {
                     this.id = id;
                 }
 
-                public String getIngredient() {
-                    return ingredient;
+                public String getName() {
+                    return name;
                 }
 
-                public void setIngredient(String ingredient) {
-                    this.ingredient = ingredient;
+                public void setName(String name) {
+                    this.name = name;
                 }
 
-                public int getPrice() {
+                public String getTags() {
+                    return tags;
+                }
+
+                public void setTags(String tags) {
+                    this.tags = tags;
+                }
+
+                public String getMethod() {
+                    return method;
+                }
+
+                public void setMethod(String method) {
+                    this.method = method;
+                }
+
+                public String getAvatar() {
+                    return avatar;
+                }
+
+                public void setAvatar(String avatar) {
+                    this.avatar = avatar;
+                }
+
+                public double getPrice() {
                     return price;
                 }
 
-                public void setPrice(int price) {
+                public void setPrice(double price) {
                     this.price = price;
                 }
 
-                public int getMajor() {
-                    return major;
+                public int getMenuId() {
+                    return menuId;
                 }
 
-                public void setMajor(int major) {
-                    this.major = major;
+                public void setMenuId(int menuId) {
+                    this.menuId = menuId;
                 }
 
-                public String getStandard_weight() {
-                    return standard_weight;
+                public List<FoodBean> getList() {
+                    return list;
                 }
 
-                public void setStandard_weight(String standard_weight) {
-                    this.standard_weight = standard_weight;
+                public void setList(List<FoodBean> list) {
+                    this.list = list;
+                }
+
+                public static class FoodBean implements Serializable {
+                    private int id;
+                    private int major;
+                    private String ingredient;
+                    private String standard_weight;
+                    private double price;
+
+                    public int getId() {
+                        return id;
+                    }
+
+                    public void setId(int id) {
+                        this.id = id;
+                    }
+
+                    public int getMajor() {
+                        return major;
+                    }
+
+                    public void setMajor(int major) {
+                        this.major = major;
+                    }
+
+                    public String getIngredient() {
+                        return ingredient;
+                    }
+
+                    public void setIngredient(String ingredient) {
+                        this.ingredient = ingredient;
+                    }
+
+                    public String getStandard_weight() {
+                        return standard_weight;
+                    }
+
+                    public void setStandard_weight(String standard_weight) {
+                        this.standard_weight = standard_weight;
+                    }
+
+                    public double getPrice() {
+                        return price;
+                    }
+
+                    public void setPrice(double price) {
+                        this.price = price;
+                    }
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        return "OrderResponse{" +
+                "code=" + code +
+                ", data=" + data +
+                ", message='" + message + '\'' +
+                '}';
     }
 }

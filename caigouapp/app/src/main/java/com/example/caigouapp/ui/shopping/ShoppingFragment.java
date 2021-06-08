@@ -156,7 +156,6 @@ public class ShoppingFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
-                Toast.makeText(getContext(),"好像出了点问题……",Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
             }
         });
