@@ -1,26 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.mine.MineFragment">
+    tools:context=".ui.mine.MineFragment"
+    android:background="@drawable/bg_up_round_gray"
+    android:layout_margin="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/user_information"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp">
+        android:layout_height="120dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/bg_round"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/user_pic"
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginTop="28dp"
-            android:src="@drawable/user"
+            android:src="@drawable/vegetabledoge"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginLeft="15dp"/>
         <TextView
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
@@ -29,8 +36,8 @@
             app:layout_constraintLeft_toRightOf="@id/user_pic"
             app:layout_constraintBottom_toTopOf="@id/user_sig"
             android:text="菜购用户1"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="15dp"
+            android:textColor="@color/black"
+            android:layout_marginLeft="25dp"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -38,10 +45,10 @@
             android:id="@+id/user_sig"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
+            android:layout_marginLeft="25dp"
             app:layout_constraintTop_toBottomOf="@id/user_name"
             app:layout_constraintLeft_toRightOf="@id/user_pic"
-            app:layout_constraintBottom_toBottomOf="@id/user_pic"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:background="@color/white"
             android:drawableRight="@drawable/ic_baseline_edit_24"
             android:drawablePadding="10dp"
@@ -53,9 +60,10 @@
 
 
     <LinearLayout
+        app:layout_constraintTop_toBottomOf="@+id/user_information"
         android:id="@+id/address_edit"
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
         android:background="@drawable/shape_corner"
         android:orientation="vertical"
         android:layout_margin="15dp"
@@ -67,15 +75,20 @@
             android:drawableLeft="@drawable/ic_baseline_house_24"
             android:drawableRight="@drawable/ic_baseline_edit_24"
             android:drawablePadding="10dp"
-            android:text="地址管理"></TextView>
+            android:text="地址管理"
+            android:gravity="center_vertical">
+        </TextView>
 
-        <ListView
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="5dp"
             android:id="@+id/address_lv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"></ListView>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 
     <LinearLayout
+        app:layout_constraintTop_toBottomOf="@id/address_edit"
         android:layout_width="match_parent"
         android:layout_height="130dp"
         android:background="@drawable/shape_corner"
@@ -90,9 +103,12 @@
             android:drawableLeft="@drawable/ic_baseline_label_24"
             android:drawableRight="@drawable/ic_baseline_edit_24"
             android:drawablePadding="10dp"
-            android:text="我订阅的标签"></TextView>
+            android:text="我订阅的标签"
+            android:gravity="center_vertical">
+        </TextView>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:layout_marginTop="5dp"
             android:id="@+id/mine_tag_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -107,6 +123,5 @@
         app:backgroundTint="#F44336"
         android:layout_margin="15dp"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-</LinearLayout>
+        app:layout_constraintBottom_toBottomOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
