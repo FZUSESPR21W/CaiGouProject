@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/navigation_home">
+
+    <fragment
+        android:id="@+id/navigation_home"
+        android:name="com.example.caigouapp.ui.home.HomeFragment"
+        android:label="首页"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/navigation_shopping"
+        android:name="com.example.caigouapp.ui.shopping.ShoppingFragment"
+        android:label="购物车"
+        tools:layout="@layout/fragment_shopping" />
+    <fragment
+        android:id="@+id/navigation_order"
+        android:name="com.example.caigouapp.ui.order.OrderFragment"
+        android:label="订单"
+        tools:layout="@layout/fragment_order" />
+    <fragment
+        android:id="@+id/navigation_mine"
+        android:name="com.example.caigouapp.ui.mine.MineFragment"
+        android:label="我的"
+        tools:layout="@layout/fragment_mine" />
+</navigation>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@drawable/order_recyclerview_backgroud"
+    android:orientation="vertical"
+    android:layout_marginVertical="3dp"
+    android:padding="10dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/store">
+        </ImageView>
+
+        <TextView
+            android:id="@+id/txt_order_preview_store_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="7"
+            android:text="顺丰超市"
+            android:layout_marginLeft="10dp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:textSize="18dp">
+        </TextView>
+        <TextView
+            android:id="@+id/txt_order_preview_state"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:text="正在进行"
+            android:textSize="17dp"
+            android:maxLines="1"
+            android:paddingRight="10dp"
+            android:textColor="#000000"
+            android:gravity="left">
+        </TextView>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <HorizontalScrollView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="10"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <GridView
+                    android:id="@+id/grid_order_preview"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="10"
+                    android:numColumns="auto_fit"
+                    android:scrollbars="none"></GridView>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_weight="3"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/txt_order_preview_price"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:gravity="left"
+                android:text="￥10.55"
+                android:textColor="#000000"
+                android:textSize="15dp"></TextView>
+
+            <TextView
+                android:id="@+id/txt_order_preview_piece"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="15dp"
+                android:gravity="left"
+                android:text="共 1 件"
+                android:textColor="#000000"
+                android:textSize="15dp"></TextView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="left|center_vertical"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/btn_order_preview_cancel"
+                    android:layout_width="60dp"
+                    android:layout_height="35dp"
+                    android:background="@drawable/bg_button"
+                    android:text="取消订单"
+                    android:textColor="#FFFFFF"
+                    android:textSize="12dp"
+                    android:textStyle="bold"></Button>
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/btn_order_preview_show_detail"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+
+            android:src="@drawable/arrow_right"></ImageView>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp">
+    </View>
+
+</LinearLayout>
+
