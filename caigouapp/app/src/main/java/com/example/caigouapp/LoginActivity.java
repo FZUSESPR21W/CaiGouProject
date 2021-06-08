@@ -6,7 +6,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.caigouapp.data.UserResponse;
 import com.example.caigouapp.databinding.ActivityLoginBinding;
@@ -25,11 +24,12 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 import com.bumptech.glide.Glide;
+import com.example.push.helper.BasePushActivity;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BasePushActivity {
     private ActivityLoginBinding binding;
     private String account;
     private String password;
@@ -112,6 +112,4 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
-
-
 }
