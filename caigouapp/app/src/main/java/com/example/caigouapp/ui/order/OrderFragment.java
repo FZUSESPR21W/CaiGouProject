@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,10 +59,10 @@ public class OrderFragment extends Fragment {
         noOrderTextView = (TextView)view.findViewById(R.id.txt_order_preview_noOrder);
 
         //grid_recent_order
-        /*recentOrderGridView = view.findViewById(R.id.recent_order_grid);
+        recentOrderGridView = view.findViewById(R.id.recent_order_grid);
         mData = new ArrayList<>();
         mData.add(new CustomerMenu(R.drawable.sample,"番茄炒牛肉"));
-        setHorizontalGridView();*/
+        setHorizontalGridView();
 
         recyclerView = (RecyclerView) view.findViewById(R.id.all_order_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity获得活动（context）
@@ -123,30 +124,36 @@ public class OrderFragment extends Fragment {
     }
 
     private void setHorizontalGridView(){
-        int size = mData.size();
-        int length = 100;
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        float density = dm.density;
-        int gridviewWidth = (int) (size * (length + 4) * density);
-        int itemWidth = (int) (length * density);
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                gridviewWidth, LinearLayout.LayoutParams.MATCH_PARENT);
-        recentOrderGridView.setLayoutParams(params); // 设置GirdView布局参数,横向布局的关键
-        recentOrderGridView.setColumnWidth(itemWidth); // 设置列表项宽
-        recentOrderGridView.setHorizontalSpacing(5); // 设置列表项水平间距
-        recentOrderGridView.setStretchMode(GridView.NO_STRETCH);
-        recentOrderGridView.setNumColumns(size); // 设置列数量=列表集合数
-
-        mAdapter = new GridAdapter(mData, R.layout.item_grid_order) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void bindView(ViewHolder holder, Object obj) {
-                CustomerMenu cm = (CustomerMenu)obj;
-                holder.setImageResource(R.id.img_grid, BitmapFactory.decodeResource(getResources(),R.drawable.sample));
-                holder.setText(R.id.txt_grid, cm.getiName());
+            public void run() {
+                int size = mData.size();
+                int length = 100;
+                DisplayMetrics dm = getResources().getDisplayMetrics();
+                float density = dm.density;
+                int gridviewWidth = (int) (size * (length + 4) * density);
+                int itemWidth = (int) (length * density);
+
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        gridviewWidth, LinearLayout.LayoutParams.MATCH_PARENT);
+                recentOrderGridView.setLayoutParams(params); // 设置GirdView布局参数,横向布局的关键
+                recentOrderGridView.setColumnWidth(itemWidth); // 设置列表项宽
+                recentOrderGridView.setHorizontalSpacing(5); // 设置列表项水平间距
+                recentOrderGridView.setStretchMode(GridView.NO_STRETCH);
+                recentOrderGridView.setNumColumns(size); // 设置列数量=列表集合数
+
+                mAdapter = new GridAdapter(mData, R.layout.item_grid_order) {
+                    @Override
+                    public void bindView(ViewHolder holder, Object obj) {
+                        CustomerMenu cm = (CustomerMenu)obj;
+                        holder.setImageResource(R.id.img_grid, BitmapFactory.decodeResource(getResources(),R.drawable.sample));
+                        holder.setText(R.id.txt_grid, cm.getiName());
+                    }
+                };
+                recentOrderGridView.setAdapter(mAdapter);
             }
-        };
-        recentOrderGridView.setAdapter(mAdapter);
+        },100);
     }
 
     @Override
