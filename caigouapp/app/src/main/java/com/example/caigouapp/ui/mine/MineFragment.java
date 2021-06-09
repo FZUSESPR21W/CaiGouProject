@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -17,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.caigouapp.R;
+import com.example.caigouapp.data.AddressBean;
+import com.example.caigouapp.data.TagsBean;
 import com.example.caigouapp.data.UserAddressResponse;
 import com.example.caigouapp.data.UserAddressResponse.*;
 import com.example.caigouapp.data.UserTagResponse;
@@ -43,7 +46,7 @@ public class MineFragment extends Fragment {
     Call<UserTagResponse> call1;
 
 //    地址管理代码
-    private ListView listView;
+    private RecyclerView recyclerView;
     private List<AddressBean> addressList = new ArrayList<>();
     private MineAddressAdapter addressAdapter;
 
@@ -52,13 +55,13 @@ public class MineFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_mine, container, false);
 
-        TextView textView = root.findViewById(R.id.tag_choose_tv);
+        ImageView tag = root.findViewById(R.id.tag_update);
         TextView userName = root.findViewById(R.id.user_name);
-        TextView address = root.findViewById(R.id.tv_address);
+        ImageView address = root.findViewById(R.id.address_add);
 
         userName.setText(SpUtil.getInstance().getString("account","昵称"));
 
-        textView.setOnClickListener(v -> {
+        tag.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), TagChooseActivity.class);
             String tagChosen = "";
             for (TagsBean tagsBean : tagList) {
@@ -82,9 +85,10 @@ public class MineFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         //地址list
-        listView = (ListView)root.findViewById(R.id.address_lv);
+        recyclerView = (RecyclerView)root.findViewById(R.id.address_rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         addressAdapter = new MineAddressAdapter(addressList, getActivity());
-        listView.setAdapter(addressAdapter);
+        recyclerView.setAdapter(addressAdapter);
 
         return root;
     }

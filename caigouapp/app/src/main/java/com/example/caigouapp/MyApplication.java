@@ -3,6 +3,8 @@ package com.example.caigouapp;
 import android.app.Application;
 import android.content.Context;
 
+import org.litepal.LitePal;
+
 import com.example.push.helper.PushHelper;
 
 public class MyApplication extends Application {
@@ -13,6 +15,7 @@ public class MyApplication extends Application {
         super.onCreate();
         //获取context
         mContext = getApplicationContext();
+        LitePal.initialize(this);
 
         //预初始化
         PushHelper.preInit(this);

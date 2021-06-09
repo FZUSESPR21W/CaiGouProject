@@ -2,6 +2,7 @@ package com.example.caigouapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,6 +20,7 @@ import com.example.caigouapp.databinding.ActivitySignupBinding;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.UserServices;
 import com.example.caigouapp.utils.SpUtil;
+import com.example.caigouapp.utils.StatusBarUtils;
 import com.google.gson.Gson;
 
 import java.util.HashMap;
@@ -34,7 +36,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SignupActivity extends AppCompatActivity {
     private ActivitySignupBinding binding;
-    private Context mContext;
     private String account;
     private String password;
     private String password_confirm;
@@ -43,9 +44,9 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = this;
         binding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        MyApplication.getRefWatcher().watch(this);
         Glide.with(this).load(R.drawable.vegetabledoge).into(binding.img);
         binding.userAccount.clearFocus();
         binding.userPwd.clearFocus();
@@ -56,6 +57,7 @@ public class SignupActivity extends AppCompatActivity {
                 SpUtil.getInstance().putString("str","777");
                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                 startActivity(intent);
+                //overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
             }
         });
         binding.btn.setOnClickListener(new View.OnClickListener() {
@@ -126,6 +128,15 @@ public class SignupActivity extends AppCompatActivity {
                 
             }
         });
+        initStatusBar();//初始化状态栏
+    }
+
+    private void initStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            StatusBarUtils.setStatusBarColor(SignupActivity.this, R.color.white);
+        }
     }
 
     private Handler mHandler = new Handler(){
@@ -140,5 +151,23 @@ public class SignupActivity extends AppCompatActivity {
     public void toLoginActivity(){
         Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
         startActivity(intent);
+        //overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+        setIntent(intent); //这一句必须的，否则Intent无法获得最新的数据
+    }
+
+    protected void onStart() {
+        super.onStart();
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
+
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
     }
 }

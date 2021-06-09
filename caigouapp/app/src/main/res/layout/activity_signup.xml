@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     tools:context=".SignupActivity">
 
     <ImageView
@@ -20,6 +21,9 @@
 
     <EditText
         android:background="@drawable/edit_account_style"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
+        android:nextFocusForward="@id/user_pwd"
         android:drawableLeft="@drawable/account"
         android:paddingLeft="15dp"
         android:id="@+id/user_account"
@@ -35,6 +39,9 @@
     <EditText
         app:passwordToggleEnabled="true"
         android:background="@drawable/edit_account_style"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
+        android:nextFocusForward="@id/user_pwd_confirm"
         android:id="@+id/user_pwd"
         android:drawableLeft="@drawable/password"
         android:paddingLeft="15dp"
@@ -50,6 +57,8 @@
     <EditText
         app:passwordToggleEnabled="true"
         android:background="@drawable/edit_account_style"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
         android:id="@+id/user_pwd_confirm"
         android:drawableLeft="@drawable/password"
         android:paddingLeft="15dp"
