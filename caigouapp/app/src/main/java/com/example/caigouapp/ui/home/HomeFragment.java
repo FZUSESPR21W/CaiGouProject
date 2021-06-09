@@ -1,6 +1,7 @@
 package com.example.caigouapp.ui.home;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.example.caigouapp.R;
 import com.example.caigouapp.databinding.FragmentHomeBinding;
 import com.example.caigouapp.ui.SearchActivity;
+import com.example.caigouapp.utils.StatusBarUtils;
 import com.zhouwei.mzbanner.holder.MZHolderCreator;
 
 import java.util.ArrayList;
@@ -26,7 +28,16 @@ public class HomeFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(getLayoutInflater());
         initView();
+        initStatusBar();//初始化状态栏
         return binding.getRoot();
+    }
+
+    private void initStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            StatusBarUtils.setStatusBarColor(getActivity(), R.color.white);
+        }
     }
 
     public void initView(){

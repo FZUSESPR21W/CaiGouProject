@@ -56,6 +56,15 @@ public class OrderFragment extends Fragment {
                              Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_order,container,false);
         noOrderTextView = (TextView)view.findViewById(R.id.txt_order_preview_noOrder);
+
+        //grid_recent_order
+        /*recentOrderGridView = view.findViewById(R.id.recent_order_grid);
+        mData = new ArrayList<>();
+        mData.add(new CustomerMenu(R.drawable.sample,"番茄炒牛肉"));
+        setHorizontalGridView();*/
+
+        recyclerView = (RecyclerView) view.findViewById(R.id.all_order_recycler);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity获得活动（context）
         //String str = GsonUtil.getOrderJson(getActivity());
         //System.out.println(GsonUtil.ParseOrderGson(str));
 
@@ -88,16 +97,18 @@ public class OrderFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(list.size()==0) noOrderTextView.setVisibility(View.VISIBLE);
-                        else noOrderTextView.setVisibility(View.GONE);
-                        recyclerView = (RecyclerView) view.findViewById(R.id.all_order_recycler);
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity获得活动（context）
-                        recyclerView.setAdapter(new OrderPreviewAdapter(getActivity(),list));
-                    }
-                });
+                if(isAdded()){//必须要这个判断，否则快速切换导航栏时程序会闪退。
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(list.size()==0) noOrderTextView.setText("暂无订单");
+                            else {
+                                noOrderTextView.setVisibility(View.GONE);
+                                recyclerView.setAdapter(new OrderPreviewAdapter(getActivity(),list));
+                            }
+                        }
+                    });
+                }
             }
 
             @Override
@@ -107,12 +118,6 @@ public class OrderFragment extends Fragment {
         });
 
         //System.out.println(GsonUtil.ParseOrderGson(GsonUtil.getOrderJson(getActivity())));
-        //grid_recent_order
-        recentOrderGridView = view.findViewById(R.id.recent_order_grid);
-        mData = new ArrayList<>();
-        mData.add(new CustomerMenu(R.drawable.sample,"番茄炒牛肉"));
-
-        setHorizontalGridView();
 
         return view;
     }

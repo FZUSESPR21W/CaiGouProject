@@ -1,39 +1,36 @@
 package com.example.caigouapp;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.example.caigouapp.data.UserResponse;
 import com.example.caigouapp.databinding.ActivityLoginBinding;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.UserServices;
 import com.example.caigouapp.utils.SpUtil;
-
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import okio.BufferedSource;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 import com.bumptech.glide.Glide;
+import com.example.caigouapp.utils.StatusBarUtils;
 import com.google.gson.Gson;
-
 import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity {
-    private ActivityLoginBinding binding;
-    private String account;
-    private String password;
-    private SpUtil sp = SpUtil.getInstance();
+    public ActivityLoginBinding binding;
+    public String account;
+    public String password;
+    public SpUtil sp = SpUtil.getInstance();
+    public String responseCode = "200";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,9 +44,23 @@ public class LoginActivity extends AppCompatActivity {
         binding.userPwd.setText(spPwd);
         binding.userAccount.clearFocus();
         binding.userPwd.clearFocus();
+        setClick();
+        initStatusBar();//初始化状态栏
+    }
+
+    private void initStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            StatusBarUtils.setStatusBarColor(LoginActivity.this, R.color.white);
+        }
+    }
+
+    public void setClick(){
         binding.signup.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
             startActivityForResult(intent,1);
+            //overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
         });
         binding.btn.setOnClickListener(view -> {
 //            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -77,19 +88,23 @@ public class LoginActivity extends AppCompatActivity {
                 call.enqueue(new Callback<UserResponse>() {
                     @Override
                     public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+
                         if (response.isSuccessful() && response.body().getCode() == null){
+                            responseCode = "200";
                             sp.putString("account",account);
                             sp.putString("password",password);
                             sp.putString("token",response.body().getToken());
                             sp.putInt("id",response.body().getData().getId());
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
-                            finish();
+                            //overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
                         }
                         else if (response.body().getCode().equals("1003")){
+                            responseCode = response.body().getCode();
                             Toast.makeText(LoginActivity.this,"密码错误，登录失败",Toast.LENGTH_SHORT).show();
                         }
                         else if (response.body().getCode().equals("1002")){
+                            responseCode = response.body().getCode();
                             Toast.makeText(LoginActivity.this,"用户不存在，请重新注册",Toast.LENGTH_SHORT).show();
                         }
                         else{
@@ -113,5 +128,21 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onNewIntent(Intent intent)
+    {
+        super.onNewIntent(intent);
+        setIntent(intent); //这一句必须的，否则Intent无法获得最新的数据
+    }
+
+    protected void onStart() {
+        super.onStart();
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
+
+    protected void onPause() {
+        super.onPause();
+        overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
+    }
 
 }
