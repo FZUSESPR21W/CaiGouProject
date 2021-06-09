@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 
 import com.example.caigouapp.R;
 import com.example.caigouapp.data.CommonResponse;
+import com.example.caigouapp.data.TagsBean;
 import com.example.caigouapp.data.UserTagResponse;
 import com.example.caigouapp.data.UserTagResponse.*;
 import com.example.caigouapp.http.Constant;

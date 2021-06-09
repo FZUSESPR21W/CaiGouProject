@@ -13,7 +13,7 @@
         android:id="@+id/user_information"
         android:layout_width="match_parent"
         android:layout_height="120dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="20dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="@drawable/bg_round"
@@ -64,51 +64,92 @@
         android:id="@+id/address_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_corner"
+        android:background="@drawable/bg_round"
         android:orientation="vertical"
         android:layout_margin="15dp"
         android:padding="5dp">
-        <TextView
-            android:id="@+id/tv_address"
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="24dp"
-            android:drawableLeft="@drawable/ic_baseline_house_24"
-            android:drawableRight="@drawable/ic_baseline_edit_24"
-            android:drawablePadding="10dp"
-            android:text="地址管理"
-            android:gravity="center_vertical">
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tv_address"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:drawableLeft="@drawable/map"
+                android:drawablePadding="10dp"
+                android:textSize="15sp"
+                android:textColor="#71CC98"
+                android:text="地址管理"
+                android:gravity="center_vertical">
+            </TextView>
+            <ImageView
+                android:id="@+id/address_add"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/add_select"
+                android:layout_alignParentEnd="true">
+            </ImageView>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_marginTop="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#71cc98">
         </TextView>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="5dp"
-            android:id="@+id/address_lv"
+            android:layout_marginTop="2dp"
+            android:id="@+id/address_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
         </androidx.recyclerview.widget.RecyclerView>
+
     </LinearLayout>
 
     <LinearLayout
         app:layout_constraintTop_toBottomOf="@id/address_edit"
         android:layout_width="match_parent"
         android:layout_height="130dp"
-        android:background="@drawable/shape_corner"
+        android:background="@drawable/bg_round"
         android:orientation="vertical"
         android:layout_margin="15dp"
         android:padding="5dp">
 
-        <TextView
-            android:id="@+id/tag_choose_tv"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:drawableLeft="@drawable/ic_baseline_label_24"
-            android:drawableRight="@drawable/ic_baseline_edit_24"
-            android:drawablePadding="10dp"
-            android:text="我订阅的标签"
-            android:gravity="center_vertical">
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/tag_choose_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:drawableLeft="@drawable/tag"
+                android:drawablePadding="10dp"
+                android:textSize="15sp"
+                android:textColor="#71CC98"
+                android:text="我订阅的标签"
+                android:gravity="center_vertical">
+            </TextView>
+
+            <ImageView
+                android:id="@+id/tag_update"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:src="@drawable/add_select"
+                android:layout_alignParentEnd="true">
+            </ImageView>
+        </RelativeLayout>
+
+        <TextView
+            android:layout_marginTop="2dp"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#71cc98">
         </TextView>
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="2dp"
             android:id="@+id/mine_tag_rv"
             android:layout_width="match_parent"
             android:layout_height="match_parent">

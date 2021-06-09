@@ -140,7 +140,7 @@ public class ShoppingFragment extends Fragment {
                         list.add(new RecipeBean(dataBean.getId(),
                                 dataBean.getName(),
                                 dataBean.getTags(),
-                                0,
+                                price,
                                 dataBean.getAvatar(),
                                 new ArrayList<>(ingredient),
                                 new ArrayList<>(sideIngredient),
@@ -150,7 +150,6 @@ public class ShoppingFragment extends Fragment {
                 else {
                     binding.noItem.setVisibility(View.VISIBLE);
                 }
-
                 requireActivity().runOnUiThread(()->initView());
             }
 
