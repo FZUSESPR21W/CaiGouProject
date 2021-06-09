@@ -5,9 +5,49 @@ import lombok.Data;
 
 import javax.persistence.*;
 
-@Data
+//@Data
 @Entity
 public class Food{
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getIngredient() {
+        return ingredient;
+    }
+
+    public void setIngredient(String ingredient) {
+        this.ingredient = ingredient;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public Integer getMajor() {
+        return major;
+    }
+
+    public void setMajor(Integer major) {
+        this.major = major;
+    }
+
+    public String getStandard_weight() {
+        return standard_weight;
+    }
+
+    public void setStandard_weight(String standard_weight) {
+        this.standard_weight = standard_weight;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -25,6 +65,18 @@ public class Food{
         this.weight = weight;
     }
 //    @Transient
-    private String weight;
-//    private String weightList;//需要分割
+    private transient String weight;
+
+
+    @Transient
+    public Integer getMultiple() {
+        return multiple;
+    }
+
+    public void setMultiple(Integer multiple) {
+        this.multiple = multiple;
+    }
+
+    private transient  Integer multiple;
+
 }

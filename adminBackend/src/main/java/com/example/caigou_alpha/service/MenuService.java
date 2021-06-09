@@ -1,29 +1,31 @@
 package com.example.caigou_alpha.service;
 
+import com.example.caigou_alpha.common.SpringUtil;
 import com.example.caigou_alpha.dao.CustomMenuDao;
 import com.example.caigou_alpha.dao.FoodDao;
 import com.example.caigou_alpha.dao.MenuDao;
 import com.example.caigou_alpha.dao.MenuFoodDao;
 import com.example.caigou_alpha.entity.Food;
 import com.example.caigou_alpha.entity.Menu;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MenuService {
 
 //    @Resource
 //    private Menu menu;
-    @Resource
-    private Food food;
-    @Resource
-    private List<Food> foodList;
-
+//    @Resource
+//    private Food food;
+//    @Resource
+//    private List<Food> foodList;
+//
     @Resource
     private FoodDao foodDao;
     @Resource
@@ -33,10 +35,10 @@ public class MenuService {
     @Resource
     private CustomMenuDao customMenuDao;
 
-
-    public MenuService(MenuFoodDao menuFoodDao) {
-        this.menuFoodDao = menuFoodDao;
-    }
+//   Menu menu = (Menu)SpringUtil.getBean("Menu");
+//   Food food = (Food)SpringUtil.getBean("Food");
+//   FoodDao foodDao = (FoodDao) SpringUtil.getBean("FoodDao");
+//   List<Food> foodList = (Food) SpringUtil.getBean("Food").;
 
     public Page<Menu> findPage(Integer pageNum, Integer pageSize){
         //Sort sort =  Sort.by(Sort.Direction.DESC, "id");
@@ -72,36 +74,55 @@ public class MenuService {
         return menuDao.findLikeTagDao(tags,pageable);
     }
 
+    public Menu findMenuTest(Integer id){
+        return menuDao.selectMenuById(id);
+    }
 
     //通过ID查找一个带有详情的菜谱
-//    public Menu findMenuAndDetailById(Integer id){
-//        menu = menuDao.selectMenuById(id);
-//        String weightList;
-//        weightList = menuDao.findWeightList(id);
-//        menu.setWeightList(weightList);
-//
-//        String foodAll;
-//        foodAll = menuDao.findFoodList(id);
-//        menu.setFoodAll(foodAll);
-//
-//        String[] foodAllSplit = foodAll.split(",");
-//        String[] weightAllSplit = weightList.split(",");
-//
-//        for(int i = 0;i < foodAllSplit.length;i++){
-//            food = foodDao.findById(Integer.parseInt(foodAllSplit[i])).orElse(null);
-//            food.setWeight(weightAllSplit[i]);
-//            foodList.add(food);
-//        }
-//
-////        for(String s:foodAllSplit){//填充每个Food的信息
-////            foodList.add(foodDao.findById(Integer.parseInt(s)).orElse(null).setWeight(););
-////        }
-////        for(Food food:foodList){//填充每个Food的信息
-////            foodDao.findById()
-////        }
-//        menu.setFoodList(foodList);
-//        return menu;
-//
-//    }
+    public Menu findMenuAndDetailById(Integer id){
+        List<Food> foodList = new ArrayList<>();
+        Menu menu;
+        Food food;
+        menu = menuDao.selectMenuById(id);
+        String weightList;
+        weightList = menuDao.findWeightList(id);
 
+        String foodAll;
+        foodAll = menuDao.findFoodList(id);
+
+        String[] foodAllSplit = foodAll.split(",");
+        String[] weightAllSplit = weightList.split(",");
+
+        for(int i = 0;i < foodAllSplit.length;i++){
+            food = foodDao.findById(Integer.parseInt(foodAllSplit[i])).orElse(null);
+            food.setWeight(weightAllSplit[i]);
+            foodList.add(food);
+        }
+
+        menu.setFoodList(foodList);
+        return menu;
+    }
+
+    //根据菜谱ID查找该项的详情
+    public List<Food> findDetailFoodList(Integer menuId){
+        List<Food> foodList = new ArrayList<>();
+        Menu menu;
+        Food food;
+        menu = menuDao.selectMenuById(menuId);
+        String weightList;
+        weightList = menuDao.findWeightList(menuId);
+
+        String foodAll;
+        foodAll = menuDao.findFoodList(menuId);
+//
+        String[] foodAllSplit = foodAll.split(",");
+        String[] weightAllSplit = weightList.split(",");
+
+        for(int i = 0;i < foodAllSplit.length;i++){
+            food = foodDao.findById(Integer.parseInt(foodAllSplit[i])).orElse(null);
+            food.setWeight(weightAllSplit[i]);
+            foodList.add(food);
+        }
+        return foodList;
+    }
 }

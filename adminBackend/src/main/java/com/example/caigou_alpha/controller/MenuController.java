@@ -2,6 +2,7 @@ package com.example.caigou_alpha.controller;
 
 import com.example.caigou_alpha.annotation.UserLoginToken;
 import com.example.caigou_alpha.common.Result;
+import com.example.caigou_alpha.entity.Food;
 import com.example.caigou_alpha.entity.Menu;
 import com.example.caigou_alpha.entity.UserOrder;
 import com.example.caigou_alpha.service.MenuService;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @SuppressWarnings("rawtypes")
 @CrossOrigin(origins = "http://domain2.com",
@@ -92,10 +94,17 @@ public class MenuController {
         return Result.success();
     }
 
-//    @UserLoginToken
-//    @GetMapping("/findMenuByIdDetail")
-//    public Result findMenuByIdDetail(@RequestParam Integer id){
-//        menuService.findMenuAndDetailById(id);
-//        return Result.success();
-//    }
+    @UserLoginToken
+    @GetMapping("/findMenuByIdDetail")
+    public Result<Menu> findMenuByIdDetail(@RequestParam Integer id){
+       return  Result.success(menuService.findMenuAndDetailById(id));
+    }
+
+    @UserLoginToken
+    @GetMapping("/findDetailFoodList")
+    public Result<List<Food>> findDetailFoodList(@RequestParam Integer id){
+        return  Result.success(menuService.findDetailFoodList(id));
+    }
+
+
 }

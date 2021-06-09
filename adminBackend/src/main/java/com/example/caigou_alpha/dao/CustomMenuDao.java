@@ -33,4 +33,9 @@ public interface CustomMenuDao extends JpaRepository<CustomMenu,Integer> {
     @Query("delete from CustomMenu  customMenu where customMenu.menu_id = :id")
     void deleteMenuSonRow(@Param("id") Integer id);
 
+    @Query("select cm.Multiple_list from CustomMenu  cm where  cm.id = :customMenuId")
+    String findMultipleList(@Param("customMenuId") Integer id);
+
+    @Query("select cm.food_id_list from CustomMenu  cm where  cm.id = :customMenuId")
+    String findFoodList(@Param("customMenuId") Integer id);
 }

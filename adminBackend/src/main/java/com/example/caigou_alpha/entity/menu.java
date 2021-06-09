@@ -1,6 +1,7 @@
 package com.example.caigou_alpha.entity;
 
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -23,9 +24,10 @@ public class Menu {
     private String tags;
     private String avatar;
 
-    //一下未非数据库表部分
-    private String weightList;
-    private String foodAll;//需要分割分割后填充为foodList的Food.name
+//    //一下未非数据库表部分
+//    private transient String weightList;
+//    private transient String foodAll;//需要分割分割后填充为foodList的Food.name
+
 
     public List<Food> getFoodList() {
         return foodList;
@@ -36,25 +38,27 @@ public class Menu {
     }
 
     @OneToMany
-    private List<Food> foodList;
+    private transient List<Food> foodList;
 
     static private  String test;
 
-    public String getWeightList() {
-        return weightList;
-    }
-
-    public void setWeightList(String weightList) {
-        this.weightList = weightList;
-    }
-
-    public String getFoodAll() {
-        return foodAll;
-    }
-
-    public void setFoodAll(String foodAll) {
-        this.foodAll = foodAll;
-    }
+//    @Transient
+//    public String getWeightList() {
+//        return weightList;
+//    }
+//
+//    public void setWeightList(String weightList) {
+//        this.weightList = weightList;
+//    }
+//
+//    @Transient
+//    public String getFoodAll() {
+//        return foodAll;
+//    }
+//
+//    public void setFoodAll(String foodAll) {
+//        this.foodAll = foodAll;
+//    }
 
 
 

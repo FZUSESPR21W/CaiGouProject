@@ -19,7 +19,7 @@ public class CustomMenu {
     private String food_id_list;
     private String Multiple_list;
 //    private String address;
-//    @OneToMany
-//    private List<Food> foodList = new ArrayList<Food>();
+    @OneToMany
+    private List<Food> foodList;
 
 }

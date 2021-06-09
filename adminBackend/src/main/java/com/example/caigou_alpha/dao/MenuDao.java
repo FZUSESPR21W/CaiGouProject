@@ -66,4 +66,6 @@ public interface MenuDao extends JpaRepository<Menu,Integer> {
     @Query("select mf.food_id_list from MenuFood  mf where  mf.menu_id = :menuid")
     String findFoodList(@Param("menuid") Integer id);
 
+
+
 }

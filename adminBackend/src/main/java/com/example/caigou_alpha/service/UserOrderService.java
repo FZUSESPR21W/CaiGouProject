@@ -2,10 +2,14 @@ package com.example.caigou_alpha.service;
 
 import com.example.caigou_alpha.dao.*;
 import com.example.caigou_alpha.entity.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,13 +20,16 @@ public class UserOrderService {
     @Resource
     private CustomMenuDao customMenuDao;
     @Resource
+    private CustomMenuService customMenuService;
+    @Resource
     private MenuDao menuDao;
     @Resource
     private UserDao userDao;
     public  UserOrderInfoListAll getUserOrderInfo(){
+//        Pageable pageable = PageRequest.of(pageNum-1,pageSize);
 
-//        List<UserOrder> user_order = userOrderDao.selectUserOrderByUserId(user_id);
         List<UserOrder> user_order = userOrderDao.findAll();
+//        Page<UserOrder> userOrderPage = userOrderDao.findAll(pageable);
         //创建拥有该用户所有订单信息的对象
         UserOrderInfoListAll userOrderInfoListAll = new UserOrderInfoListAll();
         //获取一个订单的信息
@@ -72,5 +79,25 @@ public class UserOrderService {
         }
         //返回订单列表
         return userOrderInfoListAll;
+    }
+
+
+    public UserOrder testPage(){
+        UserOrder userOrder;
+//        Pageable pageable = PageRequest.of(0,5);
+//        Page<userOrder> userOrderPage = userOrderDao.findAll(pageable);
+        userOrder = userOrderDao.getOne(1);
+        CustomMenu customMenu;
+        List<CustomMenu> customMenuList = new ArrayList<>();
+        String cml = userOrder.getCustom_menuid_list();
+        String[] customMenuArray = cml.split(",");
+        for(String s:customMenuArray){
+            customMenu = customMenuDao.selectCustomMenuById(Integer.parseInt(s));
+            //获取带有所有信息的customMenu
+            customMenu = customMenuService.findCustomMenuAndDetailById(customMenu);
+            customMenuList.add(customMenu);
+        }
+        //将查好的customMenu加入到UserOrder中的CustomMenuList中！！！！
+        return userOrder;
     }
 }
