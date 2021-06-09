@@ -1,6 +1,8 @@
 package com.example.caigouapp.ui.shopping;
 
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.caigouapp.Ingredient;
 import com.example.caigouapp.MainActivity;
+import com.example.caigouapp.MyApplication;
 import com.example.caigouapp.R;
 import com.example.caigouapp.RecipeBean;
 import com.example.caigouapp.Step;
@@ -27,6 +30,7 @@ import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.RecipeServices;
 import com.example.caigouapp.ui.RecipeDetailActivity;
 import com.example.caigouapp.utils.SpUtil;
+import com.example.caigouapp.utils.StatusBarUtils;
 import com.google.gson.Gson;
 
 import java.text.DecimalFormat;
@@ -65,7 +69,16 @@ public class ShoppingFragment extends Fragment {
         binding = FragmentShoppingBinding.inflate(getLayoutInflater());
         getCartRequest(userId);
         initView();
+        initStatusBar();//初始化状态栏
         return binding.getRoot();
+    }
+
+    private void initStatusBar() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getActivity().getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            StatusBarUtils.setStatusBarColor(getActivity(), R.color.white);
+        }
     }
 
     private void postRequest(int userId){
