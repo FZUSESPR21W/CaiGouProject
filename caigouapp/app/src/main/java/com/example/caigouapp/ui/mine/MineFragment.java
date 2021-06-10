@@ -1,6 +1,7 @@
 package com.example.caigouapp.ui.mine;
 
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -24,6 +27,7 @@ import com.example.caigouapp.data.UserAddressResponse;
 import com.example.caigouapp.data.UserAddressResponse.*;
 import com.example.caigouapp.data.UserTagResponse;
 import com.example.caigouapp.data.UserTagResponse.*;
+import com.example.caigouapp.databinding.FragmentMineBinding;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.UserServices;
 import com.example.caigouapp.ui.AddAddressActivity;
@@ -31,6 +35,7 @@ import com.example.caigouapp.utils.SpUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,6 +45,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MineFragment extends Fragment {
 
+    private FragmentMineBinding binding;
     private List<TagsBean> tagList = new ArrayList<>();
     private MineAdapter adapter;
     Call<UserAddressResponse> call;
@@ -53,15 +59,11 @@ public class MineFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_mine, container, false);
+        binding = FragmentMineBinding.inflate(getLayoutInflater());
 
-        ImageView tag = root.findViewById(R.id.tag_update);
-        TextView userName = root.findViewById(R.id.user_name);
-        ImageView address = root.findViewById(R.id.address_add);
+        binding.userName.setText(SpUtil.getInstance().getString("account","昵称"));
 
-        userName.setText(SpUtil.getInstance().getString("account","昵称"));
-
-        tag.setOnClickListener(v -> {
+        binding.tagUpdate.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), TagChooseActivity.class);
             String tagChosen = "";
             for (TagsBean tagsBean : tagList) {
@@ -71,26 +73,26 @@ public class MineFragment extends Fragment {
             startActivity(intent);
         });
 
-        address.setOnClickListener(v -> {
+        binding.addressAdd.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), AddAddressActivity.class);
             startActivity(intent);
         });
 
-        RecyclerView recyclerView = root.findViewById(R.id.mine_tag_rv);
-
         StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(4, StaggeredGridLayoutManager.VERTICAL);
-        recyclerView.setLayoutManager(staggeredGridLayoutManager);
+        binding.mineTagRv.setLayoutManager(staggeredGridLayoutManager);
 
         adapter = new MineAdapter(tagList, getActivity());
-        recyclerView.setAdapter(adapter);
+        binding.mineTagRv.setAdapter(adapter);
 
         //地址list
-        recyclerView = (RecyclerView)root.findViewById(R.id.address_rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        binding.addressRv.setLayoutManager(new LinearLayoutManager(this.getContext()));
         addressAdapter = new MineAddressAdapter(addressList, getActivity());
-        recyclerView.setAdapter(addressAdapter);
+        binding.addressRv.setAdapter(addressAdapter);
+        DividerItemDecoration divider = new DividerItemDecoration(requireContext(),DividerItemDecoration.VERTICAL);
+        divider.setDrawable((Objects.requireNonNull(ContextCompat.getDrawable(requireContext(), R.drawable.line))));
+        binding.addressRv.addItemDecoration(divider);
 
-        return root;
+        return binding.getRoot();
     }
 
     @Override
@@ -100,6 +102,10 @@ public class MineFragment extends Fragment {
     }
 
     private void initData() {
+        binding.addressRv.setVisibility(View.GONE);
+        binding.mineTagRv.setVisibility(View.GONE);
+        binding.addressLoading.setVisibility(View.VISIBLE);
+        binding.tagLoading.setVisibility(View.VISIBLE);
         String account = SpUtil.getInstance().getString("account","");
         String token = SpUtil.getInstance().getString("token","");
         Retrofit retrofit = new Retrofit.Builder()
@@ -122,6 +128,10 @@ public class MineFragment extends Fragment {
                             addressAdapter.notifyDataSetChanged();
                         }
                     });
+                    requireActivity().runOnUiThread(()-> {
+                        binding.addressRv.setVisibility(View.VISIBLE);
+                        binding.addressLoading.setVisibility(View.GONE);
+                    });
                 }
             }
             @Override
@@ -141,6 +151,10 @@ public class MineFragment extends Fragment {
                             tagList.addAll(response.body().getTags());
                             adapter.notifyDataSetChanged();
                         }
+                    });
+                    requireActivity().runOnUiThread(()-> {
+                        binding.mineTagRv.setVisibility(View.VISIBLE);
+                        binding.tagLoading.setVisibility(View.GONE);
                     });
                 }
             }
