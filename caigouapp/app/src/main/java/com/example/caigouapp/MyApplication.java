@@ -39,3 +39,57 @@ public class MyApplication extends Application {
         }
     }
 }
+//package com.example.caigouapp;
+//
+//import android.app.Application;
+//import android.content.Context;
+//import android.os.StrictMode;
+//
+////import com.squareup.leakcanary.LeakCanary;
+////import com.squareup.leakcanary.RefWatcher;
+//
+//public class MyApplication extends Application {
+//    private static Context mContext;
+////    private static RefWatcher mRefWatcher;
+//
+//    @Override
+//    public void onCreate() {
+//        super.onCreate();
+//        //获取context
+//        mContext = getApplicationContext();
+//
+////        mRefWatcher = LeakCanary.install(this);
+//        //setupLeakCanary();
+//    }
+//
+////    public static RefWatcher getRefWatcher() {
+////        return mRefWatcher;
+////
+////    }
+//
+//    //创建一个静态的方法，以便获取context对象
+//    public static Context getContext(){
+//        return mContext;
+//    }
+//
+//    protected void setupLeakCanary() {
+//        // 启用严格模式
+//        enabledStrictMode();
+//        // 判断是否是 HeapAnalyzerService 所属进程
+////        if (LeakCanary.isInAnalyzerProcess(this)) {
+////            // This process is dedicated to LeakCanary for heap analysis.
+////            // You should not init your app in this process.
+////            return;
+////        }
+////        // 注册 LeakCanary
+////        LeakCanary.install(this);
+//    }
+//
+//    private static void enabledStrictMode() {
+//        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder() //
+//                .detectAll() //
+//                .penaltyLog() //
+//                .penaltyDeath() //
+//                .build());
+//    }
+//}

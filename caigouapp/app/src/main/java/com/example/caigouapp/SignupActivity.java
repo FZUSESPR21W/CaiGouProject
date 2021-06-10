@@ -46,7 +46,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        MyApplication.getRefWatcher().watch(this);
+        //MyApplication.getRefWatcher().watch(this);
         Glide.with(this).load(R.drawable.vegetabledoge).into(binding.img);
         binding.userAccount.clearFocus();
         binding.userPwd.clearFocus();
