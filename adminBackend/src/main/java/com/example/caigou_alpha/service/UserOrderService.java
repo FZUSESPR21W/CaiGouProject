@@ -82,11 +82,9 @@ public class UserOrderService {
     }
 
 
-    public UserOrder testPage(){
+    public UserOrder testPage(Integer id){//获取一个带有详情信息的UserOrder
         UserOrder userOrder;
-//        Pageable pageable = PageRequest.of(0,5);
-//        Page<userOrder> userOrderPage = userOrderDao.findAll(pageable);
-        userOrder = userOrderDao.getOne(1);
+        userOrder = userOrderDao.selectOneOrder(id);
         CustomMenu customMenu;
         List<CustomMenu> customMenuList = new ArrayList<>();
         String cml = userOrder.getCustom_menuid_list();
@@ -97,7 +95,7 @@ public class UserOrderService {
             customMenu = customMenuService.findCustomMenuAndDetailById(customMenu);
             customMenuList.add(customMenu);
         }
-        //将查好的customMenu加入到UserOrder中的CustomMenuList中！！！！
+        userOrder.setCustomMenuList(customMenuList);
         return userOrder;
     }
 }

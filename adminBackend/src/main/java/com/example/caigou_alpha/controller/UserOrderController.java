@@ -50,4 +50,10 @@ public class UserOrderController {
 //    public UserOrderInfoListAll findAll3(){
 //    }
 
+    @UserLoginToken
+    @GetMapping("/findOne")
+    public UserOrder findOne(@RequestParam Integer id){
+        return userOrderService.testPage(id);
+    }
+
 }

@@ -22,7 +22,7 @@ public class CustomMenuService {
         List<Integer> weightSplit  = new ArrayList<>();
         Integer id = customMenu.getId();
         Food food;
-        customMenu = customMenuDao.selectCustomMenuById(id);
+
         String MulList;
         MulList = customMenuDao.findMultipleList(id);
 

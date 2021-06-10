@@ -13,4 +13,7 @@ import java.util.List;
 public interface UserOrderDao extends JpaRepository<UserOrder,Integer> {
     @Query(value = "select o from UserOrder o where o.user_id= :user_id")
     List<UserOrder> selectUserOrderByUserId(@Param("user_id")Integer user_id);
+
+    @Query(value = "select * from user_order where id = :id",nativeQuery = true)
+    UserOrder selectOneOrder(@Param("id")Integer id);
 }
