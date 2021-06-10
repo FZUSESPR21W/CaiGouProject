@@ -43,12 +43,6 @@ public class LoginActivityTest {
     @Test
     public void testLogin() {
         loginActivity = (LoginActivity) mActivityRule.getActivity();
-        loginActivity.runOnUiThread(()->{
-            loginActivity.binding.userAccount.setText("cy");
-            loginActivity.binding.userPwd.setText("123");
-            loginActivity.setClick();
-            loginActivity.binding.btn.performClick();
-        });
         Map<String, Object> params = new HashMap<>();
         params.put("phone", "cy");
         params.put("password", "123");
