@@ -42,7 +42,7 @@ public class CustomMenuService {
             food.setMultiple(weightSplit.get(i));
             foodList.add(food);
         }
-
+        customMenu.setFoodList(foodList);
         return customMenu;
     }
 }

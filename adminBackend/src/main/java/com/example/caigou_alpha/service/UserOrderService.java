@@ -92,10 +92,55 @@ public class UserOrderService {
         for(String s:customMenuArray){
             customMenu = customMenuDao.selectCustomMenuById(Integer.parseInt(s));
             //获取带有所有信息的customMenu
-            customMenu = customMenuService.findCustomMenuAndDetailById(customMenu);
-            customMenuList.add(customMenu);
+            if(customMenu != null) {
+                customMenu = customMenuService.findCustomMenuAndDetailById(customMenu);
+                customMenuList.add(customMenu);
+            }
+//            customMenuList.add(null);
         }
         userOrder.setCustomMenuList(customMenuList);
         return userOrder;
     }
+
+
+    public UserOrder testPage2(UserOrder u){//获取一个带有详情信息的UserOrder
+//        UserOrder userOrder;
+//        userOrder = userOrderDao.selectOneOrder(id);
+        CustomMenu customMenu;
+        List<CustomMenu> customMenuList = new ArrayList<>();
+        String cml = u.getCustom_menuid_list();
+        String[] customMenuArray = cml.split(",");
+        for(String s:customMenuArray){
+            customMenu = customMenuDao.selectCustomMenuById(Integer.parseInt(s));
+            //获取带有所有信息的customMenu
+            if(customMenu != null) {
+                customMenu = customMenuService.findCustomMenuAndDetailById(customMenu);
+                customMenuList.add(customMenu);
+            }
+            else customMenuList.add(null);
+        }
+        u.setCustomMenuList(customMenuList);
+        return u;
+    }
+
+    public List<UserOrder> findUserOrderPage(){
+        int tempId;
+        List<UserOrder> userOrderList;
+        List<UserOrder> userOrderList1 = new ArrayList<>();
+        userOrderList = userOrderDao.findAll();
+
+
+        for(int i = 0;i < userOrderList.size();i++){
+            userOrderList1.add(testPage2(userOrderList.get(i)));
+        }
+        return userOrderList1;
+    }
+
+
+    public Page<UserOrder> findPageOrder(Integer pageNum, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNum-1,pageSize);
+        userOrderDao.findAll(pageable).forEach(userOrder -> testPage2(userOrder));
+        return userOrderDao.findAll(pageable);
+    }
+
 }

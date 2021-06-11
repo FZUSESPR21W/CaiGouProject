@@ -3,6 +3,7 @@ package com.example.caigou_alpha.controller;
 
 import com.example.caigou_alpha.annotation.UserLoginToken;
 import com.example.caigou_alpha.common.Result;
+import com.example.caigou_alpha.dao.UserOrderDao;
 import com.example.caigou_alpha.entity.UserOrder;
 import com.example.caigou_alpha.entity.UserOrderInfoListAll;
 import com.example.caigou_alpha.service.OrderService;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 @SuppressWarnings("rawtypes")
 @CrossOrigin(origins = "http://domain2.com",
@@ -22,6 +24,8 @@ public class UserOrderController {
     @Resource
     private OrderService orderService;
     @Resource
+    private UserOrderDao userOrderDao;
+    @Resource
     private UserOrderService userOrderService;
 
     /**
@@ -32,8 +36,8 @@ public class UserOrderController {
      */
     @UserLoginToken
     @GetMapping("/findAll")
-    public Result<Page<UserOrder>> findAll(@RequestParam Integer pageNum){
-        return Result.success(orderService.findPage(pageNum,5));
+    public Result<Page<UserOrder>> findAll(@RequestParam Integer pageNum,@RequestParam Integer pageSize){
+        return Result.success(orderService.findPage(pageNum,pageSize));
     }
 
     /**
@@ -46,14 +50,27 @@ public class UserOrderController {
         return userOrderService.getUserOrderInfo();
     }
 
-//    @GetMapping("/findAll2")
-//    public UserOrderInfoListAll findAll3(){
-//    }
-
+    //根据一个订单ID查询详情
     @UserLoginToken
-    @GetMapping("/findOne")
+    @GetMapping("/findOneDetail")
     public UserOrder findOne(@RequestParam Integer id){
         return userOrderService.testPage(id);
+//        return userOrderService.testPage2(userOrderDao.selectOneOrder(7));
     }
 
+    //非分页查询所有订单
+    @UserLoginToken
+    @GetMapping("/findPageTest")
+    public List<UserOrder> findUserOrderPage(){
+
+        return userOrderService.findUserOrderPage();
+    }
+
+    //分页查询，带有详情
+    @UserLoginToken
+    @GetMapping("/findPageOrder")
+    public Page<UserOrder> findOrderPage( @RequestParam(required = true)Integer pageNum,@RequestParam(required = true)Integer pageSize){
+
+        return userOrderService.findPageOrder(pageNum,pageSize);
+    }
 }
