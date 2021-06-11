@@ -3,6 +3,8 @@ package com.example.caigouapp.ui.order;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
+
 
 public class CustomerMenu {
     @SerializedName("id")
@@ -23,6 +25,16 @@ public class CustomerMenu {
     private String multiple;
     @SerializedName("list")
     private List<Food> foods;
+
+    private Integer count;//用于标识最近常点
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
 
     public List<Food> getFoods() {
         return foods;

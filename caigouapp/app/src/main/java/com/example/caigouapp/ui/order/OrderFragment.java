@@ -1,8 +1,10 @@
 package com.example.caigouapp.ui.order;
 
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,9 +31,16 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -60,9 +69,9 @@ public class OrderFragment extends Fragment {
 
         //grid_recent_order
         recentOrderGridView = view.findViewById(R.id.recent_order_grid);
-        mData = new ArrayList<>();
+        /*mData = new ArrayList<>();
         mData.add(new CustomerMenu(R.drawable.sample,"番茄炒牛肉"));
-        setHorizontalGridView();
+        setHorizontalGridView();*/
 
         recyclerView = (RecyclerView) view.findViewById(R.id.all_order_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity获得活动（context）
@@ -83,6 +92,7 @@ public class OrderFragment extends Fragment {
         //System.out.println(call.request());
         //System.out.println(call.request().url());
         call.enqueue(new Callback<OrderResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
                 String str = new Gson().toJson(response.body());
@@ -94,6 +104,8 @@ public class OrderFragment extends Fragment {
                     GsonUtil.e("123",data);
                     list = new Gson().fromJson(data, new TypeToken<List<Order>>(){}.getType());
                     Collections.reverse(list);
+                    mData = getRecentData(list);
+                    setHorizontalGridView();
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -154,6 +166,29 @@ public class OrderFragment extends Fragment {
                 recentOrderGridView.setAdapter(mAdapter);
             }
         },100);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public ArrayList<CustomerMenu> getRecentData(List<Order> orders){
+        int orderSize = Math.min(orders.size(),10);
+        Map<String,CustomerMenu> cmm = new TreeMap<>();
+        ArrayList<CustomerMenu> result = new ArrayList<>();
+
+        for(int i=0;i<orderSize;i++){
+            ArrayList<CustomerMenu> cms = orders.get(i).getCms();//获得order
+            for(int j=0;j<cms.size();j++){
+                CustomerMenu cm = cms.get(j);
+                if(cmm.containsKey(cm.getiName())){
+                    //已存在该map，计数器要加一
+                    cm.setCount(cm.getCount()+1);
+                }else{
+                    cm.setCount(1);
+                    cmm.put(cm.getiName(),cm);
+                }
+            }
+        }
+
+        return result;
     }
 
     @Override
