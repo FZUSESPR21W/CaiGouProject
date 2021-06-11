@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.example.caigouapp.MainActivity;
 import com.example.caigouapp.R;
 import com.example.caigouapp.data.AddressBean;
 import com.example.caigouapp.data.TagsBean;
@@ -168,6 +170,8 @@ public class MineFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        if(addressAdapter.getSelectAddress() > -1)
+            ((MainActivity)getActivity()).setAddressRequest(addressAdapter.getSelectAddress());
         if (call != null && call.isExecuted())
             call.cancel();
         if (call1 != null && call1.isExecuted())

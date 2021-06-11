@@ -40,4 +40,7 @@ public interface UserServices {
 
     @POST("user/updateDeviceToken")
     Call<CommonResponse> updateDeviceToken(@Body RequestBody body);
+
+    @POST("user/setAddress")
+    Call<CommonResponse> setUserAddress(@Body RequestBody body);
 }

@@ -52,7 +52,8 @@
         app:layout_constraintTop_toBottomOf="@+id/user_account"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp" />
+        android:layout_marginRight="30dp"
+        android:inputType="textPassword"/>
 
     <Button
         android:id="@+id/btn"

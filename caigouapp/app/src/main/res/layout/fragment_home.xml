@@ -91,7 +91,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/recommend_resource"/>
+                    android:src="@drawable/default_image"/>
 
                 <TextView
                     android:id="@+id/tv_commend"
@@ -104,6 +104,13 @@
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"/>
             </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recipe_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_et"
+                android:layout_margin="16dp"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

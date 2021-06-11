@@ -65,11 +65,8 @@ public class LoginActivity extends BasePushActivity {
         binding.signup.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
             startActivityForResult(intent,1);
-            //overridePendingTransition(R.anim.in_from_right, R.anim.out_to_left);
         });
         binding.btn.setOnClickListener(view -> {
-//            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-//            startActivity(intent);
             account = binding.userAccount.getText().toString();
             password = binding.userPwd.getText().toString();
 
@@ -104,6 +101,7 @@ public class LoginActivity extends BasePushActivity {
                     sp.putString("password",password);
                     sp.putString("token",response.body().getToken());
                     sp.putInt("id",response.body().getData().getId());
+                    updateDeviceToken();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
@@ -126,7 +124,6 @@ public class LoginActivity extends BasePushActivity {
                 Log.d("LoginActivity error:",t.toString());
                 runOnUiThread(() -> {
                     Toast.makeText(LoginActivity.this,"请求失败",Toast.LENGTH_SHORT).show();
-                    updateDeviceToken();
                 });
             }
         });
