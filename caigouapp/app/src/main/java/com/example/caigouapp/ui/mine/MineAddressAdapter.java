@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.caigouapp.MainActivity;
 import com.example.caigouapp.R;
 import com.example.caigouapp.data.AddressBean;
 import com.example.caigouapp.data.UserAddressResponse.*;
@@ -29,6 +30,12 @@ public class MineAddressAdapter extends RecyclerView.Adapter<MineAddressAdapter.
     public MineAddressAdapter(List<AddressBean> addressList, Context context) {
         this.addressList = addressList;
         this.context = context;
+    }
+
+    public int getSelectAddress(){
+        if (index >= 0)
+        return addressList.get(index).getId();
+        return -1;
     }
 
     @NonNull
