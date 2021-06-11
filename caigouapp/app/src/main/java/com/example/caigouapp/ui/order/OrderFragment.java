@@ -1,5 +1,6 @@
 package com.example.caigouapp.ui.order;
 
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,8 +21,12 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.caigouapp.R;
 import com.example.caigouapp.data.OrderResponse;
+import com.example.caigouapp.utils.GraphicUtil;
 import com.example.caigouapp.utils.GsonUtil;
 import com.example.caigouapp.utils.SpUtil;
 import com.google.gson.Gson;
@@ -103,7 +108,7 @@ public class OrderFragment extends Fragment {
                     String data = jsonArray.toString();
                     GsonUtil.e("123",data);
                     list = new Gson().fromJson(data, new TypeToken<List<Order>>(){}.getType());
-                    Collections.reverse(list);
+                    //Collections.reverse(list);
                     mData = getRecentData(list);
                     setHorizontalGridView();
                 }catch(Exception e){
@@ -159,7 +164,19 @@ public class OrderFragment extends Fragment {
                     @Override
                     public void bindView(ViewHolder holder, Object obj) {
                         CustomerMenu cm = (CustomerMenu)obj;
-                        holder.setImageResource(R.id.img_grid, BitmapFactory.decodeResource(getResources(),R.drawable.sample));
+                        if(isAdded()){
+                            Glide.with(getActivity())
+                                    .load(cm.getPhotoUrl())
+                                    //.placeholder() 这是等待时的图标
+                                    .asBitmap()
+                                    .fitCenter()
+                                    .into(new SimpleTarget<Bitmap>() {
+                                        @Override
+                                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                                            holder.setImageResource(R.id.img_grid,GraphicUtil.getSquarePhoto(resource,64));
+                                        }
+                                    });
+                        }
                         holder.setText(R.id.txt_grid, cm.getiName());
                     }
                 };
@@ -171,21 +188,35 @@ public class OrderFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.N)
     public ArrayList<CustomerMenu> getRecentData(List<Order> orders){
         int orderSize = Math.min(orders.size(),10);
-        Map<String,CustomerMenu> cmm = new TreeMap<>();
+        Map<String,CustomerMenu> cmm = new LinkedHashMap<>();
         ArrayList<CustomerMenu> result = new ArrayList<>();
 
         for(int i=0;i<orderSize;i++){
             ArrayList<CustomerMenu> cms = orders.get(i).getCms();//获得order
+            System.out.println(cms.size());
             for(int j=0;j<cms.size();j++){
                 CustomerMenu cm = cms.get(j);
+                System.out.println(cm.getiName());
                 if(cmm.containsKey(cm.getiName())){
-                    //已存在该map，计数器要加一
-                    cm.setCount(cm.getCount()+1);
+                    //已存在该map，直接复用已有的对象计数器要加一
+                    CustomerMenu cmTemp = cmm.get(cm.getiName());
+                    cmTemp.setCount(cmTemp.getCount()+1);//问题在于相同名称的CM也会拥有不同对象，count并不共通，所以要直接复用
                 }else{
                     cm.setCount(1);
                     cmm.put(cm.getiName(),cm);
                 }
             }
+        }
+
+        List<Map.Entry<String,CustomerMenu>> list = new ArrayList<>(cmm.entrySet());
+        Collections.sort(list, new Comparator<Map.Entry<String, CustomerMenu>>() {
+            public int compare(Map.Entry<String, CustomerMenu> o1, Map.Entry<String, CustomerMenu> o2) {
+                return  o2.getValue().getCount().compareTo(o1.getValue().getCount());
+            }
+        });
+
+        for(int i=0;i<Math.min(list.size(),3);i++){
+            result.add(list.get(i).getValue());
         }
 
         return result;
