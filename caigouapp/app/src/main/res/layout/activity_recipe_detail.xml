@@ -84,7 +84,7 @@
             app:layout_constraintRight_toRightOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="测试菜谱名"
+            android:text="加载中..."
             android:textSize="30sp"
             android:maxEms="5"
             android:textColor="@color/black"

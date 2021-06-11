@@ -61,9 +61,6 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<CommonResponse>() {
             @Override
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
-                if(response.body() != null){
-                    Toast.makeText(MyApplication.getContext(), (response.body()).getMessage(),Toast.LENGTH_SHORT).show();
-                }
             }
 
             @Override

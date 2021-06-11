@@ -7,22 +7,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.caigouapp.R;
 import com.example.caigouapp.data.RecommendResponse;
-import com.example.caigouapp.data.UserAddressResponse;
-import com.example.caigouapp.data.UserTagResponse;
+import com.example.caigouapp.data.SearchResponse;
+import com.example.caigouapp.data.SearchResponse.*;
 import com.example.caigouapp.databinding.FragmentHomeBinding;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.RecipeServices;
-import com.example.caigouapp.http.UserServices;
 import com.example.caigouapp.ui.RecipeDetailActivity;
 import com.example.caigouapp.ui.SearchActivity;
+import com.example.caigouapp.ui.adapter.RecipeHomeAdapter;
+import com.example.caigouapp.ui.adapter.RecipeSearchAdapter;
 import com.example.caigouapp.utils.SpUtil;
 import com.example.caigouapp.utils.StatusBarUtils;
 import com.google.gson.Gson;
@@ -44,7 +46,10 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
-    Call<RecommendResponse> call;
+    private Call<RecommendResponse> call;
+    private Call<SearchResponse> call1;
+    private List<MenusBean> menuList = new ArrayList<>();
+    private RecipeHomeAdapter adapter;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -72,6 +77,7 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<RecommendResponse> call, Response<RecommendResponse> response) {
                 if (response.isSuccessful()){
                     getActivity().runOnUiThread(() -> {
+                        getRecommendList(response.body().getData().getTags());
                         binding.tvCommend.setText("今日推荐-"+response.body().getData().getName());
                         Glide.with(getActivity()).load(response.body().getData().getAvatar()).into(binding.ivRecommend);
                         binding.ivRecommend.setOnClickListener(v -> {
@@ -85,6 +91,36 @@ public class HomeFragment extends Fragment {
             @Override
             public void onFailure(Call<RecommendResponse> call, Throwable t) {
                 Log.d("HomeFragment","今日推荐加载失败");
+            }
+        });
+    }
+
+    private void getRecommendList(String content){
+        HashMap<String, String> map = new HashMap<>();
+        map.put("searchWord",content);
+        String searchContent = new Gson().toJson(map);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), searchContent);
+        //网络请求
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.URL_BASE)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        RecipeServices recipeServices = retrofit.create(RecipeServices.class);
+        call1 = recipeServices.searchRecipes(requestBody);
+        call1.enqueue(new Callback<SearchResponse>() {
+            @Override
+            public void onResponse(Call<SearchResponse> call, Response<SearchResponse> response) {
+                if (response.isSuccessful()){
+                    getActivity().runOnUiThread(() -> {
+                        menuList.clear();
+                        menuList.addAll(response.body().getMenus());
+                        adapter.notifyDataSetChanged();
+                    });
+                }
+            }
+            @Override
+            public void onFailure(Call<SearchResponse> call, Throwable t) {
+                Log.d("HomeFragment",t.getMessage()+call.toString());
             }
         });
     }
@@ -121,6 +157,12 @@ public class HomeFragment extends Fragment {
             Intent intent = new Intent(getActivity(), SearchActivity.class);
             startActivity(intent);
         });
+        // 线性布局管理器
+        StaggeredGridLayoutManager staggeredGridLayoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        binding.rvRecipeList.setLayoutManager(staggeredGridLayoutManager);
+        // 用于描述item的适配器
+        adapter = new RecipeHomeAdapter(menuList,getActivity());
+        binding.rvRecipeList.setAdapter(adapter);
     }
 
     @Override
