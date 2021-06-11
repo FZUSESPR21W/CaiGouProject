@@ -5,10 +5,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.example.caigouapp.MyApplication;
 import com.example.caigouapp.R;
 import com.zhouwei.mzbanner.holder.MZViewHolder;
 
-public class BannerViewHolder implements MZViewHolder<Integer> {
+public class BannerViewHolder implements MZViewHolder<String> {
     private ImageView mImageView;
     @Override
     public View createView(Context context) {
@@ -19,8 +21,13 @@ public class BannerViewHolder implements MZViewHolder<Integer> {
     }
 
     @Override
-    public void onBind(Context context, int position, Integer data) {
-        // 数据绑定
-        mImageView.setImageResource(data);
+    public void onBind(Context context, int position, String data) {
+        Glide.with(MyApplication.getContext()).load(data).into(mImageView);
     }
+
+//    @Override
+//    public void onBind(Context context, int position, Integer data) {
+//        // 数据绑定
+//        mImageView.setImageResource(data);
+//    }
 }

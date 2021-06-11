@@ -3,17 +3,19 @@ package com.example.caigouapp.ui.home;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.FitWindowsLinearLayout;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.example.caigouapp.MainActivity;
 import com.example.caigouapp.R;
 import com.example.caigouapp.data.RecommendResponse;
 import com.example.caigouapp.data.SearchResponse;
@@ -21,6 +23,7 @@ import com.example.caigouapp.data.SearchResponse.*;
 import com.example.caigouapp.databinding.FragmentHomeBinding;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.RecipeServices;
+import com.example.caigouapp.http.UserServices;
 import com.example.caigouapp.ui.RecipeDetailActivity;
 import com.example.caigouapp.ui.SearchActivity;
 import com.example.caigouapp.ui.adapter.RecipeHomeAdapter;
@@ -28,12 +31,18 @@ import com.example.caigouapp.ui.adapter.RecipeSearchAdapter;
 import com.example.caigouapp.utils.SpUtil;
 import com.example.caigouapp.utils.StatusBarUtils;
 import com.google.gson.Gson;
+import com.zhouwei.mzbanner.MZBannerView;
 import com.zhouwei.mzbanner.holder.MZHolderCreator;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
@@ -50,6 +59,9 @@ public class HomeFragment extends Fragment {
     private Call<SearchResponse> call1;
     private List<MenusBean> menuList = new ArrayList<>();
     private RecipeHomeAdapter adapter;
+    private List<String> pictureList = new ArrayList<String>(3);
+    private List<Integer> idList = new ArrayList<Integer>(3);
+    private String pic = "";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -78,8 +90,9 @@ public class HomeFragment extends Fragment {
                 if (response.isSuccessful()){
                     getActivity().runOnUiThread(() -> {
                         getRecommendList(response.body().getData().getTags());
-                        binding.tvCommend.setText("今日推荐-"+response.body().getData().getName());
-                        Glide.with(getActivity()).load(response.body().getData().getAvatar()).into(binding.ivRecommend);
+                        binding.tvCommend.setText("今日推荐-" + response.body().getData().getName());
+                        pic = response.body().getData().getAvatar();
+                        Glide.with(getActivity()).load(pic).into(binding.ivRecommend);
                         binding.ivRecommend.setOnClickListener(v -> {
                             Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
                             intent.putExtra("id",response.body().getData().getId());
@@ -90,10 +103,11 @@ public class HomeFragment extends Fragment {
             }
             @Override
             public void onFailure(Call<RecommendResponse> call, Throwable t) {
-                Log.d("HomeFragment","今日推荐加载失败");
+                Log.d("HomeFragment", "今日推荐加载失败");
             }
         });
     }
+
 
     private void getRecommendList(String content){
         HashMap<String, String> map = new HashMap<>();
@@ -115,6 +129,12 @@ public class HomeFragment extends Fragment {
                         menuList.clear();
                         menuList.addAll(response.body().getMenus());
                         adapter.notifyDataSetChanged();
+                        int j = new Random().nextInt(10) + 1;
+                        for (int i = j;i < j+3;i++){
+                            pictureList.add(response.body().getMenus().get(i).getAvatar());
+                            idList.add(response.body().getMenus().get(i).getId());
+                        }
+                        initBanner();
                     });
                 }
             }
@@ -134,14 +154,7 @@ public class HomeFragment extends Fragment {
     }
 
     public void initView(){
-        //初始化轮播图
-        List pictureList = new ArrayList<>(Arrays.asList(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3));
-        binding.mzbHome.setPages(pictureList, new MZHolderCreator<BannerViewHolder>() {
-            @Override
-            public BannerViewHolder createViewHolder() {
-                return new BannerViewHolder();
-            }
-        });
+
         //初始化菜系
         ArrayList styleList = new ArrayList<>(Arrays.asList(
                 R.drawable.min,
@@ -165,10 +178,29 @@ public class HomeFragment extends Fragment {
         binding.rvRecipeList.setAdapter(adapter);
     }
 
+    private void initBanner(){
+        //初始化轮播图
+        //List pictureList = new ArrayList<>(Arrays.asList(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3));
+        binding.mzbHome.setBannerPageClickListener(new MZBannerView.BannerPageClickListener() {
+            @Override
+            public void onPageClick(View view, int position) {
+                Log.d("click","");
+                Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
+                intent.putExtra("id", idList.get(position));
+                startActivity(intent);
+
+            }
+        });
+        binding.mzbHome.setPages(pictureList, (MZHolderCreator<BannerViewHolder>) () -> new BannerViewHolder());
+
+    }
+
     @Override
     public void onStop() {
         super.onStop();
         if (call.isExecuted())
             call.cancel();
+        if (call1.isExecuted())
+            call1.cancel();
     }
 }
