@@ -36,8 +36,22 @@ public class UserOrderController {
      */
     @UserLoginToken
     @GetMapping("/findAll")
-    public Result<Page<UserOrder>> findAll(@RequestParam Integer pageNum,@RequestParam Integer pageSize){
-        return Result.success(orderService.findPage(pageNum,pageSize));
+    public Result<Page<UserOrder>> findAll(@RequestParam Integer pageNum,@RequestParam Integer pageSize,
+                                           @RequestParam Integer status,
+                                           @RequestParam(required = false) Integer orderId){
+        if(orderId == null) {
+            if (status == 0) {
+                return Result.success(orderService.findPage(pageNum, pageSize));
+            }
+            return Result.success(orderService.findPageStatus(pageNum, pageSize, status));
+        }
+        else{
+            if (status == 0) {
+                return Result.success(orderService.findPageOrderIdAll(pageNum,pageSize,orderId));
+            }
+            return Result.success(orderService.findPageOrderId(pageNum, pageSize, status,orderId));
+        }
+
     }
 
     /**
@@ -70,7 +84,12 @@ public class UserOrderController {
     @UserLoginToken
     @GetMapping("/findPageOrder")
     public Page<UserOrder> findOrderPage( @RequestParam(required = true)Integer pageNum,@RequestParam(required = true)Integer pageSize){
-
         return userOrderService.findPageOrder(pageNum,pageSize);
+    }
+
+    @UserLoginToken
+    @PutMapping("/changeStatus")
+    public Result changeOrderStatus(@RequestParam(required = true)Integer orderId){
+        return Result.success("共有"+orderService.changeStatus(orderId) + "行数据受到修改,其ID为" + orderId);
     }
 }

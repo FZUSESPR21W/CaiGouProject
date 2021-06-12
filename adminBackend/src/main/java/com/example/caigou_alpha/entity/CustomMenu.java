@@ -67,6 +67,17 @@ public class CustomMenu {
     private double price;
     private String food_id_list;
     private String Multiple_list;
+
+    @Transient
+    public String getMenuName() {
+        return menuName;
+    }
+
+    public void setMenuName(String menuName) {
+        this.menuName = menuName;
+    }
+    @Transient
+    private String menuName;
 //    private String address;
 
     @Transient

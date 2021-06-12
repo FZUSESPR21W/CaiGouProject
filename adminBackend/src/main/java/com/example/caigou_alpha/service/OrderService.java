@@ -16,9 +16,31 @@ public class OrderService {
     @Resource//获得将其他部分资源引入
     private UserOrderDao userOrderDao;
 
+    public Page<UserOrder> findPageStatus(Integer pageNum, Integer pageSize,Integer status){
+        //Sort sort =  Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNum-1,pageSize);
+        return userOrderDao.findAllStatus(status,pageable);
+    }
+
     public Page<UserOrder> findPage(Integer pageNum, Integer pageSize){
         //Sort sort =  Sort.by(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(pageNum-1,pageSize);
         return userOrderDao.findAll(pageable);
+    }
+
+    public Page<UserOrder> findPageOrderId(Integer pageNum, Integer pageSize,Integer status,Integer orderId){
+        //Sort sort =  Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNum-1,pageSize);
+        return userOrderDao.findAllOrderId(status,orderId,pageable);
+    }
+
+    public Page<UserOrder> findPageOrderIdAll(Integer pageNum, Integer pageSize,Integer orderId){
+        //Sort sort =  Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(pageNum-1,pageSize);
+        return userOrderDao.findAllOrderIdAll(orderId,pageable);
+    }
+
+    public int changeStatus(Integer orderId){
+          return userOrderDao.changeStatus(orderId);
     }
 }

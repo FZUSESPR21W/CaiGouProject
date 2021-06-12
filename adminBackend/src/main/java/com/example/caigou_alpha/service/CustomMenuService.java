@@ -2,6 +2,7 @@ package com.example.caigou_alpha.service;
 
 import com.example.caigou_alpha.dao.CustomMenuDao;
 import com.example.caigou_alpha.dao.FoodDao;
+import com.example.caigou_alpha.dao.MenuDao;
 import com.example.caigou_alpha.entity.CustomMenu;
 import com.example.caigou_alpha.entity.Food;
 import com.example.caigou_alpha.entity.Menu;
@@ -13,6 +14,8 @@ import java.util.List;
 
 @Service
 public class CustomMenuService {
+    @Resource
+    private MenuDao menuDao;
     @Resource
     private CustomMenuDao customMenuDao;
     @Resource
@@ -42,6 +45,8 @@ public class CustomMenuService {
             food.setMultiple(weightSplit.get(i));
             foodList.add(food);
         }
+
+        customMenu.setMenuName(menuDao.selectMenuById(customMenu.getMenu_id()).getName());
         customMenu.setFoodList(foodList);
         return customMenu;
     }

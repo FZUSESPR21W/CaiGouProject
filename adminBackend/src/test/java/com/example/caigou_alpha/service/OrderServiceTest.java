@@ -19,12 +19,5 @@ class OrderServiceTest {
     OrderService orderService;
     @Test
     void findPage() {
-
-        UserOrder userOrder;
-
-        int pageNum = 1;
-        int pageSize = 5;
-        userOrder = orderService.findPage(1,5).get().findFirst().orElse(null);
-        System.out.println(userOrder);
     }
 }
