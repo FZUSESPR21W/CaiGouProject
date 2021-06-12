@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/bg_round"
-    android:layout_margin="3dp">
+    android:background="@drawable/bg_white"
+    android:layout_marginBottom="10dp">
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
@@ -45,7 +45,7 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="5dp"
             android:textSize="12sp"
-            android:maxLines="2"
+            android:maxLines="1"
             android:maxEms="10"
             android:ellipsize="end"
             android:text="这是一个描述这个菜谱的测试语句这是一个描述这个菜谱"
@@ -53,13 +53,12 @@
         </TextView>
 
         <TextView
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/shoppingRecipeImage"
             app:layout_constraintLeft_toRightOf="@id/shoppingRecipeImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginStart="15dp"
-            android:layout_marginBottom="5dp"
             android:textSize="12sp"
             android:textColor="#FF4500"
             android:text="￥999"
@@ -92,16 +91,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/personalRecipe"
-        android:id="@+id/rvLine">
+        android:id="@+id/rvLine"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@drawable/line"
+            android:id="@+id/upLine">
+        </TextView>
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_square"
+            android:background="@drawable/bg_ingredient"
             android:id="@+id/personalIngredientRv">
         </androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
     <TextView
         app:layout_constraintTop_toBottomOf="@id/rvLine"
+        android:padding="2dp"
         android:layout_width="match_parent"
         android:layout_height="15dp"
         android:id="@+id/endItem">
