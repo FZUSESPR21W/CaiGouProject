@@ -12,7 +12,9 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.caigouapp.Ingredient;
@@ -67,8 +69,10 @@ public class ShoppingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentShoppingBinding.inflate(getLayoutInflater());
+        binding.loading.setVisibility(View.VISIBLE);
+        binding.noItem.setVisibility(View.GONE);
+        binding.recommend.setVisibility(View.GONE);
         getCartRequest(userId);
-        initView();
         initStatusBar();//初始化状态栏
         return binding.getRoot();
     }
@@ -94,11 +98,17 @@ public class ShoppingFragment extends Fragment {
         call.enqueue(new Callback<CommonResponse>() {
             @Override
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
-                Toast.makeText(getContext(),"已经为您下单啦",Toast.LENGTH_SHORT).show();
-                list.clear();
-                adapter.clear();
-                adapter.notifyDataSetChanged();
-                binding.noItem.setVisibility(View.VISIBLE);
+                if(response.body().getCode().equals("200")) {
+                    Toast.makeText(getContext(), "已经为您下单啦", Toast.LENGTH_SHORT).show();
+                    list.clear();
+                    adapter.clear();
+                    adapter.notifyDataSetChanged();
+                    binding.noItem.setVisibility(View.VISIBLE);
+                    initView();
+                }
+                else if(response.body().getCode().equals("100")){
+                    Toast.makeText(getContext(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -160,9 +170,6 @@ public class ShoppingFragment extends Fragment {
                                 new ArrayList<>(step)));
                     }
                 }
-                else {
-                    binding.noItem.setVisibility(View.VISIBLE);
-                }
                 requireActivity().runOnUiThread(()->initView());
             }
 
@@ -191,6 +198,10 @@ public class ShoppingFragment extends Fragment {
         binding.shoppingCarRv.setLayoutManager(layoutManager);
         adapter = new ShoppingAdapter(list,getContext());
         binding.shoppingCarRv.setAdapter(adapter);
+        binding.loading.setVisibility(View.GONE);
+        binding.recommend.setVisibility(View.VISIBLE);
+        if (list.size() == 0)binding.noItem.setVisibility(View.VISIBLE);
+        else binding.noItem.setVisibility(View.GONE);
         binding.submitButton.setOnClickListener(view -> {
             if(list.size() != 0) postRequest(userId);
             else Toast.makeText(getContext(),"您的购物车还没有东西哦！",Toast.LENGTH_SHORT).show();
