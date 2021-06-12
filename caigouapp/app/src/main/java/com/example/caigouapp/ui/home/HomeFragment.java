@@ -154,7 +154,6 @@ public class HomeFragment extends Fragment {
     }
 
     public void initView(){
-
         //初始化菜系
         ArrayList styleList = new ArrayList<>(Arrays.asList(
                 R.drawable.min,
@@ -198,9 +197,9 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        if (call.isExecuted())
-            call.cancel();
-        if (call1.isExecuted())
+        if (call1 != null && call1.isExecuted())
             call1.cancel();
+        if (call != null && call.isExecuted())
+            call.cancel();
     }
 }
