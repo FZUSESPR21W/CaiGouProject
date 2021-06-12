@@ -5,7 +5,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.caigouapp.SignupActivity;
@@ -121,6 +124,14 @@ public class SearchActivity extends AppCompatActivity {
             binding.rvSearchHistory.setAdapter(textAdapter);
         }
 
+        binding.etSearch.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                doSearch();
+                return true;
+            }
+            return false;
+        });
+
         binding.tvClearHistory.setOnClickListener(v -> {
             SpUtil.getInstance().putString("history","");
             initHistory();
@@ -142,20 +153,24 @@ public class SearchActivity extends AppCompatActivity {
         binding.rvRecipeList.setAdapter(adapter);
 
         binding.tvSearch.setOnClickListener(v -> {
-            String content = binding.etSearch.getText().toString();
-            if (content != null && !content.equals("")){
-                String str = SpUtil.getInstance().getString("history","");
-                if (!str.contains(content)){
-                    if (str.equals(""))
-                        SpUtil.getInstance().putString("history",content);
-                    else
-                        SpUtil.getInstance().putString("history",str+","+content);
-                }
-                HashMap<String, String> map = new HashMap<>();
-                map.put("searchWord",content);
-                binding.pbLoad.setVisibility(View.VISIBLE);
-                initData(new Gson().toJson(map));
-            }
+            doSearch();
         });
+    }
+
+    private void doSearch(){
+        String content = binding.etSearch.getText().toString();
+        if (content != null && !content.equals("")){
+            String str = SpUtil.getInstance().getString("history","");
+            if (!str.contains(content)){
+                if (str.equals(""))
+                    SpUtil.getInstance().putString("history",content);
+                else
+                    SpUtil.getInstance().putString("history",str+","+content);
+            }
+            HashMap<String, String> map = new HashMap<>();
+            map.put("searchWord",content);
+            binding.pbLoad.setVisibility(View.VISIBLE);
+            initData(new Gson().toJson(map));
+        }
     }
 }
