@@ -3,9 +3,11 @@ package com.example.caigouapp.ui.order;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,6 +37,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     TextView addressTextView;
     TextView phoneTextView;
     TextView remarkTextView;
+    LinearLayout callSellerButton;
     String data;//传到该活动的订单的json字符串
 
     @Override
@@ -62,6 +65,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         phoneTextView = (TextView) findViewById(R.id.txt_order_detail_phone);
         remarkTextView = (TextView) findViewById(R.id.txt_order_detail_remark);
         ImageView back = findViewById(R.id.btn_arrow_left);
+        callSellerButton = (LinearLayout) findViewById(R.id.call_seller);
 
         stateTextView.setText(mOrder.getOrderStateString());
         numberTextView.setText(mOrder.getOrderNumber());
@@ -80,6 +84,16 @@ public class OrderDetailActivity extends AppCompatActivity {
             ClipData mClipData = ClipData.newPlainText("Label", mOrder.getOrderNumber());
             cm.setPrimaryClip(mClipData);
             Toast.makeText(OrderDetailActivity.this,"已复制到剪贴板",Toast.LENGTH_SHORT).show();
+        });
+
+        callSellerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
+            }
         });
     }
 }
