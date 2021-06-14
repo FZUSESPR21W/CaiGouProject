@@ -16,21 +16,26 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.caigouapp.Ingredient;
 import com.example.caigouapp.MainActivity;
 import com.example.caigouapp.MyApplication;
+import com.example.caigouapp.OrderDialog;
 import com.example.caigouapp.R;
 import com.example.caigouapp.RecipeBean;
 import com.example.caigouapp.Step;
 import com.example.caigouapp.data.CartResponse;
 import com.example.caigouapp.data.CommonResponse;
 import com.example.caigouapp.data.RecipeDetailResponse;
+import com.example.caigouapp.data.RecommendResponse;
 import com.example.caigouapp.databinding.FragmentShoppingBinding;
 import com.example.caigouapp.http.CartServices;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.RecipeServices;
 import com.example.caigouapp.ui.RecipeDetailActivity;
+import com.example.caigouapp.ui.RecipeDialog;
 import com.example.caigouapp.utils.SpUtil;
 import com.example.caigouapp.utils.StatusBarUtils;
 import com.google.gson.Gson;
@@ -63,8 +68,12 @@ public class ShoppingFragment extends Fragment {
     private double totalPrice = 0;
     private String token = SpUtil.getInstance().getString("token",null);
     private int userId = SpUtil.getInstance().getInt("id",0);
+    private String remark = "";
     DecimalFormat df = new DecimalFormat( "0.00");
     Call<CartResponse> call;
+    Call<RecommendResponse> recommendCall;
+    Call<CommonResponse> postCall;
+
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -72,7 +81,9 @@ public class ShoppingFragment extends Fragment {
         binding.loading.setVisibility(View.VISIBLE);
         binding.noItem.setVisibility(View.GONE);
         binding.recommend.setVisibility(View.GONE);
+        binding.recommendTitle.setVisibility(View.GONE);
         getCartRequest(userId);
+        getRecommendRequest();
         initStatusBar();//初始化状态栏
         return binding.getRoot();
     }
@@ -90,12 +101,13 @@ public class ShoppingFragment extends Fragment {
                 .baseUrl(Constant.URL_BASE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        HashMap<String , Integer> map = new HashMap<>();
+        HashMap<String , Object> map = new HashMap<>();
         map.put("user_id",userId);
+        map.put("remark",remark);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
         CartServices cartServices = retrofit.create(CartServices.class);
-        Call<CommonResponse> call = cartServices.postOrder(token,requestBody);
-        call.enqueue(new Callback<CommonResponse>() {
+        postCall = cartServices.postOrder(token,requestBody);
+        postCall.enqueue(new Callback<CommonResponse>() {
             @Override
             public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
                 if(response.body().getCode().equals("200")) {
@@ -118,6 +130,41 @@ public class ShoppingFragment extends Fragment {
         });
     }
 
+    private void getRecommendRequest() {
+        Integer id = SpUtil.getInstance().getInt("id",0);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.URL_BASE)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        RecipeServices recipeServices = retrofit.create(RecipeServices.class);
+        HashMap<String,Integer> map = new HashMap<>();
+        map.put("id",id);
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),new Gson().toJson(map));
+        recommendCall = recipeServices.getCommendRecipe(body);
+        recommendCall.enqueue(new Callback<RecommendResponse>() {
+            @Override
+            public void onResponse(Call<RecommendResponse> call, Response<RecommendResponse> response) {
+                if (response.isSuccessful()){
+                    getActivity().runOnUiThread(() -> {
+                        binding.recommendTv.setText(response.body().getData().getName());
+                        String pic = response.body().getData().getAvatar();
+                        Glide.with(getActivity()).load(pic).into(binding.recommendImg);
+                        binding.recommendImg.setOnClickListener(v -> {
+                            Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
+                            intent.putExtra("id",response.body().getData().getId());
+                            startActivity(intent);
+                        });
+                        initRecommend();
+                    });
+                }
+            }
+            @Override
+            public void onFailure(Call<RecommendResponse> call, Throwable t) {
+                Log.d("ShoppingFragment", "今日推荐加载失败");
+            }
+        });
+    }
+
     private void getCartRequest(int userId){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.URL_BASE)
@@ -136,6 +183,7 @@ public class ShoppingFragment extends Fragment {
                     double price = 0;
                     List<CartResponse.DataBean.InfoBean> infoList = new ArrayList<>(response.body().getData().getInfo());
                     for(CartResponse.DataBean.InfoBean dataBean : infoList){
+                        price = 0;
                         String[] portion = dataBean.getMultiple().split(",");
                         String[] weight = dataBean.getFood_weight_list().split(",");
                         ingredient.clear();
@@ -188,22 +236,41 @@ public class ShoppingFragment extends Fragment {
 
     }
 
+    private void initRecommend(){
+        binding.recommend.setVisibility(View.VISIBLE);
+        binding.recommendTitle.setVisibility(View.VISIBLE);
+    }
+
     private void initView(){
         countPrice();
         String str = "共有"+list.size()+"件菜品";
         String price = "￥"+df.format(totalPrice);
         binding.shoppingRecipeTotal.setText(str);
         binding.shoppingCarTotal.setText(price);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager layoutManager = new LinearLayoutManager(requireContext()){
+            @Override
+            public boolean canScrollVertically() {
+                // 直接禁止垂直滑动
+                return false;
+            }
+        };
+        if(list.size() == 0)binding.remarkAdd.setVisibility(View.GONE);
+        else binding.remarkAdd.setVisibility(View.VISIBLE);
         binding.shoppingCarRv.setLayoutManager(layoutManager);
         adapter = new ShoppingAdapter(list,getContext());
         binding.shoppingCarRv.setAdapter(adapter);
         binding.loading.setVisibility(View.GONE);
-        binding.recommend.setVisibility(View.VISIBLE);
         if (list.size() == 0)binding.noItem.setVisibility(View.VISIBLE);
         else binding.noItem.setVisibility(View.GONE);
         binding.submitButton.setOnClickListener(view -> {
             if(list.size() != 0) postRequest(userId);
+            else Toast.makeText(getContext(),"您的购物车还没有东西哦！",Toast.LENGTH_SHORT).show();
+        });
+        binding.remarkAdd.setOnClickListener(view -> {
+            if(list.size() != 0){
+                OrderDialog dialog = new OrderDialog(this);
+                dialog.show(((MainActivity)getActivity()).getSupportFragmentManager(),"tag");
+            }
             else Toast.makeText(getContext(),"您的购物车还没有东西哦！",Toast.LENGTH_SHORT).show();
         });
         //管理购物车功能暂不实现
@@ -242,6 +309,11 @@ public class ShoppingFragment extends Fragment {
             list.remove(position-i);
             i++;
         }
+    }
+
+    public void updateRemark(String str){
+        this.remark = str;
+        if(remark == null)remark = "";
     }
 
     @Override

@@ -86,7 +86,13 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
         holder.recipeName.setText(recipeBean.getName());
         holder.recipeIntro.setText(recipeBean.getTag());
         holder.recipePrice.setText(str);
-        holder.recipeIngredient.setLayoutManager(new LinearLayoutManager(mContext));
+        holder.recipeIngredient.setLayoutManager(new LinearLayoutManager(mContext){
+            @Override
+            public boolean canScrollVertically() {
+                // 直接禁止垂直滑动
+                return false;
+            }
+        });
         holder.recipeIngredient.setAdapter(new PersonalIngredientAdapter((ArrayList<Ingredient>) recipeBean.getIngredient()));
         DividerItemDecoration divider = new DividerItemDecoration(mContext,DividerItemDecoration.VERTICAL);
         divider.setDrawable((Objects.requireNonNull(ContextCompat.getDrawable(mContext, R.drawable.line))));
