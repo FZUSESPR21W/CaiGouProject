@@ -1,15 +1,11 @@
 package com.example.caigouapp;
 
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Toast;
 
 import com.example.caigouapp.data.CommonResponse;
-import com.example.caigouapp.http.CartServices;
+import com.example.caigouapp.databinding.ActivityMainBinding;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.UserServices;
-import com.example.caigouapp.utils.SpUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 
@@ -32,16 +28,15 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity {
 
-    //通知购物车刷新界面
-    public int flush = 0;
+    private ActivityMainBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        BottomNavigationView navView = findViewById(R.id.nav_view);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
-        NavigationUI.setupWithNavController(navView, navController);
+        NavigationUI.setupWithNavController(binding.navView, navController);
         LitePal.getDatabase();
         if(getIntent().getIntExtra("shoppingCar",0) != 0){
             navController.navigate(R.id.navigation_shopping);
