@@ -52,7 +52,7 @@ public class CartResponse implements Serializable {
             private String method;
             private String avatar;
             private String food_weight_list;
-            private int price;
+            private double price;
             private String multiple;
             private List<FoodBean> food;
 
@@ -104,11 +104,11 @@ public class CartResponse implements Serializable {
                 this.food_weight_list = food_weight_list;
             }
 
-            public int getPrice() {
+            public double getPrice() {
                 return price;
             }
 
-            public void setPrice(int price) {
+            public void setPrice(double price) {
                 this.price = price;
             }
 
@@ -132,7 +132,7 @@ public class CartResponse implements Serializable {
 
                 private int id;
                 private String ingredient;
-                private int price;
+                private double price;
                 private int major;
                 private String standard_weight;
 
@@ -152,11 +152,11 @@ public class CartResponse implements Serializable {
                     this.ingredient = ingredient;
                 }
 
-                public int getPrice() {
+                public double getPrice() {
                     return price;
                 }
 
-                public void setPrice(int price) {
+                public void setPrice(double price) {
                     this.price = price;
                 }
 
