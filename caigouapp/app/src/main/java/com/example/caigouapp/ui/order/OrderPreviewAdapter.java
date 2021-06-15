@@ -13,17 +13,14 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.caigouapp.R;
+import com.example.caigouapp.ui.RecipeDetailActivity;
 import com.google.gson.Gson;
 
-import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -131,9 +128,15 @@ public class OrderPreviewAdapter extends RecyclerView.Adapter<OrderPreviewAdapte
                                 holder.setImageResource(R.id.img_grid,resource);
                             }
                         });
+                holder.getItemView().setOnClickListener(v -> {
+                        Intent intent = new Intent(mContext, RecipeDetailActivity.class);
+                        intent.putExtra("id", cm.getSourceMenuId());
+                        mContext.startActivity(intent);
+                });
                 //holder.setImageResource(R.id.img_grid, R.drawable.sample);//这里要用加载图片的框架
                 holder.setText(R.id.txt_grid, cm.getiName());
             }
+
         };
         view.setAdapter(mAdapter);
     }
