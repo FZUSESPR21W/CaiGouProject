@@ -93,6 +93,9 @@ public class MineFragment extends Fragment {
             getActivity().startActivity(intent);
         });
 
+        binding.tagNoItem.setVisibility(View.GONE);
+        binding.addressNoItem.setVisibility(View.GONE);
+
         //地址list
         binding.addressRv.setLayoutManager(new LinearLayoutManager(this.getContext()));
         addressAdapter = new MineAddressAdapter(addressList, getActivity());
@@ -100,7 +103,6 @@ public class MineFragment extends Fragment {
         DividerItemDecoration divider = new DividerItemDecoration(requireContext(),DividerItemDecoration.VERTICAL);
         divider.setDrawable((Objects.requireNonNull(ContextCompat.getDrawable(requireContext(), R.drawable.line))));
         binding.addressRv.addItemDecoration(divider);
-
         return binding.getRoot();
     }
 
@@ -138,7 +140,14 @@ public class MineFragment extends Fragment {
                         }
                     });
                     requireActivity().runOnUiThread(()-> {
-                        binding.addressRv.setVisibility(View.VISIBLE);
+                        if(addressList.size() != 0){
+                            binding.addressRv.setVisibility(View.VISIBLE);
+                            binding.addressNoItem.setVisibility(View.GONE);
+                        }
+                        else{
+                            binding.addressRv.setVisibility(View.GONE);
+                            binding.addressNoItem.setVisibility(View.VISIBLE);
+                        }
                         binding.addressLoading.setVisibility(View.GONE);
                     });
                 }
@@ -162,7 +171,14 @@ public class MineFragment extends Fragment {
                         }
                     });
                     requireActivity().runOnUiThread(()-> {
-                        binding.mineTagRv.setVisibility(View.VISIBLE);
+                        if(tagList.size() != 0){
+                            binding.mineTagRv.setVisibility(View.VISIBLE);
+                            binding.tagNoItem.setVisibility(View.GONE);
+                        }
+                        else{
+                            binding.mineTagRv.setVisibility(View.GONE);
+                            binding.tagNoItem.setVisibility(View.VISIBLE);
+                        }
                         binding.tagLoading.setVisibility(View.GONE);
                     });
                 }

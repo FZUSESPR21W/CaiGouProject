@@ -82,6 +82,7 @@ public class ShoppingFragment extends Fragment {
         binding.noItem.setVisibility(View.GONE);
         binding.recommend.setVisibility(View.GONE);
         binding.recommendTitle.setVisibility(View.GONE);
+        binding.remarkAdd.setVisibility(View.GONE);
         getCartRequest(userId);
         getRecommendRequest();
         initStatusBar();//初始化状态栏

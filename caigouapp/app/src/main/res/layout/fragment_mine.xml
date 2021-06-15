@@ -114,6 +114,14 @@
                 android:textSize="18sp">
             </TextView>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="您还没有添加常用地址哦"
+                android:id="@+id/address_no_item"
+                android:gravity="center">
+            </TextView>
+
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_marginTop="2dp"
                 android:id="@+id/address_rv"
@@ -173,6 +181,14 @@
                     android:id="@+id/tag_loading"
                     android:gravity="center"
                     android:textSize="18sp">
+                </TextView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:text="您还没有添加喜欢的标签哦"
+                    android:id="@+id/tag_no_item"
+                    android:gravity="center">
                 </TextView>
 
                 <androidx.recyclerview.widget.RecyclerView
