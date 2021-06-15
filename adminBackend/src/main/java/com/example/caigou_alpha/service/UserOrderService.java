@@ -1,7 +1,9 @@
 package com.example.caigou_alpha.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.caigou_alpha.dao.*;
 import com.example.caigou_alpha.entity.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -9,7 +11,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -25,6 +30,9 @@ public class UserOrderService {
     private MenuDao menuDao;
     @Resource
     private UserDao userDao;
+//    @Resource
+//    private Statistics statistics;
+
     public  UserOrderInfoListAll getUserOrderInfo(){
 //        Pageable pageable = PageRequest.of(pageNum-1,pageSize);
 
@@ -85,6 +93,7 @@ public class UserOrderService {
     public UserOrder testPage(Integer id){//获取一个带有详情信息的UserOrder
         UserOrder userOrder;
         userOrder = userOrderDao.selectOneOrder(id);
+
         CustomMenu customMenu;
         List<CustomMenu> customMenuList = new ArrayList<>();
         String cml = userOrder.getCustom_menuid_list();
@@ -141,6 +150,98 @@ public class UserOrderService {
         Pageable pageable = PageRequest.of(pageNum-1,pageSize);
         userOrderDao.findAll(pageable).forEach(userOrder -> testPage2(userOrder));
         return userOrderDao.findAll(pageable);
+    }
+
+
+//    public JSONObject getTenRecent(){
+//        JSONObject jsonObject = null;
+//
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM");
+//        String nowYM = sdf.format(new java.util.Date());
+//
+//
+//        Integer day = new Date().getDay();
+//        String now = nowYM + "-" + day.toString();
+//
+//        List<String> timeArray = new ArrayList<>();
+//        List<Double> priceArray  = new ArrayList<>();
+//        List<UserOrder> userOrderList;
+//
+//        Double max = 0.0;
+//        Double min = 100000000.0;
+
+//        jsonObject.put("test","true");
+
+//        for(int i = 0;i < 10;i++){
+//            Double tempProfit = 0.0;
+//            Integer dayRecent = day - i;
+//            String date = nowYM + "-" + dayRecent.toString();
+//            timeArray.add(date);
+//            userOrderList = userOrderDao.findOrderBytime(date);
+//            for(UserOrder userOrder:userOrderList){
+//                tempProfit += userOrder.getPrice();
+//            }
+//            priceArray.add(tempProfit);
+//        }
+//        jsonObject.fluentPut("time",timeArray);
+//        jsonObject.fluentPut("price",priceArray);
+//
+//        for(Double price :priceArray){
+//            if(price > max) max = price;
+//            if(price < min) min = price;
+//        }
+//
+//        jsonObject.fluentPut("maxProfit",max);
+//        jsonObject.fluentPut("minProfit",min);
+
+
+//        return  jsonObject;
+//    }
+
+
+        public Statistics getTenRecent() throws ParseException {
+
+        Statistics statistics = new Statistics();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String nowString = sdf.format(new Date());
+
+//        Date nowDate = sdf.parse(nowString);
+
+        List<String> timeArray = new ArrayList<>();
+        List<Double> priceArray  = new ArrayList<>();
+        List<Integer> orderNum  = new ArrayList<>();
+        List<UserOrder> userOrderList;
+
+        Double max = 0.0;
+        Double min = 100000000.0;
+//        UserOrder userOrder;
+//        userOrderList = statisticsDao.findTenRecentOrder();
+
+        for(int i = 0;i < 10;i++){
+            Double tempProfit = 0.0;
+            Integer count = 0;
+//            Integer dayRecent = day - i;
+            String date = sdf.format(new Date(sdf.parse(nowString).getTime()- i * 24 * 60 * 60 * 1000));
+//            String date = nowYM + "-" + dayRecent.toString();
+            timeArray.add(date);
+            userOrderList = userOrderDao.findOrderBytime(date);
+            for(UserOrder userOrder:userOrderList){
+                tempProfit += userOrder.getPrice();
+                count++;
+            }
+            orderNum.add(count);
+            priceArray.add(tempProfit);
+        }
+        statistics.setTimeTenRecent(timeArray);
+        statistics.setProfitTenRecent(priceArray);
+        statistics.setOrderNum(orderNum);
+        for(Double price :priceArray){
+            if(price > max) max = price;
+            if(price < min) min = price;
+        }
+        statistics.setMaxProfit(max);
+        statistics.setMinProfit(min);
+        return statistics;
     }
 
 }

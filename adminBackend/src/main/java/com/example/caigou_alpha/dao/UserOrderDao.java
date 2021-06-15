@@ -12,6 +12,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -36,4 +38,13 @@ public interface UserOrderDao extends JpaRepository<UserOrder,Integer> {
     @Modifying(clearAutomatically = true)
     @Query(value = "update UserOrder  uo set uo.status = 3 where uo.id =?1")
     int changeStatus(Integer orderId);
+
+
+    @Query(value = "SELECT * FROM user_order WHERE DATE_SUB(CURDATE(), INTERVAL 10 DAY) <= DATE(createtime)",nativeQuery = true)
+    List<UserOrder>  findTenRecentOrder();
+
+
+    @Query(value = "select * from user_order where date_format(createtime,'%Y-%m-%d') =:date ",nativeQuery = true)
+    List<UserOrder> findOrderBytime(@Param("date")String date);
+
 }

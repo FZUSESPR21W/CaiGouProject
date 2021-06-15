@@ -2,9 +2,8 @@ package com.example.caigou_alpha.controller;
 
 import com.example.caigou_alpha.annotation.UserLoginToken;
 import com.example.caigou_alpha.common.Result;
-import com.example.caigou_alpha.entity.Food;
-import com.example.caigou_alpha.entity.Menu;
-import com.example.caigou_alpha.entity.UserOrder;
+import com.example.caigou_alpha.dao.TagDao;
+import com.example.caigou_alpha.entity.*;
 import com.example.caigou_alpha.service.MenuService;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,8 @@ import java.util.List;
 public class MenuController {
     @Resource
     private MenuService menuService;
-
+    @Resource
+    private TagDao tagDao;
     /**
      *  /menu/findAll/{pageNum}
      * 所有菜谱的分页查询
@@ -107,4 +107,15 @@ public class MenuController {
     }
 
 
+    @UserLoginToken
+    @PostMapping("/addMenuDetail")
+    public Result<Integer> addDetail(@RequestBody MenuDI menuDI){
+        return Result.success(menuService.addMenuDetail(menuDI));
+    }
+
+    @UserLoginToken
+    @GetMapping("/getAllTags")
+    public Result<List<Tags>> getAllTags(){
+        return Result.success(tagDao.findAll());
+    }
 }

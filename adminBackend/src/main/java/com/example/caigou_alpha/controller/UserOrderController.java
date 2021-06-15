@@ -1,9 +1,11 @@
 package com.example.caigou_alpha.controller;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.caigou_alpha.annotation.UserLoginToken;
 import com.example.caigou_alpha.common.Result;
 import com.example.caigou_alpha.dao.UserOrderDao;
+import com.example.caigou_alpha.entity.Statistics;
 import com.example.caigou_alpha.entity.UserOrder;
 import com.example.caigou_alpha.entity.UserOrderInfoListAll;
 import com.example.caigou_alpha.service.OrderService;
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.text.ParseException;
 import java.util.List;
 
 @SuppressWarnings("rawtypes")
@@ -91,5 +94,12 @@ public class UserOrderController {
     @PutMapping("/changeStatus")
     public Result changeOrderStatus(@RequestParam(required = true)Integer orderId){
         return Result.success("共有"+orderService.changeStatus(orderId) + "行数据受到修改,其ID为" + orderId);
+    }
+
+
+    @UserLoginToken
+    @GetMapping("/findRecent")
+    public Result<Statistics> findRecent() throws ParseException {
+        return  Result.success(userOrderService.getTenRecent());
     }
 }

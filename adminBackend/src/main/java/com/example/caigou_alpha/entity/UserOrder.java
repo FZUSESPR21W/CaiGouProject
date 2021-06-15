@@ -1,6 +1,7 @@
 package com.example.caigou_alpha.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -23,10 +24,22 @@ public class UserOrder {
     private String address;
     private String phone;
     private String createtime;
+
+//    public Date getCtime() {
+//        return ctime;
+//    }
+//
+//    public void setCtime(Date ctime) {
+//        this.ctime = ctime;
+//    }
+//
+//    private Date ctime;
+
     private String deliverytime;
 
     @OneToMany
     private transient List<CustomMenu> customMenuList;
+
 
 
 

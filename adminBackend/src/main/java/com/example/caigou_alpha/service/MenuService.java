@@ -7,6 +7,7 @@ import com.example.caigou_alpha.dao.MenuDao;
 import com.example.caigou_alpha.dao.MenuFoodDao;
 import com.example.caigou_alpha.entity.Food;
 import com.example.caigou_alpha.entity.Menu;
+import com.example.caigou_alpha.entity.MenuDI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
@@ -59,8 +60,11 @@ public class MenuService {
      * @param m
      */
     public void save(Menu m){
-
         menuDao.save(m);
+    }
+
+    public void addMenuFood(List<Integer> foodIdList){
+
     }
 
     public void del(Integer id){
@@ -124,5 +128,30 @@ public class MenuService {
             foodList.add(food);
         }
         return foodList;
+    }
+
+
+    public Integer addMenuDetail(MenuDI menuDI){
+
+        Menu menu = new Menu();
+        String foodListString = "";
+        String foodWeightString = "";
+        menu.setStatus(1);
+        menu.setName(menuDI.getName());
+        menu.setMethod(menuDI.getMethod());
+        menu.setTags(menuDI.getTags());
+        menu.setAvatar(menuDI.getAvatar());
+
+        menu = menuDao.save(menu);
+        Integer menuNewId = menu.getId();
+        List<String> foodList = menuDI.getFoodList();
+        List<String> weightList = menuDI.getWeightList();
+        for(String s:foodList){
+            foodListString += ( s + ",");
+        }
+        for(String s:weightList){
+            foodWeightString += ( s + ",");
+        }
+        return menuFoodDao.addOneRecord(menuNewId,foodListString,foodWeightString);
     }
 }

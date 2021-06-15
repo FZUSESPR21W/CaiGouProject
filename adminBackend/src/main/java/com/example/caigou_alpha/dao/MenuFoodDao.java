@@ -17,5 +17,9 @@ public interface MenuFoodDao extends JpaRepository<MenuFood,Integer> {
     @Query("delete from MenuFood  menufood where menufood.menu_id = :id")
     void deleteSonRow(@Param("id") Integer id);
 
-    
+    @Modifying
+    @Transactional
+    @Query(value = "INSERT INTO `tmall`.`menu_food` (`menu_id`, `food_id_list`, `food_weight_list`) VALUES (?1, ?2, ?3)",nativeQuery = true)
+    Integer addOneRecord(@Param("newId") Integer newId,@Param("foodList") String foodListString,@Param("weightList") String weightListString);
+
 }

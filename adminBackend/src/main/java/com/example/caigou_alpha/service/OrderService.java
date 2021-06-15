@@ -9,6 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -41,6 +44,10 @@ public class OrderService {
     }
 
     public int changeStatus(Integer orderId){
-          return userOrderDao.changeStatus(orderId);
+        Date nowdate=new Date();
+        //转换时间格式
+        SimpleDateFormat simpleDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        userOrderDao.selectOneOrder(orderId).setDeliverytime(Timestamp.valueOf(simpleDate.format(nowdate)).toString());
+        return userOrderDao.changeStatus(orderId);
     }
 }
