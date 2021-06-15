@@ -1,6 +1,7 @@
 package com.example.caigouapp.ui.order;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -12,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.caigouapp.ui.RecipeDetailActivity;
 import com.example.caigouapp.utils.GraphicUtil;
 
 import java.util.ArrayList;
@@ -122,6 +124,7 @@ public abstract class GridAdapter<T> extends BaseAdapter {
                 holder.item = convertView;
             }
             holder.position = position;
+
             return holder;
         }
 
@@ -173,12 +176,11 @@ public abstract class GridAdapter<T> extends BaseAdapter {
          * 设置图片
          */
         public ViewHolder setImageResource(int id, Bitmap bitmap) {
-            Bitmap temp = GraphicUtil.getSquarePhoto(bitmap,64);
             View view = getView(id);
             if (view instanceof ImageView) {
-                ((ImageView) view).setImageDrawable(new BitmapDrawable(context.getResources(),temp));
+                ((ImageView) view).setImageDrawable(new BitmapDrawable(context.getResources(),bitmap));
             } else {
-                view.setBackground(new BitmapDrawable(context.getResources(),temp));
+                view.setBackground(new BitmapDrawable(context.getResources(),bitmap));
             }
             return this;
         }

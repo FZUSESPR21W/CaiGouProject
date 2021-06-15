@@ -77,7 +77,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        holder.iconImageView.setImageBitmap(GraphicUtil.getSquarePhoto(resource,64));
+                        holder.iconImageView.setImageBitmap(resource);
                     }
                 });
         //holder.iconImageView.setImageResource(cm.getiId());

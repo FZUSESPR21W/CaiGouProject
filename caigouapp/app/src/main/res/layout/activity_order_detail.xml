@@ -88,7 +88,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-
                 <LinearLayout
                     android:id="@+id/call_seller"
                     android:layout_width="wrap_content"
