@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.example.caigouapp.LoginActivity;
 import com.example.caigouapp.MainActivity;
 import com.example.caigouapp.R;
 import com.example.caigouapp.data.AddressBean;
@@ -85,6 +86,12 @@ public class MineFragment extends Fragment {
 
         adapter = new MineAdapter(tagList, getActivity());
         binding.mineTagRv.setAdapter(adapter);
+
+        binding.logout.setOnClickListener(v -> {
+            SpUtil.getInstance().putString("password","");
+            Intent intent = new Intent(getActivity(), LoginActivity.class);
+            getActivity().startActivity(intent);
+        });
 
         //地址list
         binding.addressRv.setLayoutManager(new LinearLayoutManager(this.getContext()));

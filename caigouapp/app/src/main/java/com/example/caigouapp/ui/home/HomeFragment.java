@@ -59,7 +59,7 @@ public class HomeFragment extends Fragment {
     private Call<SearchResponse> call1;
     private List<MenusBean> menuList = new ArrayList<>();
     private RecipeHomeAdapter adapter;
-    private List<String> pictureList = new ArrayList<String>(3);
+    private List<String> pictureList = new ArrayList<>(3);
     private List<Integer> idList = new ArrayList<Integer>(3);
     private String pic = "";
 
@@ -129,6 +129,7 @@ public class HomeFragment extends Fragment {
                         menuList.clear();
                         menuList.addAll(response.body().getMenus());
                         adapter.notifyDataSetChanged();
+                        pictureList.clear();
                         int j = new Random().nextInt(10) + 1;
                         for (int i = j;i < j+3;i++){
                             pictureList.add(response.body().getMenus().get(i).getAvatar());
@@ -154,6 +155,8 @@ public class HomeFragment extends Fragment {
     }
 
     public void initView(){
+        pictureList.add("");
+        initBanner();
         //初始化菜系
         ArrayList styleList = new ArrayList<>(Arrays.asList(
                 R.drawable.min,
@@ -180,18 +183,14 @@ public class HomeFragment extends Fragment {
     private void initBanner(){
         //初始化轮播图
         //List pictureList = new ArrayList<>(Arrays.asList(R.drawable.banner1, R.drawable.banner2, R.drawable.banner3));
-        binding.mzbHome.setBannerPageClickListener(new MZBannerView.BannerPageClickListener() {
-            @Override
-            public void onPageClick(View view, int position) {
-                Log.d("click","");
-                Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
-                intent.putExtra("id", idList.get(position));
-                startActivity(intent);
+        binding.mzbHome.setBannerPageClickListener((view, position) -> {
+            Log.d("click","");
+            Intent intent = new Intent(getActivity(), RecipeDetailActivity.class);
+            intent.putExtra("id", idList.get(position));
+            startActivity(intent);
 
-            }
         });
         binding.mzbHome.setPages(pictureList, (MZHolderCreator<BannerViewHolder>) () -> new BannerViewHolder());
-
     }
 
     @Override

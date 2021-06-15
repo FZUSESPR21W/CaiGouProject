@@ -13,6 +13,7 @@ import com.example.caigouapp.data.UserResponse;
 import com.example.caigouapp.databinding.ActivityLoginBinding;
 import com.example.caigouapp.http.Constant;
 import com.example.caigouapp.http.UserServices;
+import com.example.caigouapp.utils.EncryptUtil;
 import com.example.caigouapp.utils.SpUtil;
 
 import okhttp3.MediaType;
@@ -40,11 +41,15 @@ public class LoginActivity extends BasePushActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        String spAccount = SpUtil.getInstance().getString("account","");
+        String spPwd = SpUtil.getInstance().getString("password","");
+        if (!spPwd.equals("")){
+            login(spAccount, spPwd);
+            return;
+        }
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         Glide.with(this).load(R.drawable.vegetabledoge).into(binding.img);
-        String spAccount = SpUtil.getInstance().getString("account","");
-        String spPwd = SpUtil.getInstance().getString("password","");
         binding.userAccount.setText(spAccount);
         binding.userPwd.setText(spPwd);
         binding.userAccount.clearFocus();
@@ -69,7 +74,7 @@ public class LoginActivity extends BasePushActivity {
         binding.btn.setOnClickListener(view -> {
             account = binding.userAccount.getText().toString();
             password = binding.userPwd.getText().toString();
-
+            password = EncryptUtil.md5(password);
             if(account.equals("")){
                 Toast.makeText(LoginActivity.this,"账号为空，请重新输入",Toast.LENGTH_SHORT).show();
             }
@@ -77,12 +82,12 @@ public class LoginActivity extends BasePushActivity {
                 Toast.makeText(LoginActivity.this,"密码为空，请重新输入",Toast.LENGTH_SHORT).show();
             }
             else{
-                login();
+                login(account, password);
             }
         });
     }
 
-    private void login(){
+    private void login(String account, String password){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.URL_BASE)
                 .addConverterFactory(GsonConverterFactory.create())

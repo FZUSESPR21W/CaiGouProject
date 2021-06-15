@@ -1,6 +1,7 @@
 package com.example.caigouapp.ui.home;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,13 +17,18 @@ public class BannerViewHolder implements MZViewHolder<String> {
     public View createView(Context context) {
         // 返回页面布局
         View view = LayoutInflater.from(context).inflate(R.layout.banner_item,null);
-        mImageView = (ImageView) view.findViewById(R.id.banner_image);
+        mImageView = view.findViewById(R.id.banner_image);
+        mImageView.setImageResource(R.drawable.default_image);
         return view;
     }
 
     @Override
     public void onBind(Context context, int position, String data) {
-        Glide.with(MyApplication.getContext()).load(data).into(mImageView);
+        Log.d("banner",data+"*");
+        if (data == null || data.equals(""))
+            mImageView.setImageResource(R.drawable.default_image);
+        else
+            Glide.with(MyApplication.getContext()).load(data).error(R.drawable.default_image).into(mImageView);
     }
 
 //    @Override
