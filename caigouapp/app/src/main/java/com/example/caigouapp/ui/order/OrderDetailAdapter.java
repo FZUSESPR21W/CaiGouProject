@@ -54,9 +54,10 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             priceView = itemView.findViewById(R.id.txt_order_detail_price) ;
             showSourceMenuButton = itemView.findViewById(R.id.btn_order_detail_show_source_menu) ;
             customerMenuView = itemView.findViewById(R.id.recycler_custom_menu) ;
+            /*
             LinearLayoutManager lm = new LinearLayoutManager(itemView.getContext());
             lm.setOrientation(ChildPresenter.VERTICAL);
-            customerMenuView.setLayoutManager(lm);
+            customerMenuView.setLayoutManager(lm);*/
         }
     }
 
@@ -83,6 +84,20 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
         //holder.iconImageView.setImageResource(cm.getiId());
         holder.iconTextView.setText(cm.getiName());//要根据返回的状态填入文字
         holder.priceView.setText("￥"+cm.getPrice());
+
+        if(getMajorFoods(cm).size()<=2){
+            holder.customerMenuView.flag = false;
+        }
+
+        LinearLayoutManager lm = new LinearLayoutManager(holder.itemView.getContext()){
+            @Override
+            public boolean canScrollVertically() {
+                return getMajorFoods(cm).size() > 2;
+            }
+        };
+        lm.setOrientation(ChildPresenter.VERTICAL);
+        holder.customerMenuView.setLayoutManager(lm);
+
         CustomerMenuAdapter adapter = new CustomerMenuAdapter(getMajorFoods(cm));
         holder.customerMenuView.setAdapter(adapter);
         holder.showSourceMenuButton.setOnClickListener(new View.OnClickListener() {
