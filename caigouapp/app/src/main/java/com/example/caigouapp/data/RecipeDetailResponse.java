@@ -36,6 +36,16 @@ public class RecipeDetailResponse implements Serializable {
     public static class DataBean implements Serializable {
 
         private int id;
+        private int customId;
+
+        public int getCustomId() {
+            return customId;
+        }
+
+        public void setCustomId(int customId) {
+            this.customId = customId;
+        }
+
         private String name;
         private String tags;
         private String method;

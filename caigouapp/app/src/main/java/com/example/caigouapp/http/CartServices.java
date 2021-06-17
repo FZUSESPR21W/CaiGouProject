@@ -30,5 +30,7 @@ public interface CartServices {
     @POST("cart/list")
     Call<CartResponse> getCartDetail(@Header("token") String header,@Body RequestBody body);
 
+    @POST("delete/cart")
+    Call<CommonResponse> deleteCartRecipe(@Body RequestBody body);
 
 }

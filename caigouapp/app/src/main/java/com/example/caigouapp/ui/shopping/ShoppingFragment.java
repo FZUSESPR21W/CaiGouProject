@@ -69,24 +69,53 @@ public class ShoppingFragment extends Fragment {
     private String token = SpUtil.getInstance().getString("token",null);
     private int userId = SpUtil.getInstance().getInt("id",0);
     private String remark = "";
+    private StringBuilder customId = new StringBuilder();
     DecimalFormat df = new DecimalFormat( "0.00");
     Call<CartResponse> call;
     Call<RecommendResponse> recommendCall;
     Call<CommonResponse> postCall;
+    Call<CommonResponse> deleteCall;
 
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentShoppingBinding.inflate(getLayoutInflater());
+        binding.submitButton.setOnClickListener(view -> {
+            if(list.size() != 0) postRequest(userId);
+            else Toast.makeText(getContext(),"您的购物车还没有东西哦！",Toast.LENGTH_SHORT).show();
+        });
+        binding.remarkAdd.setOnClickListener(view -> {
+            if(list.size() != 0){
+                OrderDialog dialog = new OrderDialog(this);
+                dialog.show(((MainActivity)getActivity()).getSupportFragmentManager(),"tag");
+            }
+            else Toast.makeText(getContext(),"您的购物车还没有东西哦！",Toast.LENGTH_SHORT).show();
+        });
+        initLoading();
+        getCartRequest(userId);
+        getRecommendRequest();
+        initStatusBar();//初始化状态栏
+        return binding.getRoot();
+    }
+
+    private void initLoading(){
         binding.loading.setVisibility(View.VISIBLE);
         binding.noItem.setVisibility(View.GONE);
         binding.recommend.setVisibility(View.GONE);
         binding.recommendTitle.setVisibility(View.GONE);
         binding.remarkAdd.setVisibility(View.GONE);
-        getCartRequest(userId);
-        getRecommendRequest();
-        initStatusBar();//初始化状态栏
-        return binding.getRoot();
+        binding.shoppingCarRv.setVisibility(View.GONE);
+    }
+
+    private void finishLoading(){
+        if(list.size() == 0)binding.remarkAdd.setVisibility(View.GONE);
+        else binding.remarkAdd.setVisibility(View.VISIBLE);
+        binding.loading.setVisibility(View.GONE);
+        if (list.size() == 0)binding.noItem.setVisibility(View.VISIBLE);
+        else binding.noItem.setVisibility(View.GONE);
+        binding.recommendTitle.setVisibility(View.VISIBLE);
+        binding.recommend.setVisibility(View.VISIBLE);
+        binding.shoppingCarRv.setVisibility(View.VISIBLE);
     }
 
     private void initStatusBar() {
@@ -210,6 +239,7 @@ public class ShoppingFragment extends Fragment {
                         }
                         //解析recipe
                         list.add(new RecipeBean(dataBean.getId(),
+                                dataBean.getCustomId(),
                                 dataBean.getName(),
                                 dataBean.getTags(),
                                 price,
@@ -257,25 +287,15 @@ public class ShoppingFragment extends Fragment {
         };
         if(list.size() == 0)binding.remarkAdd.setVisibility(View.GONE);
         else binding.remarkAdd.setVisibility(View.VISIBLE);
-        binding.shoppingCarRv.setLayoutManager(layoutManager);
-        adapter = new ShoppingAdapter(list,getContext());
-        binding.shoppingCarRv.setAdapter(adapter);
         binding.loading.setVisibility(View.GONE);
         if (list.size() == 0)binding.noItem.setVisibility(View.VISIBLE);
         else binding.noItem.setVisibility(View.GONE);
-        binding.submitButton.setOnClickListener(view -> {
-            if(list.size() != 0) postRequest(userId);
-            else Toast.makeText(getContext(),"您的购物车还没有东西哦！",Toast.LENGTH_SHORT).show();
-        });
-        binding.remarkAdd.setOnClickListener(view -> {
-            if(list.size() != 0){
-                OrderDialog dialog = new OrderDialog(this);
-                dialog.show(((MainActivity)getActivity()).getSupportFragmentManager(),"tag");
-            }
-            else Toast.makeText(getContext(),"您的购物车还没有东西哦！",Toast.LENGTH_SHORT).show();
-        });
+        binding.shoppingCarRv.setLayoutManager(layoutManager);
+        adapter = new ShoppingAdapter(list,getContext());
+        binding.shoppingCarRv.setAdapter(adapter);
+        binding.shoppingCarRv.setVisibility(View.VISIBLE);
         //管理购物车功能暂不实现
-        /*binding.manageButton.setOnClickListener(view -> {
+        binding.manageButton.setOnClickListener(view -> {
             if(binding.manageButton.getText().equals("管理")){
                 adapter.open = true;
                 adapter.notifyDataSetChanged();
@@ -285,23 +305,11 @@ public class ShoppingFragment extends Fragment {
                 binding.shoppingCarTotal.setVisibility(View.GONE);
             }
             else if (binding.manageButton.getText().equals("删除")){
-                int t = list.size();
-                adapter.delete();
-                delete();
-                countPrice();
-                String price1 = "￥"+df.format(totalPrice);
-                String str1 = "共有"+list.size()+"件菜品";
-                adapter.open = false;
-                adapter.notifyDataSetChanged();
-                binding.shoppingCarTotal.setText(price1);
-                binding.shoppingRecipeTotal.setText(str1);
-                binding.manageButton.setText("管理");
-                binding.total.setVisibility(View.VISIBLE);
-                binding.submitButton.setVisibility(View.VISIBLE);
-                binding.shoppingCarTotal.setVisibility(View.VISIBLE);
-                Toast.makeText(getContext(),"已经删除了"+(t-list.size())+"个商品",Toast.LENGTH_SHORT).show();
+                initLoading();
+                getDeleteString();
+                deleteRequest();
             }
-        });*/
+        });
     }
 
     private void delete(){
@@ -310,6 +318,69 @@ public class ShoppingFragment extends Fragment {
             list.remove(position-i);
             i++;
         }
+    }
+
+    private void getDeleteString(){
+        int i = 0;
+        for (int position:adapter.getMap().keySet()) {
+            customId.append(list.get(position).getCustomId());
+            customId.append(",");
+            i++;
+        }
+    }
+
+    private void deleteRequest(){
+        Integer id = SpUtil.getInstance().getInt("id",0);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constant.URL_BASE)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        CartServices cartServices = retrofit.create(CartServices.class);
+        HashMap<String,Object> map = new HashMap<>();
+        map.put("userId",id);
+        map.put("customlist",customId.toString());
+        Log.d("messageid",id+"");
+        Log.d("messagelist",customId.toString());
+        RequestBody body = RequestBody.create(MediaType.parse("application/json; charset=utf-8"),new Gson().toJson(map));
+        deleteCall = cartServices.deleteCartRecipe(body);
+        deleteCall.enqueue(new Callback<CommonResponse>() {
+            @Override
+            public void onResponse(Call<CommonResponse> call, Response<CommonResponse> response) {
+                Log.d("message",response.body().getMessage());
+                requireActivity().runOnUiThread(()->{
+                    int t = list.size();
+                    adapter.delete();
+                    delete();
+                    countPrice();
+                    String price1 = "￥"+df.format(totalPrice);
+                    String str1 = "共有"+list.size()+"件菜品";
+                    adapter.open = false;
+                    adapter.notifyDataSetChanged();
+                    binding.shoppingCarTotal.setText(price1);
+                    binding.shoppingRecipeTotal.setText(str1);
+                    binding.manageButton.setText("管理");
+                    binding.total.setVisibility(View.VISIBLE);
+                    binding.submitButton.setVisibility(View.VISIBLE);
+                    binding.shoppingCarTotal.setVisibility(View.VISIBLE);
+                    Toast.makeText(getContext(),"已经删除了"+(t-list.size())+"个商品",Toast.LENGTH_SHORT).show();
+                    finishLoading();
+                });
+            }
+
+
+            @Override
+            public void onFailure(Call<CommonResponse> call, Throwable t) {
+                Toast.makeText(getContext(),"好像出了一点问题……",Toast.LENGTH_SHORT).show();
+                requireActivity().runOnUiThread(()->{
+                    adapter.open = false;
+                    binding.manageButton.setText("管理");
+                    binding.total.setVisibility(View.VISIBLE);
+                    binding.submitButton.setVisibility(View.VISIBLE);
+                    binding.shoppingCarTotal.setVisibility(View.VISIBLE);
+                    finishLoading();
+                });
+            }
+        });
     }
 
     public void updateRemark(String str){
@@ -322,5 +393,12 @@ public class ShoppingFragment extends Fragment {
         super.onStop();
         if (call != null && call.isExecuted())
             call.cancel();
+        if (recommendCall != null && recommendCall.isExecuted())
+            recommendCall.cancel();
+        if (postCall != null && postCall.isExecuted())
+            postCall.cancel();
+        if (deleteCall != null && deleteCall.isExecuted())
+            deleteCall.cancel();
+
     }
 }
