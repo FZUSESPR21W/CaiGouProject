@@ -1,5 +1,6 @@
 package com.example.caigouapp.ui.order;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
@@ -26,6 +27,7 @@ import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.caigouapp.R;
 import com.example.caigouapp.data.OrderResponse;
+import com.example.caigouapp.ui.RecipeDetailActivity;
 import com.example.caigouapp.utils.GraphicUtil;
 import com.example.caigouapp.utils.GsonUtil;
 import com.example.caigouapp.utils.SpUtil;
@@ -119,6 +121,11 @@ public class OrderFragment extends Fragment {
                                         }
                                     });
                         }
+                        holder.getItemView().setOnClickListener(v -> {
+                            Intent intent = new Intent(getContext(), RecipeDetailActivity.class);
+                            intent.putExtra("id", cm.getSourceMenuId());
+                            getContext().startActivity(intent);
+                        });
                         holder.setText(R.id.txt_grid, cm.getiName());
                     }
                 };
