@@ -16,6 +16,10 @@ public class FoodService {
 
     public Page<Food> getFoodPageByName(String name,Integer pageNum,Integer pageSize){
         Pageable pageable = PageRequest.of(pageNum-1,pageSize);
+        String s1 = "%" + name + "%";
+        String s2 = name + "%";
+        String s3 = "%" + name ;
+
         return foodDao.findFoodByIngredient(name,pageable);
     }
 

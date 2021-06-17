@@ -15,6 +15,14 @@ import java.util.List;
 @Repository
 public interface FoodDao extends JpaRepository<Food,Integer> {
 
-    @Query(value = "select f from Food f where f.ingredient like %:name%")
-    Page<Food> findFoodByIngredient(@Param("name") String name,Pageable pageable);
+//    @Query(value = "select f from Food  f where f.ingredient like %?1% order by (" +
+//            "case when f.ingredient = ?1 then 1 " +
+//            "when f.ingredient like ?1% then 2 " +
+//            "when f.ingredient like %?1% then 3 " +
+//            "when f.ingredient like %?1 then 4 " +
+//            "else 5" +
+//            " end " +
+//            ")")
+    @Query(value = "select f from Food  f where f.ingredient like %?1% order by (f.ingredient)")
+    Page<Food> findFoodByIngredient(String name,Pageable pageable);
 }

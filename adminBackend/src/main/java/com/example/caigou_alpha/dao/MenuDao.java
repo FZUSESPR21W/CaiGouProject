@@ -6,9 +6,12 @@ import com.example.caigou_alpha.entity.MenuFood;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import javax.transaction.Transactional;
 
 
 @Repository
@@ -66,6 +69,8 @@ public interface MenuDao extends JpaRepository<Menu,Integer> {
     @Query("select mf.food_id_list from MenuFood  mf where  mf.menu_id = :menuid")
     String findFoodList(@Param("menuid") Integer id);
 
-
-
+    @Modifying
+    @Transactional
+    @Query("delete from Menu  menu where menu.id = :id")
+    Integer deleteMenuSonRow(@Param("id") Integer id);
 }

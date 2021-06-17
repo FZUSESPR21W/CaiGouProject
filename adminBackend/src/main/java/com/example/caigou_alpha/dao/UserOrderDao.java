@@ -39,6 +39,11 @@ public interface UserOrderDao extends JpaRepository<UserOrder,Integer> {
     @Query(value = "update UserOrder  uo set uo.status = 3 where uo.id =?1")
     int changeStatus(Integer orderId);
 
+    @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "update UserOrder  uo set uo.status = 2 where uo.id =?1")
+    int cancelStatus(Integer orderId);
+
 
     @Query(value = "SELECT * FROM user_order WHERE DATE_SUB(CURDATE(), INTERVAL 10 DAY) <= DATE(createtime)",nativeQuery = true)
     List<UserOrder>  findTenRecentOrder();

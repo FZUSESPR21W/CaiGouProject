@@ -50,4 +50,8 @@ public class OrderService {
         userOrderDao.selectOneOrder(orderId).setDeliverytime(Timestamp.valueOf(simpleDate.format(nowdate)).toString());
         return userOrderDao.changeStatus(orderId);
     }
+
+    public int cancelStatus(Integer orderId){
+        return userOrderDao.cancelStatus(orderId);
+    }
 }

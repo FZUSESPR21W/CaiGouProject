@@ -1,14 +1,19 @@
 package com.example.caigou_alpha.controller;
 
 import com.example.caigou_alpha.annotation.UserLoginToken;
+import com.example.caigou_alpha.common.FileUtils;
 import com.example.caigou_alpha.common.Result;
+import com.example.caigou_alpha.dao.CustomMenuDao;
 import com.example.caigou_alpha.dao.TagDao;
 import com.example.caigou_alpha.entity.*;
 import com.example.caigou_alpha.service.MenuService;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 
 @SuppressWarnings("rawtypes")
@@ -22,6 +27,8 @@ public class MenuController {
     private MenuService menuService;
     @Resource
     private TagDao tagDao;
+    @Resource
+    private CustomMenuDao customMenuDao;
     /**
      *  /menu/findAll/{pageNum}
      * 所有菜谱的分页查询
@@ -67,7 +74,6 @@ public class MenuController {
         menuService.save(menu);
         return Result.success();
     }
-
     /**
      * /menu/updateMenu
      * 修改菜单，id字段必须传入，未传入字段则默认为不更改
@@ -117,5 +123,64 @@ public class MenuController {
     @GetMapping("/getAllTags")
     public Result<List<Tags>> getAllTags(){
         return Result.success(tagDao.findAll());
+    }
+
+
+//    @UserLoginToken
+//    @RequestMapping(value = "/upload.action", method = RequestMethod.POST)
+//    public String upload(@RequestParam("file") MultipartFile file) throws IOException {
+//
+//        if(file != null){
+//            return menuService.upload(file);
+//        }
+//        return "文件不存在";
+//    }
+
+
+    @Value("${web.upload-path}")
+    private String path;
+
+    /**
+     *
+     * @param file 上传的文件
+     * @return
+     */
+    @UserLoginToken
+    @RequestMapping(value = "/upload.action", method = RequestMethod.POST)
+    public String upload(@RequestParam("file") MultipartFile file){
+        //1定义要上传文件 的存放路径
+//        String localPath="E:/image";
+        String localPath = "/www/javaweb/zhpart/upload";
+        String virtual = "/pics";
+        //2获得文件名字
+        String fileName=file.getOriginalFilename();
+        //2上传失败提示
+        String warning="";
+//        String url = "http://106.53.148.37:8083" + localPath + "/"+fileName;
+        String newFileName = FileUtils.upload(file, localPath, fileName);
+        if(newFileName != null){
+            warning ="http://106.53.148.37:3001" + virtual +"/"+ newFileName ;
+//            //上传成功
+//            warning="上传成功";
+
+        }else{
+            warning="上传失败";
+        }
+        System.out.println(warning);
+        return warning;
+    }
+
+    @UserLoginToken
+    @PutMapping("/changeCart")
+    public Result changeCart(@RequestParam("menuDelete") String CustomIdListToDelete,@RequestParam("userId") Integer userId){
+        String CustomIdList = customMenuDao.customMenuList(userId);
+        String[] menuDelete = CustomIdListToDelete.split(",");
+
+        for(String s:menuDelete){
+            CustomIdList = CustomIdList.replace(s+",","");
+            customMenuDao.deleteMenuSonRow(Integer.parseInt(s));
+        }
+        customMenuDao.changeCart(CustomIdList,userId);
+        return Result.success();
     }
 }

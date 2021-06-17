@@ -4,6 +4,7 @@ package com.example.caigou_alpha.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.caigou_alpha.annotation.UserLoginToken;
 import com.example.caigou_alpha.common.Result;
+import com.example.caigou_alpha.dao.CustomMenuDao;
 import com.example.caigou_alpha.dao.UserOrderDao;
 import com.example.caigou_alpha.entity.Statistics;
 import com.example.caigou_alpha.entity.UserOrder;
@@ -101,5 +102,11 @@ public class UserOrderController {
     @GetMapping("/findRecent")
     public Result<Statistics> findRecent() throws ParseException {
         return  Result.success(userOrderService.getTenRecent());
+    }
+
+    @UserLoginToken
+    @PutMapping("/cancelStatus")
+    public Result cancelOrderStatus(@RequestParam(required = true)Integer orderId){
+        return Result.success("共有"+orderService.cancelStatus(orderId) + "行数据受到修改,其ID为" + orderId);
     }
 }
