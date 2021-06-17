@@ -72,68 +72,10 @@ public class OrderFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_order,container,false);
         noOrderTextView = (TextView)view.findViewById(R.id.txt_order_preview_noOrder);
 
-        //grid_recent_order
         recentOrderGridView = view.findViewById(R.id.recent_order_grid);
-        /*mData = new ArrayList<>();
-        mData.add(new CustomerMenu(R.drawable.sample,"番茄炒牛肉"));
-        setHorizontalGridView();*/
 
         recyclerView = (RecyclerView) view.findViewById(R.id.all_order_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));//getActivity获得活动（context）
-        //String str = GsonUtil.getOrderJson(getActivity());
-        //System.out.println(GsonUtil.ParseOrderGson(str));
-
-        int id = SpUtil.getInstance().getInt("id",1);
-        HashMap<String, Integer> map = new HashMap<String, Integer>();
-        map.put("user_id", id);
-        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://106.53.148.37:8082/")
-                .addConverterFactory(GsonConverterFactory.create()) //设置数据解析器
-                .build();
-        OrderRequest request = retrofit.create(OrderRequest.class);
-        call = request.getPostCall(requestBody);
-        //System.out.println(call.request().headers());
-        //System.out.println(call.request());
-        //System.out.println(call.request().url());
-        call.enqueue(new Callback<OrderResponse>() {
-            @RequiresApi(api = Build.VERSION_CODES.N)
-            @Override
-            public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
-                String str = new Gson().toJson(response.body());
-                //GsonUtil.e("123",str);
-                try{
-                    JSONObject jsonObject = new JSONObject(str);
-                    JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("info");
-                    String data = jsonArray.toString();
-                    GsonUtil.e("123",data);
-                    list = new Gson().fromJson(data, new TypeToken<List<Order>>(){}.getType());
-                    //Collections.reverse(list);
-                    mData = getRecentData(list);
-                    setHorizontalGridView();
-                }catch(Exception e){
-                    e.printStackTrace();
-                }
-
-                if(isAdded()){//必须要这个判断，否则快速切换导航栏时程序会闪退。
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            if(list.size()==0) noOrderTextView.setText("暂无订单");
-                            else {
-                                noOrderTextView.setVisibility(View.GONE);
-                                recyclerView.setAdapter(new OrderPreviewAdapter(getActivity(),list));
-                            }
-                        }
-                    });
-                }
-            }
-
-            @Override
-            public void onFailure(Call<OrderResponse> call, Throwable t) {
-                System.out.println(t.getMessage());
-            }
-        });
 
         //System.out.println(GsonUtil.ParseOrderGson(GsonUtil.getOrderJson(getActivity())));
 
@@ -185,6 +127,58 @@ public class OrderFragment extends Fragment {
         },100);
     }
 
+    public void getRecyclerViewData(){
+        int id = SpUtil.getInstance().getInt("id",1);
+        HashMap<String, Integer> map = new HashMap<String, Integer>();
+        map.put("user_id", id);
+        RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://106.53.148.37:8082/")
+                .addConverterFactory(GsonConverterFactory.create()) //设置数据解析器
+                .build();
+        OrderRequest request = retrofit.create(OrderRequest.class);
+        call = request.getPostCall(requestBody);
+        call.enqueue(new Callback<OrderResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
+                String str = new Gson().toJson(response.body());
+                //GsonUtil.e("123",str);
+                try{
+                    JSONObject jsonObject = new JSONObject(str);
+                    JSONArray jsonArray = jsonObject.getJSONObject("data").getJSONArray("info");
+                    String data = jsonArray.toString();
+                    GsonUtil.e("123",data);
+                    list = new Gson().fromJson(data, new TypeToken<List<Order>>(){}.getType());
+                    //Collections.reverse(list);
+                    mData = getRecentData(list);
+                    setHorizontalGridView();
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+
+                if(isAdded()){//必须要这个判断，否则快速切换导航栏时程序会闪退。
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(list.size()==0) noOrderTextView.setText("暂无订单");
+                            else {
+                                noOrderTextView.setVisibility(View.GONE);
+                                recyclerView.setVisibility(View.VISIBLE);
+                                recyclerView.setAdapter(new OrderPreviewAdapter(getActivity(),list));
+                            }
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OrderResponse> call, Throwable t) {
+                System.out.println(t.getMessage());
+            }
+        });
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.N)
     public ArrayList<CustomerMenu> getRecentData(List<Order> orders){
         int orderSize = Math.min(orders.size(),10);
@@ -227,5 +221,13 @@ public class OrderFragment extends Fragment {
         super.onStop();
         if (call != null && call.isExecuted())
             call.cancel();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        noOrderTextView.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
+        getRecyclerViewData();
     }
 }
