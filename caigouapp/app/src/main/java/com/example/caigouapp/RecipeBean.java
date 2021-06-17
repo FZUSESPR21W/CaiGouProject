@@ -14,6 +14,15 @@ public class RecipeBean implements Serializable {
         this.id = id;
     }
 
+    public int getCustomId() {
+        return customId;
+    }
+
+    public void setCustomId(int customId) {
+        this.customId = customId;
+    }
+
+    private int customId;
     private String name;
     private String tag;
     private double price;
@@ -22,8 +31,9 @@ public class RecipeBean implements Serializable {
     private List<Ingredient> side_ingredient;
     private List<Step> step;
 
-    public RecipeBean(int id,String name, String tag, double price,String url, List<Ingredient> ingredient, List<Ingredient> side_ingredient, List<Step> step) {
+    public RecipeBean(int id,int customId,String name, String tag, double price,String url, List<Ingredient> ingredient, List<Ingredient> side_ingredient, List<Step> step) {
         this.id = id;
+        this.customId = customId;
         this.name = name;
         this.tag = tag;
         this.price = price;
@@ -35,6 +45,7 @@ public class RecipeBean implements Serializable {
 
     public RecipeBean(RecipeBean bean){
         this.id = bean.id;
+        this.customId = bean.customId;
         this.name = bean.name;
         this.tag = bean.tag;
         this.price = bean.price;

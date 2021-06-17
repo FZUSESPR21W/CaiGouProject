@@ -117,7 +117,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                         }
                     }
                     //解析recipe
-                    data = new RecipeBean(dataBean.getId(),dataBean.getName(),dataBean.getTags(),0,dataBean.getAvatar(),ingredient,sideIngredient,step);
+                    data = new RecipeBean(dataBean.getId(),dataBean.getCustomId(),dataBean.getName(),dataBean.getTags(),0,dataBean.getAvatar(),ingredient,sideIngredient,step);
                     Log.d("tag",data.getId()+"");
                 }
                 runOnUiThread(() -> initView());
