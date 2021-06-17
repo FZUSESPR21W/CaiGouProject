@@ -49,13 +49,14 @@ public class SearchActivity extends AppCompatActivity {
     private RecipeSearchAdapter adapter;
     private List<MenusBean> recipeList = new ArrayList<>();
     List<String> historyList = new ArrayList<>();
+    String content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
         
-        String content = getIntent().getStringExtra("content");
+        content = getIntent().getStringExtra("content");
         if (content != null && !content.equals("")){
             HashMap<String, String> map = new HashMap<>();
             map.put("searchWord",content);
@@ -115,13 +116,16 @@ public class SearchActivity extends AppCompatActivity {
 
     private void initView(){
         TextAdapter textAdapter = new TextAdapter(historyList, this);
-        if (historyList.size() != 0){
-            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
-            layoutManager.setFlexDirection(FlexDirection.ROW);
-            layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-            binding.rvSearchHistory.setLayoutManager(layoutManager);
-            // 历史记录
-            binding.rvSearchHistory.setAdapter(textAdapter);
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+        binding.rvSearchHistory.setLayoutManager(layoutManager);
+        // 历史记录
+        binding.rvSearchHistory.setAdapter(textAdapter);
+        if (content != null && content.contains("菜")){
+            binding.rvSearchHistory.setVisibility(View.GONE);
+            binding.tvHistoryHead.setVisibility(View.GONE);
+            binding.tvClearHistory.setVisibility(View.GONE);
         }
 
         binding.etSearch.setOnEditorActionListener((v, actionId, event) -> {

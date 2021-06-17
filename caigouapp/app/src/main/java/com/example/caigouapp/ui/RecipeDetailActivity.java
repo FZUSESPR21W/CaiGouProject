@@ -103,7 +103,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     String content = null;
                     for (String s : steps) {
                         Matcher isHttp = httpPattern.matcher(s);
-                        if (!s.contains("步骤 ")) {
+                        if (!s.contains("步骤")) {
                             if (isHttp.matches()) {
                                 url = s;
                             } else {

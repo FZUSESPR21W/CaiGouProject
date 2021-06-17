@@ -23,6 +23,7 @@
         android:background="@drawable/edit_account_style"
         android:imeOptions="actionNext"
         android:singleLine="true"
+        android:hint="请输入十一位手机号"
         android:nextFocusForward="@id/user_pwd"
         android:drawableLeft="@drawable/account"
         android:paddingLeft="15dp"
