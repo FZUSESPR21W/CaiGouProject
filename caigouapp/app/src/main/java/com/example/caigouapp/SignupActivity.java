@@ -65,6 +65,9 @@ public class SignupActivity extends AppCompatActivity {
             if(account.equals("")){
                 Toast.makeText(SignupActivity.this,"账号为空，请重新输入",Toast.LENGTH_SHORT).show();
             }
+            else if(account.length() != 11 || account.charAt(0) != '1'){
+                Toast.makeText(SignupActivity.this,"请输入十一位手机号",Toast.LENGTH_SHORT).show();
+            }
             else if(!account.equals("") && password.equals("")){
                 Toast.makeText(SignupActivity.this,"密码为空，请重新输入",Toast.LENGTH_SHORT).show();
             }
@@ -94,6 +97,7 @@ public class SignupActivity extends AppCompatActivity {
                     public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                         if (response.isSuccessful()){
                             Toast.makeText(SignupActivity.this,"注册成功！即将跳转登陆",Toast.LENGTH_SHORT).show();
+                            sp.clear();
                             sp.putString("account",account);
                             sp.putString("password",password);
                             mHandler.sendEmptyMessageDelayed(0,1500);
