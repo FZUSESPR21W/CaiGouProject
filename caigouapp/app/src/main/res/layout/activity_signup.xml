@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:fitsSystemWindows="true"
     tools:context=".SignupActivity">
 
     <ImageView
@@ -20,6 +21,10 @@
 
     <EditText
         android:background="@drawable/edit_account_style"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
+        android:hint="请输入十一位手机号"
+        android:nextFocusForward="@id/user_pwd"
         android:drawableLeft="@drawable/account"
         android:paddingLeft="15dp"
         android:id="@+id/user_account"
@@ -35,6 +40,9 @@
     <EditText
         app:passwordToggleEnabled="true"
         android:background="@drawable/edit_account_style"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
+        android:nextFocusForward="@id/user_pwd_confirm"
         android:id="@+id/user_pwd"
         android:drawableLeft="@drawable/password"
         android:paddingLeft="15dp"
@@ -45,11 +53,14 @@
         app:layout_constraintTop_toBottomOf="@+id/user_account"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp" />
+        android:layout_marginRight="30dp"
+        android:inputType="textPassword"/>
 
     <EditText
         app:passwordToggleEnabled="true"
         android:background="@drawable/edit_account_style"
+        android:imeOptions="actionNext"
+        android:singleLine="true"
         android:id="@+id/user_pwd_confirm"
         android:drawableLeft="@drawable/password"
         android:paddingLeft="15dp"
@@ -60,7 +71,8 @@
         app:layout_constraintTop_toBottomOf="@+id/user_pwd"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp" />
+        android:layout_marginRight="30dp"
+        android:inputType="textPassword"/>
 
     <RadioGroup
         android:id="@+id/rg"

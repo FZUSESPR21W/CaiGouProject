@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,6 +27,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHolder> {
@@ -84,10 +86,20 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
         holder.recipeName.setText(recipeBean.getName());
         holder.recipeIntro.setText(recipeBean.getTag());
         holder.recipePrice.setText(str);
-        holder.recipeIngredient.setLayoutManager(new LinearLayoutManager(mContext));
+        holder.recipeIngredient.setLayoutManager(new LinearLayoutManager(mContext){
+            @Override
+            public boolean canScrollVertically() {
+                // 直接禁止垂直滑动
+                return false;
+            }
+        });
         holder.recipeIngredient.setAdapter(new PersonalIngredientAdapter((ArrayList<Ingredient>) recipeBean.getIngredient()));
+        DividerItemDecoration divider = new DividerItemDecoration(mContext,DividerItemDecoration.VERTICAL);
+        divider.setDrawable((Objects.requireNonNull(ContextCompat.getDrawable(mContext, R.drawable.line))));
+        holder.recipeIngredient.addItemDecoration(divider);
         //holder.recipeIngredient.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
         holder.recipeIngredient.setVisibility(View.GONE);
+        holder.upLine.setVisibility(View.GONE);
         holder.showButton.setImageResource(R.drawable.arrow_down);
         holder.endItem.setVisibility(View.GONE);
         holder.showButton.setTag("close");
@@ -97,12 +109,14 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
                 holder.recipeIngredient.setVisibility(View.VISIBLE);
                 holder.showButton.setImageResource(R.drawable.arrow_up);
                 holder.endItem.setVisibility(View.VISIBLE);
+                holder.upLine.setVisibility(View.VISIBLE);
             }
             else if(holder.showButton.getTag().equals("open")){
                 holder.showButton.setTag("close");
                 holder.recipeIngredient.setVisibility(View.GONE);
                 holder.showButton.setImageResource(R.drawable.arrow_down);
                 holder.endItem.setVisibility(View.GONE);
+                holder.upLine.setVisibility(View.GONE);
             }
         });
         holder.itemView.setOnClickListener(view -> {
@@ -137,6 +151,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
         RecyclerView recipeIngredient;
         ImageView showButton;
         TextView endItem;
+        TextView upLine;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -148,6 +163,7 @@ public class ShoppingAdapter extends RecyclerView.Adapter<ShoppingAdapter.ViewHo
             recipeIngredient = (RecyclerView)itemView.findViewById(R.id.personalIngredientRv);
             showButton = (ImageView)itemView.findViewById(R.id.showButton);
             endItem = (TextView)itemView.findViewById(R.id.endItem);
+            upLine = itemView.findViewById(R.id.upLine);
         }
     }
 }

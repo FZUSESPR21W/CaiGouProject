@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.example.caigouapp.R;
 import com.example.caigouapp.data.CommonResponse;
+import com.example.caigouapp.data.TagsBean;
 import com.example.caigouapp.data.UserTagResponse;
 import com.example.caigouapp.data.UserTagResponse.*;
 import com.example.caigouapp.http.Constant;
@@ -30,11 +32,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class TagChooseActivity extends AppCompatActivity {
+public class TagChooseActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener {
 
     private List<TagsBean> data = new ArrayList<>();
     MineTagChooseAdapter mineAdapter;
     String tags = "快手菜,下饭菜,素食,肉食,汤,家常菜,早餐,午餐,下午茶,晚餐,夜宵,川菜,粤菜,鲁菜,苏菜,闽菜,浙菜,徽菜";
+    RadioGroup radioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,18 +67,20 @@ public class TagChooseActivity extends AppCompatActivity {
             updateUserTags();
         });
 
-        RadioButton radioButton = findViewById(R.id.rb_tag_choose);
-        radioButton.setOnClickListener(v -> {
-            if (radioButton.isSelected()){
-                for (int i = 0;i < 18;i++){
-                    data.get(i).setStatus(0);
-                    mineAdapter.notifyDataSetChanged();
-                }
-            }else{
-                for (int i = 0;i < 18;i++){
-                    data.get(i).setStatus(1);
-                    mineAdapter.notifyDataSetChanged();
-                }
+        radioGroup = findViewById(R.id.rg_tag_choose);
+        radioGroup.setOnCheckedChangeListener(this);
+        RadioButton choose = findViewById(R.id.rb_tag_choose);
+        RadioButton cancel = findViewById(R.id.rb_tag_cancel);
+        choose.setOnClickListener(view -> {
+            for (int i = 0;i < 18;i++){
+                data.get(i).setStatus(1);
+                mineAdapter.notifyDataSetChanged();
+            }
+        });
+        cancel.setOnClickListener(view -> {
+            for (int i = 0;i < 18;i++){
+                data.get(i).setStatus(0);
+                mineAdapter.notifyDataSetChanged();
             }
         });
 
@@ -119,5 +124,23 @@ public class TagChooseActivity extends AppCompatActivity {
                 Log.d("MineFragment",t.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup radioGroup, int id) {
+        switch (id){
+            case R.id.rb_tag_choose : {
+                for (int i = 0;i < 18;i++){
+                    data.get(i).setStatus(1);
+                    mineAdapter.notifyDataSetChanged();
+                }
+            }break;
+            case R.id.rb_tag_cancel : {
+                for (int i = 0;i < 18;i++){
+                    data.get(i).setStatus(0);
+                    mineAdapter.notifyDataSetChanged();
+                }
+            }break;
+        }
     }
 }

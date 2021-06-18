@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class ChildPresenter extends RecyclerView {
+    boolean flag = true;
 
     public ChildPresenter(@NonNull Context context) {
         super(context);
@@ -25,7 +26,7 @@ public class ChildPresenter extends RecyclerView {
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         //父层ViewGroup不要拦截点击事件
-        getParent().requestDisallowInterceptTouchEvent(true);
+        getParent().requestDisallowInterceptTouchEvent(flag);
         return super.dispatchTouchEvent(ev);
     }
 }

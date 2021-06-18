@@ -3,6 +3,7 @@ package com.example.caigouapp.ui.order;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,20 +14,37 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.caigouapp.R;
+import com.example.caigouapp.data.CancelOrderResponse;
+import com.example.caigouapp.data.OrderResponse;
+import com.example.caigouapp.ui.RecipeDetailActivity;
+import com.example.caigouapp.utils.GsonUtil;
+import com.example.caigouapp.utils.SpUtil;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class OrderPreviewAdapter extends RecyclerView.Adapter<OrderPreviewAdapter.ViewHolder> {
     List<Order> list;
@@ -85,6 +103,52 @@ public class OrderPreviewAdapter extends RecyclerView.Adapter<OrderPreviewAdapte
         holder.pieceView.setText("共 "+order.getCms().size()+" 件");
         holder.cancelButton.setText(getCancelButtonText(order));
         holder.showDetailButton.setTag(position);
+        //GsonUtil.e("1333",order.toString());
+
+        if(order.getOrderState() == 3 || order.getOrderState() == 4){
+            holder.cancelButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    HashMap<String, Integer> map = new HashMap<String, Integer>();
+                    map.put("orderId", Integer.valueOf(order.getOrderNumber()));
+                    GsonUtil.e("1333",order.getOrderNumber());
+                    RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
+                    Retrofit retrofit = new Retrofit.Builder()
+                            .baseUrl("http://106.53.148.37:8082/")
+                            .addConverterFactory(GsonConverterFactory.create())
+                            .build();
+                    OrderRequest request = retrofit.create(OrderRequest.class);
+                    Call<CancelOrderResponse> call = request.cancelOrder(requestBody);
+                    GsonUtil.e("1333",call.request().url().toString());
+                    call.enqueue(new Callback<CancelOrderResponse>() {
+                        @Override
+                        public void onResponse(Call<CancelOrderResponse> call, Response<CancelOrderResponse> response) {
+                            String str = new Gson().toJson(response.body());
+                            GsonUtil.e("1333",response.body().toString());
+                            try{
+                                JSONObject jsonObject = new JSONObject(str);
+                                int code = jsonObject.getInt("code");
+                                GsonUtil.e("1333",code+"");
+                                if(code == 200) Toast.makeText(mContext,"取消订单成功！",Toast.LENGTH_SHORT).show();
+                                holder.orderStateView.setText("已取消");
+                                holder.cancelButton.setText("再来一单");
+                                Order temp = order;
+                                temp.setOrderState(2);
+                                list.set(position,temp);
+                                GsonUtil.e("1333",list.get(position).toString());
+                            }catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<CancelOrderResponse> call, Throwable t) {
+                            System.out.println(t.getMessage());
+                        }
+                    });
+                }
+            });
+        }
     }
 
     @Override
@@ -131,9 +195,15 @@ public class OrderPreviewAdapter extends RecyclerView.Adapter<OrderPreviewAdapte
                                 holder.setImageResource(R.id.img_grid,resource);
                             }
                         });
+                holder.getItemView().setOnClickListener(v -> {
+                        Intent intent = new Intent(mContext, RecipeDetailActivity.class);
+                        intent.putExtra("id", cm.getSourceMenuId());
+                        mContext.startActivity(intent);
+                });
                 //holder.setImageResource(R.id.img_grid, R.drawable.sample);//这里要用加载图片的框架
                 holder.setText(R.id.txt_grid, cm.getiName());
             }
+
         };
         view.setAdapter(mAdapter);
     }

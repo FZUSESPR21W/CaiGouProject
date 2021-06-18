@@ -7,10 +7,12 @@
     <TextView
         android:id="@+id/mine_tag_tv"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_margin="5dp"
-        android:textColor="#33CCFF"
+        android:text="下饭菜"
+        android:textColor="#FFFFFF"
         android:textSize="15sp"
-        android:background="@drawable/shape_tag"
-        android:gravity="center_horizontal"></TextView>
+        android:background="@drawable/bg_tag"
+        android:gravity="center">
+    </TextView>
 </LinearLayout>

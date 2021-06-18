@@ -44,10 +44,13 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation project(path: ':push')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     androidTestImplementation 'com.android.support.test:rules:1.0.2'
+    //litepal
+    implementation 'org.litepal.guolindev:core:3.1.1'
 
     //MZBannerView
     implementation 'com.github.pinguo-zhouwei:MZBannerView:v2.0.2'
@@ -60,8 +63,8 @@ dependencies {
     //recyclerview弹性布局
     implementation 'com.google.android:flexbox:2.0.1'
     //leak canary support
-    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
-    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+//    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+//    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+//    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
 }

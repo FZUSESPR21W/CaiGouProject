@@ -5,7 +5,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.caigouapp.SignupActivity;
@@ -46,13 +49,14 @@ public class SearchActivity extends AppCompatActivity {
     private RecipeSearchAdapter adapter;
     private List<MenusBean> recipeList = new ArrayList<>();
     List<String> historyList = new ArrayList<>();
+    String content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySearchBinding.inflate(getLayoutInflater());
         
-        String content = getIntent().getStringExtra("content");
+        content = getIntent().getStringExtra("content");
         if (content != null && !content.equals("")){
             HashMap<String, String> map = new HashMap<>();
             map.put("searchWord",content);
@@ -112,14 +116,25 @@ public class SearchActivity extends AppCompatActivity {
 
     private void initView(){
         TextAdapter textAdapter = new TextAdapter(historyList, this);
-        if (historyList.size() != 0){
-            FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
-            layoutManager.setFlexDirection(FlexDirection.ROW);
-            layoutManager.setJustifyContent(JustifyContent.FLEX_START);
-            binding.rvSearchHistory.setLayoutManager(layoutManager);
-            // 历史记录
-            binding.rvSearchHistory.setAdapter(textAdapter);
+        FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(this);
+        layoutManager.setFlexDirection(FlexDirection.ROW);
+        layoutManager.setJustifyContent(JustifyContent.FLEX_START);
+        binding.rvSearchHistory.setLayoutManager(layoutManager);
+        // 历史记录
+        binding.rvSearchHistory.setAdapter(textAdapter);
+        if (content != null && content.contains("菜")){
+            binding.rvSearchHistory.setVisibility(View.GONE);
+            binding.tvHistoryHead.setVisibility(View.GONE);
+            binding.tvClearHistory.setVisibility(View.GONE);
         }
+
+        binding.etSearch.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                doSearch();
+                return true;
+            }
+            return false;
+        });
 
         binding.tvClearHistory.setOnClickListener(v -> {
             SpUtil.getInstance().putString("history","");
@@ -142,20 +157,24 @@ public class SearchActivity extends AppCompatActivity {
         binding.rvRecipeList.setAdapter(adapter);
 
         binding.tvSearch.setOnClickListener(v -> {
-            String content = binding.etSearch.getText().toString();
-            if (content != null && !content.equals("")){
-                String str = SpUtil.getInstance().getString("history","");
-                if (!str.contains(content)){
-                    if (str.equals(""))
-                        SpUtil.getInstance().putString("history",content);
-                    else
-                        SpUtil.getInstance().putString("history",str+","+content);
-                }
-                HashMap<String, String> map = new HashMap<>();
-                map.put("searchWord",content);
-                binding.pbLoad.setVisibility(View.VISIBLE);
-                initData(new Gson().toJson(map));
-            }
+            doSearch();
         });
+    }
+
+    private void doSearch(){
+        String content = binding.etSearch.getText().toString();
+        if (content != null && !content.equals("")){
+            String str = SpUtil.getInstance().getString("history","");
+            if (!str.contains(content)){
+                if (str.equals(""))
+                    SpUtil.getInstance().putString("history",content);
+                else
+                    SpUtil.getInstance().putString("history",str+","+content);
+            }
+            HashMap<String, String> map = new HashMap<>();
+            map.put("searchWord",content);
+            binding.pbLoad.setVisibility(View.VISIBLE);
+            initData(new Gson().toJson(map));
+        }
     }
 }

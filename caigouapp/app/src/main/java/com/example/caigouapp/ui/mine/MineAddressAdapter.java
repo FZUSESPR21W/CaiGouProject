@@ -1,71 +1,91 @@
 package com.example.caigouapp.ui.mine;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.caigouapp.MainActivity;
 import com.example.caigouapp.R;
+import com.example.caigouapp.data.AddressBean;
 import com.example.caigouapp.data.UserAddressResponse.*;
+import com.example.caigouapp.ui.shopping.ShoppingAdapter;
 
 import java.util.HashMap;
 import java.util.List;
 
-public class MineAddressAdapter extends BaseAdapter {
+public class MineAddressAdapter extends RecyclerView.Adapter<MineAddressAdapter.ViewHolder> {
     private List<AddressBean> addressList;
     private Context context;
-    HashMap<String, Boolean> states = new HashMap<String, Boolean>();
+    private int index = -1;
+    private boolean start = true;
     public MineAddressAdapter(List<AddressBean> addressList, Context context) {
         this.addressList = addressList;
         this.context = context;
-        if (!addressList.isEmpty())
-            states.put(String.valueOf(0), true);
+    }
+
+    public int getSelectAddress(){
+        if (index >= 0)
+        return addressList.get(index).getId();
+        return -1;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_address_lv,parent,false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public int getCount() {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        AddressBean data = addressList.get(position);
+        if(data.getStatus() == 1 && start){
+            start = false;
+            holder.rb.setChecked(true);
+            index = position;
+        }
+        holder.address.setText(data.getAddress());
+        holder.name.setText(data.getName());
+        holder.phone.setText(data.getPhone());
+        holder.rb.setOnClickListener(view -> {
+            holder.rb.setChecked(true);
+            index = position;
+            notifyDataSetChanged();
+        });
+        holder.itemView.setOnClickListener(view -> {
+            holder.rb.setChecked(true);
+            index = position;
+            notifyDataSetChanged();
+        });
+        holder.rb.setChecked(index == position);
+    }
+
+    @Override
+    public int getItemCount() {
         return addressList.size();
     }
 
-    @Override
-    public Object getItem(int position) {
-        return null;
-    }
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        RadioButton rb;
+        TextView address;
+        TextView name;
+        TextView phone;
 
-    @Override
-    public long getItemId(int position) {
-        return 0;
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        View view;
-        if(convertView == null) {
-            view = View.inflate(context, R.layout.item_address_lv, null);
-        }else {
-            view = convertView;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            rb = itemView.findViewById(R.id.choose);
+            address = itemView.findViewById(R.id.mine_address);
+            name = itemView.findViewById(R.id.tv_name);
+            phone = itemView.findViewById(R.id.tv_phone);
         }
-        RadioButton address = view.findViewById(R.id.mine_address);
-        TextView phone = view.findViewById(R.id.tv_phone);
-        address.setText(addressList.get(position).getAddress());
-        phone.setText(addressList.get(position).getPhone());
-        address.setOnClickListener(v -> {
-            for(String key : states.keySet()) {
-                states.put(key, false);
-            }
-            states.put(String.valueOf(position), true);
-            MineAddressAdapter.this.notifyDataSetChanged();
-        });
-        boolean res = false;
-        if(states.get(String.valueOf(position)) == null || states.get(String.valueOf(position)) == false) {
-            res = false;
-            states.put(String.valueOf(position), false);
-        } else
-            res = true;
-
-        address.setChecked(res);
-        return view;
     }
 }

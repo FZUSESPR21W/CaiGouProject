@@ -3,10 +3,10 @@ package com.example.caigouapp.ui;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -59,11 +59,16 @@ public class RecipeDetailActivity extends AppCompatActivity {
     }
 
     private void internetRequest(int id){
+        binding.ingredientRv.setVisibility(View.GONE);
+        binding.sideIngredientGv.setVisibility(View.GONE);
+        binding.stepRv.setVisibility(View.GONE);
+        binding.loading1.setVisibility(View.VISIBLE);
+        binding.loading2.setVisibility(View.VISIBLE);
+        binding.loading3.setVisibility(View.VISIBLE);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(Constant.URL_BASE)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-
         HashMap<String , Integer> map = new HashMap<>();
         map.put("id",id);
         RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), new Gson().toJson(map));
@@ -98,7 +103,7 @@ public class RecipeDetailActivity extends AppCompatActivity {
                     String content = null;
                     for (String s : steps) {
                         Matcher isHttp = httpPattern.matcher(s);
-                        if (!s.contains("步骤 ")) {
+                        if (!s.contains("步骤")) {
                             if (isHttp.matches()) {
                                 url = s;
                             } else {
@@ -112,7 +117,8 @@ public class RecipeDetailActivity extends AppCompatActivity {
                         }
                     }
                     //解析recipe
-                    data = new RecipeBean(dataBean.getId(),dataBean.getName(),dataBean.getTags(),0,dataBean.getAvatar(),ingredient,sideIngredient,step);
+                    data = new RecipeBean(dataBean.getId(),dataBean.getCustomId(),dataBean.getName(),dataBean.getTags(),0,dataBean.getAvatar(),ingredient,sideIngredient,step);
+                    Log.d("tag",data.getId()+"");
                 }
                 runOnUiThread(() -> initView());
             }
@@ -125,6 +131,12 @@ public class RecipeDetailActivity extends AppCompatActivity {
     }
 
     private void initView(){
+        binding.ingredientRv.setVisibility(View.VISIBLE);
+        binding.sideIngredientGv.setVisibility(View.VISIBLE);
+        binding.stepRv.setVisibility(View.VISIBLE);
+        binding.loading1.setVisibility(View.GONE);
+        binding.loading2.setVisibility(View.GONE);
+        binding.loading3.setVisibility(View.GONE);
         binding.toolbar.setNavigationOnClickListener(view -> {
             finish();
         });

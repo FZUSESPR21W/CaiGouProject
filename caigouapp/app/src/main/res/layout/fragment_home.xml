@@ -26,6 +26,8 @@
             android:background="@drawable/search_et">
             <TextView
                 android:id="@+id/tv_content"
+                android:imeOptions="actionNext"
+                android:singleLine="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toTopOf="parent"
@@ -88,17 +90,27 @@
                     android:id="@+id/iv_recommend"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
-                    android:background="@drawable/recommend_resource"/>
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/default_image"/>
 
                 <TextView
+                    android:id="@+id/tv_commend"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="今日推荐"
+                    android:textStyle="bold"
                     android:background="@drawable/recommend_tv"
                     android:padding="16dp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentLeft="true"/>
             </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_recipe_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/search_et"
+                android:layout_margin="16dp"/>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 

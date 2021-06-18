@@ -37,4 +37,10 @@ public interface UserServices {
 
     @POST("user/addUserAddress")
     Call<CommonResponse> addUserAddress(@Header("token") String header,@Body RequestBody body);
+
+    @POST("user/updateDeviceToken")
+    Call<CommonResponse> updateDeviceToken(@Body RequestBody body);
+
+    @POST("user/setAddress")
+    Call<CommonResponse> setUserAddress(@Body RequestBody body);
 }

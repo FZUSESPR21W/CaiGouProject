@@ -1,6 +1,7 @@
 package com.example.caigouapp.ui.order;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.caigouapp.R;
+import com.example.caigouapp.ui.RecipeDetailActivity;
 import com.example.caigouapp.utils.GraphicUtil;
 import com.example.caigouapp.utils.GsonUtil;
 
@@ -52,10 +54,10 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             priceView = itemView.findViewById(R.id.txt_order_detail_price) ;
             showSourceMenuButton = itemView.findViewById(R.id.btn_order_detail_show_source_menu) ;
             customerMenuView = itemView.findViewById(R.id.recycler_custom_menu) ;
+            /*
             LinearLayoutManager lm = new LinearLayoutManager(itemView.getContext());
             lm.setOrientation(ChildPresenter.VERTICAL);
-            customerMenuView.setLayoutManager(lm);
-
+            customerMenuView.setLayoutManager(lm);*/
         }
     }
 
@@ -63,12 +65,6 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
     public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_detail_item, parent, false);
         final ViewHolder holder = new ViewHolder(view);
-        holder.showSourceMenuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //开新活动，到源菜谱详情界面
-            }
-        });
         return holder;
     }
     @Override
@@ -82,15 +78,37 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
                 .into(new SimpleTarget<Bitmap>() {
                     @Override
                     public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        holder.iconImageView.setImageBitmap(GraphicUtil.getSquarePhoto(resource,64));
+                        holder.iconImageView.setImageBitmap(resource);
                     }
                 });
         //holder.iconImageView.setImageResource(cm.getiId());
         holder.iconTextView.setText(cm.getiName());//要根据返回的状态填入文字
         holder.priceView.setText("￥"+cm.getPrice());
+
+        if(getMajorFoods(cm).size()<=2){
+            holder.customerMenuView.flag = false;
+        }
+
+        LinearLayoutManager lm = new LinearLayoutManager(holder.itemView.getContext()){
+            @Override
+            public boolean canScrollVertically() {
+                return getMajorFoods(cm).size() > 2;
+            }
+        };
+        lm.setOrientation(ChildPresenter.VERTICAL);
+        holder.customerMenuView.setLayoutManager(lm);
+
         CustomerMenuAdapter adapter = new CustomerMenuAdapter(getMajorFoods(cm));
         holder.customerMenuView.setAdapter(adapter);
-        holder.showSourceMenuButton.setVisibility(View.GONE);//到时候beta的时候实现
+        holder.showSourceMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, RecipeDetailActivity.class);
+                intent.putExtra("id",cm.getSourceMenuId());
+                mContext.startActivity(intent);
+            }
+        });
+        //holder.showSourceMenuButton.setVisibility(View.GONE);
     }
 
     public List<Map<Food,String>> getMajorFoods(CustomerMenu cm){
